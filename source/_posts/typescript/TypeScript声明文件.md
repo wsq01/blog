@@ -8,7 +8,7 @@ categories: typescript
 # 声明文件
 当使用第三方库时，我们需要引用它的声明文件，才能获得对应的代码补全、接口提示等功能。
 ## 什么是声明语句
-假如我们想使用第三方库 jQuery，一种常见的方式是在 html 中通过 <script> 标签引入 jQuery，然后就可以使用全局变量 $ 或 jQuery 了。
+假如我们想使用第三方库 jQuery，一种常见的方式是在 html 中通过`<script>`标签引入 jQuery，然后就可以使用全局变量 $ 或 jQuery 了。
 
 我们通常这样获取一个 id 是 foo 的元素：
 ```ts
@@ -75,7 +75,7 @@ npm install @types/jquery --save-dev
 
 ​全局变量：通过`<script>`标签引入第三方库，注入全局变量
 
-​npm 包：通过 import foo from 'foo' 导入，符合 ES6 模块规范
+​npm 包：通过`import foo from 'foo'`导入，符合 ES6 模块规范
 
 ​UMD 库：既可以通过`<script>`标签引入，又可以通过 import 导入
 
@@ -558,7 +558,7 @@ declare namespace foo {
 准确地讲，export = 不仅可以用在声明文件中，也可以用在普通的 ts 文件中。实际上，import ... require 和 export = 都是 ts 为了兼容 AMD 规范和 commonjs 规范而创立的新语法，由于并不常用也不推荐使用，所以这里就不详细介绍了，感兴趣的可以看官方文档。
 由于很多第三方库是 commonjs 规范的，所以声明文件也就不得不用到 export = 这种语法了。但是还是需要再强调下，相比与 export =，我们更推荐使用 ES6 标准的 export default 和 export。
 UMD 库
-既可以通过 <script> 标签引入，又可以通过 import 导入的库，称为 UMD 库。相比于 npm 包的类型声明文件，我们需要额外声明一个全局变量，为了实现这种方式，ts 提供了一个新语法 export as namespace。
+既可以通过`<script>`标签引入，又可以通过 import 导入的库，称为 UMD 库。相比于 npm 包的类型声明文件，我们需要额外声明一个全局变量，为了实现这种方式，ts 提供了一个新语法 export as namespace。
 export as namespace
 一般使用 export as namespace 时，都是先有了 npm 包的声明文件，再基于它添加一条 export as namespace 语句，即可将声明好的一个变量声明为全局变量，举例如下22：
 // types/foo/index.d.ts
