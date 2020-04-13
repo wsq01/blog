@@ -43,7 +43,7 @@ git init your_project // 会在当前路径下创建和项目名称同名的文�
 cd your_project
 ```
 
-#github高级搜索
+# github高级搜索
 ```
 created:<2020-03-29
 git in:readme

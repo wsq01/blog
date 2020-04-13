@@ -1,8 +1,8 @@
 ---
 title: call apply bind
-date: 2020-03-120 10:25:14
-tags: js
-categories: js
+date: 2020-03-12 10:25:14
+tags: javascript
+categories: javascript
 ---
 
 `call，apply，bind`这三个函数是`Function`原型上的方法`Function.prototype.call()`，`Function.prototype.apply`，`Function.prototype.bind()`，所有的函数都是`Funciton`的实例，因此所有的函数可以调用`call，apply，bind`这三个方法。
