@@ -66,6 +66,10 @@ tags: CSS
 * `justify-content: center`：将子元素水平居中。
 * `align-items: center`：将子元素垂直居中。
 
+## 定位居中
+```html
+```
+
 # 动态阴影
 创建与类似的阴影`box-shadow`而是基于元素本身的颜色。
 ```html

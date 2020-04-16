@@ -1,5 +1,5 @@
 ---
-title: call apply bind
+title: JS数组代码片段
 date: 2019-09-06 19:08:18
 tags: javascript
 categories: javascript
