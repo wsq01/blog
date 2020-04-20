@@ -94,11 +94,11 @@ rss: /atom.xml
 darkmode: true
 
 # 页面点击小红心(开启请设置为true)
-clickLove: false
+clickLove: true
 
 # 页面宽度自定义（不建议修改，可能造成布局混乱），article_width文章宽度，sidebar_width侧边栏宽度
 layout:
-  article_width: 80rem
+  article_width: 85rem
   sidebar_width: 8rem
 
 # 评论：1、Valine(推荐)；2、Gitalk
@@ -151,7 +151,7 @@ cnzz:
 # Google Analytics
 google_analytics: ''
 # 百度统计
-baidu_analytics: ''
+baidu_analytics: 'b1b5dee3bb1719c8a439f8070118dc80'
 
 # Mathjax数学公式
 mathjax: false

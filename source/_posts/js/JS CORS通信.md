@@ -1,6 +1,6 @@
 ---
 title: JS CORS通信
-date: 2019-10-15 17:08:16
+date: 2019-03-15 17:08:16
 tags: javascript
 categories: javascript
 ---

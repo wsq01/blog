@@ -1,7 +1,8 @@
 ---
 title: JS面向对象—Object对象相关方法
-date: 2020-04-13 09:22:50
+date: 2018-08-13 09:22:50
 tags: [javascript, 前端]
+categories: javascript
 ---
 
 JavaScript 在`Object`对象上面，提供了很多相关方法，处理面向对象编程的相关操作。

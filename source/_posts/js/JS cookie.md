@@ -1,6 +1,6 @@
 ---
 title: JS Cookie
-date: 2019-10-09 18:54:16
+date: 2019-2-09 18:54:16
 tags: javascript
 categories: javascript
 ---

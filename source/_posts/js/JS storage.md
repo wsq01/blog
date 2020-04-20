@@ -1,6 +1,6 @@
 ---
 title: call apply bind
-date: 2019-10-11 19:33:13
+date: 2019-03-19 19:33:13
 tags: javascript
 categories: javascript
 ---

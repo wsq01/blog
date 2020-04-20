@@ -2,6 +2,7 @@
 title: vue生命周期深入
 date: 2020-04-14 11:42:05
 tags: vue
+categories: vue
 ---
 
 # 生命周期钩子函数
