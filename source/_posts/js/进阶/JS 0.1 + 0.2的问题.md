@@ -1,7 +1,7 @@
 ---
 title: JS 0.1 + 0.2的问题
 date: 2018-03-09 22:21:41
-tags: javascript
+tags: [javascript, JS进阶]
 categories: javascript
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: call apply bind
 date: 2020-03-12 10:25:14
-tags: javascript
+tags: [javascript, JS进阶]
 categories: javascript
 ---
 

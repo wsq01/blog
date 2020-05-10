@@ -11,3 +11,71 @@ categories: 工具
 ## 首选引用样式
 文件->首选项->设置->搜索`quote`->`"javascript.preferences.quoteStyle": "single"  "typescript.preferences.quoteStyle": "single"`
 
+# 推荐插件
+| 插件名 | 描述 |
+| :- | :- |
+| Auto Close Tag | 自动补全关闭标签 |
+| Auto Rename Tag | 自动重命名标签 |
+| Beautify | HTML、CSS、JS、JSON SASS语法高亮,格式化代码的工具 |
+| Bracket Pair Colorizer | 对应括号显示同样的颜色，以防我们搞混括号配对 |
+| Code Runner | 能够运行多种语言的代码片段或代码文件 |
+| Document This | 可以快速地帮你生成注释 |
+| Easy Sass | 编译输出css |
+| JavaScript (ES6) code snippets | es6的代码自动补全 |
+| jQuery Code Snippets | jquery代码自动补全，比如你要写一段ajax你需要输入jqAjax然后敲回车 |
+| Path Autocomplete | 路径补全工具 |
+| IntelliSense for CSS class names in HTML | CSS 类名智能提示 |
+| Debugger for Chrome | 必备调试工具 |
+| ESLint | 代码检查工具 |
+| vscode-icons | 文件图标 |
+| vue-beautify | vue文件格式化 |
+| Vetur | Vue 语法高亮显示, 语法错误检查, 代码自动补全 |
+| Live Server | 本地调试工具，浏览器实时刷新 |
+| Polacode | 把代码保存成美观的图片 |
+| Markdown All in One | markdown插件 |
+| Chinese(Simplified) Language Pack for Visual Studio Code | 中文简体包 |
+
+# 快捷键
+
+![windows 快捷键](https://upload-images.jianshu.io/upload_images/3534846-f60825be9c73e777.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+![mac 快捷键](https://upload-images.jianshu.io/upload_images/3534846-f188e4ae8c25f07f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+1. 一次搜索所有文件的文本
+```
+Windows: Ctrl + Shift + F
+Mac: Command + Shift + F
+```
+2. 集成终端
+Windows: Ctrl + \`
+Mac: command + \`
+通过 Ctrl + `可以打开或关闭终端
+3. 删除上一个单词
+```
+Windows: Ctrl + Backspace
+Mac: option + delete
+这在你打错字的时候非常有用。
+4. 重复的行
+Windows: Shift + Alt + 向下箭头
+Mac: command + Shift + 向下箭头
+```
+复制行。
+5. 批量替换当前文件中所有匹配的文本
+```
+Windows: Ctrl + F2
+Mac: command + F2
+```
+可以选择任何一组文本，如果该选中文本出现多个，一次改所有出现的文本。
+6. 向上/向下移动一行
+```
+Windows: Alt + 向上/下箭头
+Mac: command+ 向上/下箭头
+```
+当前行向上/向下移动。
+7. 删除一行
+有两种方法可以立即删除一行。
+```
+Windows: Ctrl + X(Ctrl + Shift + K)
+Mac: command + X( command + Shift + K)
+```
+使用Ctrl + X剪切命令来删除一行。或者使用 Ctrl + Shift + K 命令。

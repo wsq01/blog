@@ -2,6 +2,7 @@
 title: webpack配置项
 date: 2020-04-04 20:27:31
 tags: webpack
+categories: webpack
 ---
 
 webpack 是需要传入一个配置对象。

@@ -14,6 +14,7 @@ categories: javascript
 函数节流：一个函数执行一次后，只有大于设定的执行周期后才会执行第二次。
 有个需要频繁触发函数，出于优化性能角度，在规定时间内，只让函数触发的第一次生效，后面不生效。
 ## 如何实现
+#### 使用时间戳
 其原理是用时间戳来判断是否已到回调该执行时间，记录上次执行的时间戳，然后每次触发`scroll`事件执行回调，回调中判断当前时间戳距离上次执行时间戳的间隔是否已经到达 规定时间段，如果是，则执行，并更新上次执行的时间戳，如此循环。
 ```js
 function throttle(fn, delay) {
@@ -32,6 +33,23 @@ function throttle(fn, delay) {
 }
 document.onscroll = throttle(function() { console.log('scroll事件被触发了' + Date.now()) }, 200)
 ```
+#### 使用定时器
+当触发事件的时候，我们设置一个定时器，再触发事件的时候，如果定时器存在，就不执行，直到定时器执行，然后执行函数，清空定时器，这样就可以设置下个定时器。
+```js
+function throttle(fn, delay) {
+  var timer = null;
+  var lastTime = 0;
+
+  return function() {
+    if (!timer) {
+      timer = setTimeout(() => {
+        timer = null;
+        fn.apply(this, arguments);
+      }, delay)
+    }
+  }
+}
+```
 
 ![](https://upload-images.jianshu.io/upload_images/3534846-15d3f2fb17430362?imageMogr2/auto-orient/strip)
 
@@ -46,27 +64,67 @@ document.onscroll = throttle(function() { console.log('scroll事件被触发了'
 * 监听滚动事件判断是否到页面底部自动加载更多：给`scroll`加了`debounce`后，只有用户停止滚动后，才会判断是否到了页面底部；如果是`throttle`的话，只要页面滚动就会间隔一段时间判断一次
 
 # 函数防抖(debounce)
-防抖函数：一个需要频繁触发的函数，在规定时间内，只让最后一次生效，前面的不生效。
+函数防抖：一个需要频繁触发的函数，在规定时间内，只让最后一次生效，前面的不生效。
 ## 如何实现
-其原理就第一次调用函数，创建一个定时器，在指定的时间间隔之后运行代码。当第二次调用该函数时，它会清除前一次的定时器并设置另一个。如果前一个定时器已经执行过了，这个操作就没有任何意义。然而，如果前一个定时器尚未执行，其实就是将其替换为一个新的定时器，然后延迟一定时间再执行。
+其原理就是第一次调用函数，创建一个定时器，在指定的时间间隔之后运行代码。当第二次调用该函数时，它会清除前一次的定时器并设置另一个。如果前一个定时器已经执行过了，这个操作就没有任何意义。然而，如果前一个定时器尚未执行，其实就是将其替换为一个新的定时器，然后延迟一定时间再执行。
+
 ```html
 <button id='btn'>按钮</button>
 ```
 ```js
+function bindClick() {
+  console.log('点击事件被触发' + Date.now())
+}
+document.getElementById('btn').onclick = debounce(bindClick, 1000)
+```
+```js
+// 第一版
 function debounce(fn, delay) {
   // 记录上一次的延时器
   var timer = null;
   return function() {
-  // 清除上一次延时器
-  clearTimeout(timer)
-  timer = setTimeout(() => {
+    // 清除上一次延时器
+    clearTimeout(timer)
+    timer = setTimeout(fn, delay)
+  }
+}
+```
+如果我们在`onclick`事件中使用`console.log(this)`，在不使用`debounce`函数的时候，`this`指向`button`按钮。但是如果使用`debounce`函数，`this`就会指向`Window`对象！所以我们需要将`this`指向正确的对象。
+```js
+// 第二版
+function debounce(fn, delay) {
+  // 记录上一次的延时器
+  var timer = null;
+  return () => {
+    // 清除上一次延时器
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      fn.apply(this)
+    }, delay)
+  }
+}
+```
+JavaScript 在事件处理函数中会提供事件对象`event`，我们修改下`bindClick`函数：
+```js
+function bindClick(e) {
+    console.log(e);
+    console.log(this);
+};
+```
+如果我们不使用`debouce`函数，会打印`Event`对象，但是在`debounce`函数中，会打印`undefined`，所以我们需要在`debounce`函数里处理下参数问题。
+```js
+// 第三版
+function debounce(fn, delay) {
+  // 记录上一次的延时器
+  var timer = null;
+  return function() {
+    // 清除上一次延时器
+    clearTimeout(timer)
+    timer = setTimeout(() => {
       fn.apply(this, arguments)
     }, delay)
   }
 }
-document.getElementById('btn').onclick = debounce(function() {
-  console.log('点击事件被触发' + Date.now())
-}, 1000)
 ```
 
 [![](https://upload-images.jianshu.io/upload_images/3534846-ff82b940cfa30285?imageMogr2/auto-orient/strip)](https://camo.githubusercontent.com/40b8a595e6b9d4c3bd9e7e13546671792b994c23/68747470733a2f2f757365722d676f6c642d63646e2e786974752e696f2f323031382f31312f32312f313637333661353432636131373039393f773d36363726683d31363026663d67696626733d3738323031) 

@@ -323,3 +323,62 @@ var y = e.pageY - btn.offsetTop - btn.offsetParent.offsetTop
 * `transform-origin: bottom right`表示变换锚点位于块的右下方。
 * `:hover::after`然后使用`scaleX(1)`将宽度转换为100％，然后将`transform-origin`更改为`bottom left`以便定位点反转，从而允许其在悬停时转换到另一个方向。
 
+# 交错动画
+通过设置不同的延迟时间，达到动画交错播放的效果。
+
+举个栗子，比如有十个元素播放十个动画，将第二个元素的动画播放时间设定为比第一个元素晚0.5秒（也就是将延迟设为0.5秒），其他元素以此类推，这样它们就会错开来，形成一种独特的视觉效果。
+```html
+<div class="loading">
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+  <div class="dot"></div>
+</div>
+```
+```less
+.loading {
+  $colors: #7ef9ff, #89cff0, #4682b4, #0f52ba, #000080;
+  display: flex;
+  animation-delay: 1s;
+
+  .dot {
+    position: relative;
+    width: 2em;
+    height: 2em;
+    margin: 0.8em;
+    border-radius: 50%;
+
+    &::before {
+      position: absolute;
+      content: "";
+      width: 100%;
+      height: 100%;
+      background: inherit;
+      border-radius: inherit;
+      animation: wave 2s ease-out infinite;
+    }
+
+    @for $i from 1 through 5 {
+      &:nth-child(#{$i}) {
+        background: nth($colors, $i);
+
+        &::before {
+          animation-delay: $i * 0.2s;
+        }
+      }
+    }
+  }
+}
+
+@keyframes wave {
+  50%, 75% {
+    transform: scale(2.5);
+  }
+
+  80%, 100% {
+    opacity: 0;
+  }
+}
+```
+{% asset_img gif4.gif %}
