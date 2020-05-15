@@ -1,7 +1,7 @@
 ---
 title: JS属性描述对象
 date: 2018-05-18 11:25:09
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: JS代码片段(Math、Date)
 date: 2019-10-02 15:11:41
-tags: [javascript, 前端, JS code]
+tags: [javascript, JS code, JS进阶]
 categories: javascript
 ---
 

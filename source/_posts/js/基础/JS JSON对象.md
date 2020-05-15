@@ -1,7 +1,7 @@
 ---
 title: JS JSON对象
 date: 2018-05-15 10:21:25
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: JS null、undefined和布尔值
 date: 2018-03-02 16:11:14
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

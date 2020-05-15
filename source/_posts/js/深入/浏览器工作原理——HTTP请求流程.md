@@ -1,8 +1,8 @@
 ---
 title: 浏览器工作原理——HTTP请求流程
 date: 2019-10-13 22:10:22
-tags: [浏览器工作原理与实践]
-categories: 浏览器工作原理与实践
+tags: [javascript, 浏览器工作原理与实践]
+categories: [javascript, 浏览器工作原理与实践]
 ---
 
 

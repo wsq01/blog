@@ -1,4 +1,9 @@
-
+---
+title: JS代码片段(Type)
+date: 2019-10-06 21:31:05
+tags: [javascript, JS code, JS进阶]
+categories: javascript
+---
 
 
 # Type

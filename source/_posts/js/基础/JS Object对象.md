@@ -1,7 +1,7 @@
 ---
 title: JS Object对象
 date: 2018-05-16 10:15:18
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

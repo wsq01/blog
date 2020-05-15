@@ -1,7 +1,7 @@
 ---
 title: JS数值
 date: 2018-03-07 21:08:43
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

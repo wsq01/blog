@@ -1,5 +1,5 @@
 ---
-title: JS面向对象编程—对象的继承
+title: JS面向对象—对象的继承
 date: 2018-08-23 11:32:56
 tags: [javascript, 前端]
 categories: javascript

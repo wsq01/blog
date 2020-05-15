@@ -1,7 +1,7 @@
 ---
 title: JS基本语法
 date: 2018-03-01 20:32:12
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

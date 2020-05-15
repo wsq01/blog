@@ -1,7 +1,7 @@
 ---
 title: JS 同源限制
 date: 2019-10-14 15:00:16
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

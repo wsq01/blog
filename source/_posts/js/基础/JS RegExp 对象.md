@@ -1,7 +1,8 @@
 ---
 title: JS RegExp 对象
 date: 2018-04-25 11:05:04
-tags: javascript
+tags: [javascript, JS基础]
+categories: javascript
 ---
 
 `RegExp`对象提供正则表达式的功能。

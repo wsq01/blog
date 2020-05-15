@@ -1,7 +1,7 @@
 ---
 title: JS代码片段(Array)
 date: 2019-09-06 19:08:18
-tags: [javascript, 前端, JS code]
+tags: [javascript, JS code, JS进阶]
 categories: javascript
 ---
 

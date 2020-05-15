@@ -1,8 +1,8 @@
 ---
 title: 浏览器工作原理——TCP协议
 date: 2019-10-12 17:14:36
-tags: [浏览器工作原理与实践]
-categories: 浏览器工作原理与实践
+tags: [javascript, 浏览器工作原理与实践]
+categories: [javascript, 浏览器工作原理与实践]
 ---
 
 

@@ -1,7 +1,7 @@
 ---
 title: call apply bind
 date: 2019-03-20 22:10:43
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

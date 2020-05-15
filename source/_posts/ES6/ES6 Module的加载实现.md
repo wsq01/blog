@@ -1,5 +1,9 @@
-
-
+---
+title: ES6 Module的加载实现
+date: 2019-07-11 11:02:24
+tags: [javascript, ES6]
+categories: [javascript, ES6]
+---
 
 # 浏览器加载
 ## 传统方法

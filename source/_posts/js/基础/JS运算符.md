@@ -1,7 +1,7 @@
 ---
 title: JS运算符
 date: 2018-04-20 22:43:12
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

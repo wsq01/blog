@@ -1,7 +1,7 @@
 ---
 title: JS Location对象、URL对象、RULSearchParams对象
 date: 2019-03-21 21:20:41
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

@@ -2,7 +2,7 @@
 title: ES6 class语法
 date: 2019-07-02 10:43:11
 tags: [javascript, ES6]
-categories: [javascript, ES6, 前端]
+categories: [javascript, ES6]
 ---
 
 # 简介

@@ -1,5 +1,5 @@
 ---
-title: JS面向对象编程—实例对象与 new 命令
+title: JS面向对象—实例对象与 new 命令
 date: 2018-08-20 09:22:50
 tags: [javascript, 前端]
 categories: javascript

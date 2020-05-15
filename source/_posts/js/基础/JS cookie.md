@@ -1,7 +1,7 @@
 ---
 title: JS Cookie
 date: 2019-2-09 18:54:16
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

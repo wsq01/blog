@@ -1,6 +1,13 @@
+---
+title: JS事件循环机制——Promise
+date: 2019-12-05 19:22:51
+tags: [javascript, JS事件循环机制]
+categories: [javascript, JS事件循环机制]
+---
+
 `Promise`解决的是异步编码风格的问题。
 # 异步编程的问题：代码逻辑不连续
-首先我们来回顾下 JavaScript 的异步编程模型，你应该已经非常熟悉页面的事件循环系统了，也知道页面中任务都是执行在主线程之上的，相对于页面来说，主线程就是它整个的世界，所以在执行一项耗时的任务时，比如下载网络文件任务、获取摄像头等设备信息任务，这些任务都会放到页面主线程之外的进程或者线程中去执行，这样就避免了耗时任务“霸占”页面主线程的情况。你可以结合下图来看看这个处理过程：
+页面中任务都是执行在主线程之上的，相对于页面来说，主线程就是它整个的世界，所以在执行一项耗时的任务时，比如下载网络文件任务、获取摄像头等设备信息任务，这些任务都会放到页面主线程之外的进程或者线程中去执行，这样就避免了耗时任务“霸占”页面主线程的情况。你可以结合下图来看看这个处理过程：
 
 {% asset_img img1.png Web 应用的异步编程模型 %}
 
@@ -109,28 +116,27 @@ XFetch(
 )
 ```
 # 新的问题：回调地狱
-上面的示例代码已经比较符合人的线性思维了，在一些简单的场景下运行效果也是非常好的，不过一旦接触到稍微复杂点的项目时，你就会发现，如果嵌套了太多的回调函数就很容易使得自己陷入了回调地狱，不能自拔。你可以参考下面这段让人凌乱的代码：
+上面的示例代码已经比较符合人的线性思维了，在一些简单的场景下运行效果也是非常好的，不过一旦接触到稍微复杂点的项目时，你就会发现，如果嵌套了太多的回调函数就很容易使得自己陷入了回调地狱，不能自拔。
 ```js
 XFetch(makeRequest('https://time.geekbang.org/?category'),
-function resolve(response) {
-console.log(response)
-XFetch(makeRequest('https://time.geekbang.org/column'),
-function resolve(response) {
-console.log(response)
-XFetch(makeRequest('https://time.geekbang.org')
-function resolve(response) {
-console.log(response)
-}, function reject(e) {
-console.log(e)
-})
-}, function reject(e) {
-console.log(e)
-})
-}, function reject(e) {
-console.log(e)
-})
+  function resolve(response) {
+    console.log(response)
+    XFetch(makeRequest('https://time.geekbang.org/column'),
+      function resolve(response) {
+      console.log(response)
+        XFetch(makeRequest('https://time.geekbang.org')
+          function resolve(response) {
+            console.log(response)
+          }, function reject(e) {
+            console.log(e)
+          })
+        }, function reject(e) {
+      console.log(e)
+    })
+  }, function reject(e) {
+    console.log(e)
+  })
 ```
-
 这段代码是先请求`time.geekbang.org/?category`，如果请求成功的话，那么再请求`time.geekbang.org/column`，如果再次请求成功的话，就继续请求`time.geekbang.org`。也就是说这段代码用了三层嵌套请求，就已经让代码变得混乱不堪，所以，我们还需要解决这种嵌套调用后混乱的代码结构。
 
 这段代码之所以看上去很乱，归结其原因有两点：
@@ -189,13 +195,12 @@ x3.catch(error => {
 })
 ```
 你可以观察上面这两段代码，重点关注下`Promise`的使用方式。
+* 首先我们引入了`Promise`，在调用`XFetch`时，会返回一个`Promise`对象。
+* 构建`Promise`对象时，需要传入一个`executor`函数，`XFetch`的主要业务流程都在`executor`函数中执行。
+* 如果运行在`excutor`函数中的业务执行成功了，会调用 resolve 函数；如果执行失败了，则调用`reject`函数。
+* 在`excutor`函数中调用`resolve`函数时，会触发`promise.then`设置的回调函数；而调用`reject`函数时，会触发`promise.catch`设置的回调函数。
 
-首先我们引入了`Promise`，在调用`XFetch`时，会返回一个`Promise`对象。
-构建`Promise`对象时，需要传入一个`executor`函数，`XFetch`的主要业务流程都在`executor`函数中执行。
-如果运行在`excutor`函数中的业务执行成功了，会调用 resolve 函数；如果执行失败了，则调用`reject`函数。
-在`excutor`函数中调用`resolve`函数时，会触发`promise.then`设置的回调函数；而调用`reject`函数时，会触发`promise.catch`设置的回调函数。
-
-以上简单介绍了`Promise`一些主要的使用方法，通过引入`Promise`，上面这段代码看起来就非常线性了，也非常符合人的直觉，是不是很酷？基于这段代码，我们就可以来分析`Promise`是如何消灭嵌套回调和合并多个错误处理了。
+通过引入`Promise`，上面这段代码看起来就非常线性了，也非常符合人的直觉，基于这段代码，我们就可以来分析`Promise`是如何消灭嵌套回调和合并多个错误处理了。
 
 我们先来看看`Promise`是怎么消灭嵌套回调的。产生嵌套函数的一个主要原因是在发起任务请求时会带上回调函数，这样当任务处理结束之后，下个任务就只能在回调函数中来处理了。
 
@@ -254,13 +259,13 @@ console.log(2)
 ```
 这段代码有四个`Promise`对象：`p0 ～ p4`。无论哪个对象里面抛出异常，都可以通过最后一个对象`p4.catch`来捕获异常，通过这种方式可以将所有`Promise`对象的错误合并到一个函数来处理，这样就解决了每个任务都需要单独处理异常的问题。
 
-之所以可以使用最后一个对象来捕获所有异常，是因为`Promise`对象的错误具有“冒泡”性质，会一直向后传递，直到被`onReject`函数处理或`catch`语句捕获为止。具备了这样“冒泡”的特性后，就不需要在每个`Promise`对象中单独捕获异常了。至于`Promise`错误的“冒泡”性质是怎么实现的，就留给你课后思考了。
+之所以可以使用最后一个对象来捕获所有异常，是因为`Promise`对象的错误具有“冒泡”性质，会一直向后传递，直到被`onReject`函数处理或`catch`语句捕获为止。具备了这样“冒泡”的特性后，就不需要在每个`Promise`对象中单独捕获异常了。
 
 通过这种方式，我们就消灭了嵌套调用和频繁的错误处理，这样使得我们写出来的代码更加优雅，更加符合人的线性思维。
 # Promise 与微任务
-那么 Promise 和微任务的关系到底体现哪里呢？
+那么`Promise`和微任务的关系到底体现哪里呢？
 
-我们可以结合下面这个简单的 Promise 代码来回答这个问题：
+我们可以结合下面这个简单的`Promise`代码来回答这个问题：
 ```js
 function executor(resolve, reject) {
   resolve(100)
@@ -283,21 +288,21 @@ demo.then(onResolve)
 这样按顺序陈述可能把你绕晕了，下面来模拟实现一个`Promise`，我们会实现它的构造函数、`resolve`方法以及`then`方法，以方便你能看清楚`Promise`的背后都发生了什么。这里我们就把这个对象称为`Bromise`，下面就是`Bromise`的实现代码：
 ```js
 function Bromise(executor) {
-var onResolve* = null
-var onReject* = null
-// 模拟实现 resolve 和 then，暂不支持 rejcet
-this.then = function (onResolve, onReject) {
-onResolve* = onResolve
-};
-function resolve(value) {
-//setTimeout(()=>{
-onResolve*(value)
-// },0)
-}
-executor(resolve, null);
+  var onResolve* = null
+  var onReject* = null
+  // 模拟实现 resolve 和 then，暂不支持 rejcet
+  this.then = function (onResolve, onReject) {
+    onResolve* = onResolve
+  };
+  function resolve(value) {
+  //setTimeout(()=>{
+    onResolve*(value)
+  // },0)
+  }
+  executor(resolve, null);
 }
 ```
-观察上面这段代码，我们实现了自己的构造函数、`resolve、then`方法。接下来我们使用`Bromise`来实现我们的业务代码，实现后的代码如下所示：
+观察上面这段代码，我们实现了自己的构造函数、`resolve`、`then`方法。接下来我们使用`Bromise`来实现我们的业务代码，实现后的代码如下所示：
 ```js
 function executor(resolve, reject) {
   resolve(100)
@@ -332,10 +337,10 @@ function resolve(value) {
 ```
 上面采用了定时器来推迟`onResolve`的执行，不过使用定时器的效率并不是太高，好在我们有微任务，所以`Promise`又把这个定时器改造成了微任务了，这样既可以让`onResolve\*`延时被调用，又提升了代码的执行效率。这就是`Promise`中使用微任务的原由了。
 # 总结
-首先，我们回顾了 Web 页面是单线程架构模型，这种模型决定了我们编写代码的形式——异步编程。基于异步编程模型写出来的代码会把一些关键的逻辑点打乱，所以这种风格的代码不符合人的线性思维方式。接下来我们试着把一些不必要的回调接口封装起来，简单封装取得了一定的效果，不过，在稍微复制点的场景下依然存在着回调地狱的问题。然后我们分析了产生回调地狱的原因：
+Web 页面是单线程架构模型，这种模型决定了我们编写代码的形式——异步编程。基于异步编程模型写出来的代码会把一些关键的逻辑点打乱，所以这种风格的代码不符合人的线性思维方式。接下来我们试着把一些不必要的回调接口封装起来，简单封装取得了一定的效果，不过，在稍微复制点的场景下依然存在着回调地狱的问题。然后我们分析了产生回调地狱的原因：
+* 多层嵌套的问题；
+* 每种任务的处理结果存在两种可能性（成功或失败），那么需要在每种任务执行结束后分别处理这两种可能性。
 
-多层嵌套的问题；
-每种任务的处理结果存在两种可能性（成功或失败），那么需要在每种任务执行结束后分别处理这两种可能性。
-Promise 通过回调函数延迟绑定、回调函数返回值穿透和错误“冒泡”技术解决了上面的两个问题。
+`Promise`通过回调函数延迟绑定、回调函数返回值穿透和错误“冒泡”技术解决了上面的两个问题。
 
-最后，我们还分析了 Promise 之所以要使用微任务是由 Promise 回调函数延迟绑定技术导致的。
+`Promise`之所以要使用微任务是由`Promise`回调函数延迟绑定技术导致的。

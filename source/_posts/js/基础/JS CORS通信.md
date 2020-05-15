@@ -1,7 +1,7 @@
 ---
 title: JS CORS通信
 date: 2019-03-15 17:08:16
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

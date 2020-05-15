@@ -1,7 +1,7 @@
 ---
 title: JS Array对象
 date: 2018-05-20 21:09:09
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

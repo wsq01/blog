@@ -2,7 +2,7 @@
 title: ES6数组
 date: 2019-06-15 16:17:08
 tags: [javascript, ES6]
-categories: [javascript, ES6, 前端]
+categories: [javascript, ES6]
 ---
 
 # 扩展运算符

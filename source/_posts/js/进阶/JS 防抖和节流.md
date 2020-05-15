@@ -1,7 +1,7 @@
 ---
 title: JS防抖和节流
 date: 2019-09-09 19:38:18
-tags: javascript
+tags: [javascript, JS进阶]
 categories: javascript
 ---
 

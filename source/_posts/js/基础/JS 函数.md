@@ -1,7 +1,7 @@
 ---
 title: JS函数
 date: 2018-04-11 22:32:27
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

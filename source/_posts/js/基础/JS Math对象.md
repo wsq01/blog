@@ -1,7 +1,7 @@
 ---
 title: JS Math对象
 date: 2018-05-08 20:38:07
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

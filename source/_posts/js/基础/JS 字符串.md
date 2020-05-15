@@ -1,7 +1,7 @@
 ---
 title: JS字符串
 date: 2018-03-14 22:26:09
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

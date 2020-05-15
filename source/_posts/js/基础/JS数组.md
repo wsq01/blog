@@ -1,7 +1,7 @@
 ---
 title: JS数组
 date: 2018-04-17 23:19:46
-tags: javascript
+tags: [javascript, JS基础]
 categories: javascript
 ---
 

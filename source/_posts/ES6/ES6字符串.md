@@ -2,7 +2,7 @@
 title: ES6字符串
 date: 2019-06-06 11:23:06
 tags: [javascript, ES6]
-categories: [javascript, ES6, 前端]
+categories: [javascript, ES6]
 ---
 
 # 字符串的遍历器接口

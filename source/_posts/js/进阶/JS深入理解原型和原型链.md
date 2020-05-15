@@ -1,7 +1,7 @@
 ---
 title: JS深入理解原型和原型链
 date: 2020-04-13 09:22:50
-tags: [javascript, 前端, 面试]
+tags: [javascript, JS进阶]
 categories: javascript
 ---
 
@@ -10,12 +10,12 @@ categories: javascript
 #### 函数对象的 prototype 属性
 我们创建的每一个函数都有一个`prototype`属性，这个属性是一个指针，指向一个对象。这个对象的用途是包含可以由特定类型的所有实例共享的属性和方法，简单来说，该函数实例化的所有对象的`__proto__`的属性指向这个对象，它是该函数所有实例化对象的原型。
 ```js
-function Person(){
+function Person() {
 
 }
 
 // 为原型对象添加方法
-Person.prototype.sayName = function(){
+Person.prototype.sayName = function() {
   alert(this.name);
 }
 ```
