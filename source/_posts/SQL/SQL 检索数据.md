@@ -1,4 +1,9 @@
-
+---
+title: SQL 检索数据
+date: 2020-02-05 15:15:09
+tags: [SQL]
+categories: [SQL]
+---
 
 
 `SELECT`的作用是从一个表或多个表中检索出想要的数据行。
@@ -7,23 +12,24 @@
 
 下面这个王者荣耀英雄数据表里一共有 69 个英雄，23 个属性值（不包括英雄名`name`）。SQL 文件见[Github 地址](https://github.com/cystanford/sql_heros_data)。
 
-| `id` | `name` | `hp_max` | `hp_growth` | `hp_start` | ... | `role_assist` | `birthdate` |
-| :-- | :-- | :-- | :-- | :-- | :-- | :-- | :-- |
-| 10000 | 夏侯淳 | 7350 | 288.8 | 3307 | | 战士 | 2016-07-19 |
-| 10001 | 钟无艳 | 7000 | 275 | 3150 | | 坦克 |  |
-| 10002 | 张飞 | 8341 | 329 | 3450 | | 辅助 |  |
-| ... | ... | ... | ... | ... | ... | ... | ... | ... |
-| 10068 | 百里守约 | 5611 | 185 | 3019 | | 战士 | 2017-08-08 |
+| `id` | `name` | `hp_max` | `hp_growth` | ... | `role_assist` | `birthdate` |
+| :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| 10000 | 夏侯淳 | 7350 | 288.8 | | 战士 | 2016-07-19 |
+| 10001 | 钟无艳 | 7000 | 275 | | 坦克 |  |
+| 10002 | 张飞 | 8341 | 329 | | 辅助 |  |
+| ... | ... | ... | ... | ... | ... | ... |
+| 10068 | 百里守约 | 5611 | 185 | | 战士 | 2017-08-08 |
 
 数据表中这 24 个字段（除了`id`以外），分别代表的含义见下图。
-|||||
-| :-- | :-- | :-- | :-- |
-| `name`  英雄名称 | `hp_max`  最大生命 | `hp_growth`  生命成长 | `hp_start`  初始生命 |
-| `mp_max`  最大法力 | `mp_growth`  法力成长 | `mp_start`  初始法力 | `attack_max`  最高物攻 |
-| `attack_growth`  物攻成长 | `attack_start`  初始物攻 | `defense_max`  最大物防 | `defense_growth`  物防成长 |
-| `defense_start`  初始物防 | `hp_5s_max`  最大没5秒回血 | `hp_5s_growth`  每5秒回血成长 | `hp_5s_start`  初始每5秒回血 |
-| `mp_5s_max`  最大每5秒回蓝 | `mp_5s_growth`  每5s回蓝成长 | `mp_5s_start`  初始每5秒回蓝 | `attack_range`  攻击范围 |
-| `attack_speed_max`  最大攻速 | `role_main`  主要定位 | `role_assist`  次要定位 | `birthdate`  上线时间 |
+
+| | | | |
+| :--: | :--: | :--: | :--: |
+| `name` <br> 英雄名称 | `hp_max` <br> 最大生命 | `hp_growth` <br> 生命成长 | `hp_start` <br> 初始生命 |
+| `mp_max` <br> 最大法力 | `mp_growth` <br> 法力成长 | `mp_start` <br> 初始法力 | `attack_max` <br> 最高物攻 |
+| `attack_growth` <br> 物攻成长 | `attack_start` <br> 初始物攻 | `defense_max` <br> 最大物防 | `defense_growth` <br> 物防成长 |
+| `defense_start` <br> 初始物防 | `hp_5s_max` <br> 最大没5秒回血 | `hp_5s_growth` <br> 每5秒回血成长 | `hp_5s_start` <br> 初始每5秒回血 |
+| `mp_5s_max` <br> 最大每5秒回蓝 | `mp_5s_growth` <br> 每5s回蓝成长 | `mp_5s_start` <br> 初始每5秒回蓝 | `attack_range` <br> 攻击范围 |
+| `attack_speed_max` <br> 最大攻速 | `role_main` <br> 主要定位 | `role_assist` <br> 次要定位 | `birthdate` <br> 上线时间 |
 
 ## 查询列
 如果我们想要对数据表中的某一列进行检索，在`SELECT`后面加上这个列的字段名即可。比如我们想要检索数据表中都有哪些英雄。
@@ -33,7 +39,7 @@ SQL：SELECT name FROM heros
 你可以看到这样就等于单独输出了`name`这一列。
 
 | name |
-| :-- |
+| :--: |
 | 夏侯淳 |
 | 钟无艳 |
 | ... |
@@ -61,8 +67,8 @@ SQL：SELECT name AS n, hp_max AS hm, mp_max AS mm, attack_max AS am, defense_ma
 ```sql
 SQL：SELECT '王者荣耀' as platform, name FROM heros
 ```
-| plantform | name |
-| :-- | :-- |
+| `plantform` | `name` |
+| :--: | :--: |
 | 王者荣耀 | 夏侯淳 |
 | 王者荣耀 | 钟无艳 |
 | 王者荣耀 | ... |
@@ -138,7 +144,7 @@ SQL：SELECT name, hp_max FROM heros ORDER BY mp_max, hp_max DESC
 ```sql
 SQL：SELECT name, hp_max FROM heros ORDER BY hp_max DESC LIMIT 5
 ```
-| name | hp_max |
+| `name` | `hp_max` |
 | :--: | :--: |
 | 廉颇 | 9328 |
 | 白起 | 8638 |
