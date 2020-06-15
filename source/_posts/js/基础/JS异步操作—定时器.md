@@ -1,6 +1,6 @@
 ---
 title: JS异步操作——定时器
-date: 2018-11-04 11:09:56
+date: 2018-11-04 16:09:56
 tags: [javascript, 前端]
 categories: javascript
 ---

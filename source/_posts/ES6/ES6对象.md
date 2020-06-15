@@ -1,8 +1,8 @@
 ---
 title: ES6对象
 date: 2019-06-16 14:09:01
-tags: [javascript, ES6]
-categories: [javascript, ES6]
+tags: [ES6]
+categories: [ES6]
 ---
 
 

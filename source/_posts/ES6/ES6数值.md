@@ -1,8 +1,8 @@
 ---
 title: ES6数值
 date: 2019-06-10 11:25:24
-tags: [javascript, ES6]
-categories: [javascript, ES6]
+tags: [ES6]
+categories: [ES6]
 ---
 
 # 二进制和八进制表示法

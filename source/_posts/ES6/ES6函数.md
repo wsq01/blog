@@ -1,8 +1,8 @@
 ---
 title: ES6函数
 date: 2019-06-14 21:55:21
-tags: [javascript, ES6]
-categories: [javascript, ES6]
+tags: [ES6]
+categories: [ES6]
 ---
 
 # 函数参数的默认值

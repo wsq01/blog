@@ -129,7 +129,7 @@ gitalk:
 # GitHub Ribbons-封面右上角的forkme
 github: 
   # (关闭请设置为false)
-  url: https://github.com/Shen-Yu/hexo-theme-ayer
+  url: https://github.com/wsq01/
 
 # 网易云音乐插件
 music:

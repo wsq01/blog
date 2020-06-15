@@ -26,7 +26,7 @@ categories: [SQL]
 ```sql
 SQL：SELECT name, hp_max FROM heros WHERE hp_max > 6000
 ```
-| `name` | `hp_max` |
+| name | hp_max |
 | :--: | :--: |
 | 夏侯淳 | 7350 |
 | ... | ... |
@@ -36,7 +36,7 @@ SQL：SELECT name, hp_max FROM heros WHERE hp_max > 6000
 ```sql
 SQL：SELECT name, hp_max FROM heros WHERE hp_max BETWEEN 5399 AND 6811
 ```
-| `name` | `hp_max` |
+| name | hp_max |
 | :--: | :--: |
 | 芈月 | 6164 |
 | ... | ... |
@@ -65,7 +65,7 @@ SQL：SELECT name, hp_max FROM heros WHERE hp_max IS NULL
 ```sql
 SQL：SELECT name, hp_max, mp_max FROM heros WHERE hp_max > 6000 AND mp_max > 1700 ORDER BY (hp_max+mp_max) DESC
 ```
-| `name` | `hp_max` | `mp_max` |
+| name | hp_max | mp_max |
 | :--: | :--: | :--: |
 | 廉颇 | 9328 | 1708 |
 | ... | ... | ... |
@@ -96,7 +96,7 @@ ORDER BY (hp_max + mp_max) DESC
 
 第二部分是关于上线时间的条件过滤。`NOT`代表否，因为我们要找到不在`2016-01-01`到`2017-01-01`之间的日期，因此用到了`NOT BETWEEN '2016-01-01' AND '2017-01-01'`。同时我们是在对日期类型数据进行检索，所以使用到了`DATE`函数，将字段`birthdate`转化为日期类型再进行比较。
 
-| `name` | `role_main` | `role_assist` | `hp_max` | `mp_max` | `birthdate` |
+| name | role_main | role_assist | hp_max | mp_max | birthdate |
 | :--: | :--: | :--: | :--: | :--: | :--: |
 | 张良 | 法师 | | 5799 | 1988 | 2015-10-26 |
 | 貂蝉 | 法师 | 刺客 | 5611 | 1960 | 2015-12-15 |
@@ -126,4 +126,4 @@ SQL：SELECT name FROM heros WHERE name LIKE '_% 太 %'
 
 同样需要说明的是，在 Access 中使用（`?`）来代替（`_`），而且在 DB2 中是不支持通配符（`_`）的，因此你需要在使用的时候查阅相关的 DBMS 文档。
 
-你能看出来通配符还是很有用的，尤其是在进行字符串匹配的时候。不过在实际操作过程中，我还是建议你尽量少用通配符，因为它需要消耗数据库更长的时间来进行匹配。即使你对 LIKE 检索的字段进行了索引，索引的价值也可能会失效。如果要让索引生效，那么`LIKE`后面就不能以（`%`）开头，比如使用`LIKE '%太%'或LIKE '%太'`的时候就会对全表进行扫描。如果使用`LIKE '太%'`，同时检索的字段进行了索引的时候，则不会进行全表扫描。
+通配符还是很有用的，尤其是在进行字符串匹配的时候。不过在实际操作过程中，还是尽量少用通配符，因为它需要消耗数据库更长的时间来进行匹配。即使你对`LIKE`检索的字段进行了索引，索引的价值也可能会失效。如果要让索引生效，那么`LIKE`后面就不能以（`%`）开头，比如使用`LIKE '%太%'或LIKE '%太'`的时候就会对全表进行扫描。如果使用`LIKE '太%'`，同时检索的字段进行了索引的时候，则不会进行全表扫描。

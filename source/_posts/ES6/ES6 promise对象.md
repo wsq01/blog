@@ -1,8 +1,8 @@
 ---
 title: ES6 promise对象
 date: 2019-06-28 20:15:34
-tags: [javascript, ES6]
-categories: [javascript, ES6]
+tags: [ES6]
+categories: [ES6]
 ---
 
 

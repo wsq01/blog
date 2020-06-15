@@ -1,8 +1,8 @@
 ---
 title: ES6 Set和Map数据结构
 date: 2019-06-60 21:51:09
-tags: [javascript, ES6]
-categories: [javascript, ES6]
+tags: [ES6]
+categories: [ES6]
 ---
 
 

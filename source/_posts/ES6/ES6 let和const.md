@@ -1,8 +1,8 @@
 ---
 title: ES6 let和const
 date: 2019-06-03 20:12:15
-tags: [javascript, ES6]
-categories: [javascript, ES6]
+tags: [ES6]
+categories: [ES6]
 ---
 
 

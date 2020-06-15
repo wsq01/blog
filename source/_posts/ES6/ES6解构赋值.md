@@ -1,8 +1,8 @@
 ---
 title: ES6解构赋值
 date: 2019-06-04 21:15:05
-tags: [javascript, ES6]
-categories: [javascript, ES6]
+tags: [ES6]
+categories: [ES6]
 ---
 
 # 数组的解构赋值

@@ -1,8 +1,8 @@
 ---
 title: ES6 Module语法
 date: 2019-07-10 21:35:14
-tags: [javascript, ES6]
-categories: [javascript, ES6]
+tags: [ES6]
+categories: [ES6]
 ---
 
 

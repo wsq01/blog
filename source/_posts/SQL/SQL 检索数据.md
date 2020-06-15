@@ -12,7 +12,7 @@ categories: [SQL]
 
 下面这个王者荣耀英雄数据表里一共有 69 个英雄，23 个属性值（不包括英雄名`name`）。SQL 文件见[Github 地址](https://github.com/cystanford/sql_heros_data)。
 
-| `id` | `name` | `hp_max` | `hp_growth` | ... | `role_assist` | `birthdate` |
+| id | name | hp_max | hp_growth | ... | role_assist | birthdate |
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
 | 10000 | 夏侯淳 | 7350 | 288.8 | | 战士 | 2016-07-19 |
 | 10001 | 钟无艳 | 7000 | 275 | | 坦克 |  |
@@ -24,12 +24,12 @@ categories: [SQL]
 
 | | | | |
 | :--: | :--: | :--: | :--: |
-| `name` <br> 英雄名称 | `hp_max` <br> 最大生命 | `hp_growth` <br> 生命成长 | `hp_start` <br> 初始生命 |
-| `mp_max` <br> 最大法力 | `mp_growth` <br> 法力成长 | `mp_start` <br> 初始法力 | `attack_max` <br> 最高物攻 |
-| `attack_growth` <br> 物攻成长 | `attack_start` <br> 初始物攻 | `defense_max` <br> 最大物防 | `defense_growth` <br> 物防成长 |
-| `defense_start` <br> 初始物防 | `hp_5s_max` <br> 最大没5秒回血 | `hp_5s_growth` <br> 每5秒回血成长 | `hp_5s_start` <br> 初始每5秒回血 |
-| `mp_5s_max` <br> 最大每5秒回蓝 | `mp_5s_growth` <br> 每5s回蓝成长 | `mp_5s_start` <br> 初始每5秒回蓝 | `attack_range` <br> 攻击范围 |
-| `attack_speed_max` <br> 最大攻速 | `role_main` <br> 主要定位 | `role_assist` <br> 次要定位 | `birthdate` <br> 上线时间 |
+| name <br> 英雄名称 | hp_max <br> 最大生命 | hp_growth <br> 生命成长 | hp_start <br> 初始生命 |
+| mp_max <br> 最大法力 | mp_growth <br> 法力成长 | mp_start <br> 初始法力 | attack_max <br> 最高物攻 |
+| attack_growth <br> 物攻成长 | attack_start <br> 初始物攻 | defense_max <br> 最大物防 | defense_growth` <br> 物防成长 |
+| defense_start <br> 初始物防 | hp_5s_max <br> 最大没5秒回血 | hp_5s_growth <br> 每5秒回血成长 | hp_5s_start <br> 初始每5秒回血 |
+| mp_5s_max <br> 最大每5秒回蓝 | mp_5s_growth <br> 每5s回蓝成长 | mp_5s_start <br> 初始每5秒回蓝 | attack_range <br> 攻击范围 |
+| attack_speed_max <br> 最大攻速 | role_main <br> 主要定位 | role_assist <br> 次要定位 | birthdate <br> 上线时间 |
 
 ## 查询列
 如果我们想要对数据表中的某一列进行检索，在`SELECT`后面加上这个列的字段名即可。比如我们想要检索数据表中都有哪些英雄。
@@ -194,10 +194,10 @@ LIMIT 2 # 顺序 7
 SQL 的执行原理。
 
 首先，你可以注意到，`SELECT`是先执行`FROM`这一步的。在这个阶段，如果是多张表联查，还会经历下面的几个步骤：
+1. 首先先通过`CROSS JOIN`求笛卡尔积，相当于得到虚拟表`vt（virtual table）1-1`；
+2. 通过`ON`进行筛选，在虚拟表`vt1-1`的基础上进行筛选，得到虚拟表`vt1-2`；
+3. 添加外部行。如果我们使用的是左连接、右链接或者全连接，就会涉及到外部行，也就是在虚拟表`vt1-2`的基础上增加外部行，得到虚拟表`vt1-3`。
 
-首先先通过`CROSS JOIN`求笛卡尔积，相当于得到虚拟表`vt（virtual table）1-1`；
-通过`ON`进行筛选，在虚拟表`vt1-1`的基础上进行筛选，得到虚拟表`vt1-2`；
-添加外部行。如果我们使用的是左连接、右链接或者全连接，就会涉及到外部行，也就是在虚拟表`vt1-2`的基础上增加外部行，得到虚拟表`vt1-3`。
 当然如果我们操作的是两张以上的表，还会重复上面的步骤，直到所有表都被处理完为止。这个过程得到是我们的原始数据。
 
 当我们拿到了查询数据表的原始数据，也就是最终的虚拟表`vt1`，就可以在此基础上再进行`WHERE`阶段。在这个阶段中，会根据`vt1`表的结果进行筛选过滤，得到虚拟表`vt2`。
@@ -214,8 +214,8 @@ SQL 的执行原理。
 
 当然我们在写`SELECT`语句的时候，不一定存在所有的关键字，相应的阶段就会省略。
 
-同时因为 SQL 是一门类似英语的结构化查询语言，所以我们在写`SELECT`语句的时候，还要注意相应的关键字顺序，所谓底层运行的原理，就是我们刚才讲到的执行顺序。
-# 什么情况下用 SELECT*，如何提升 SELECT 查询效率？
+同时因为 SQL 是一门类似英语的结构化查询语言，所以我们在写`SELECT`语句的时候，还要注意相应的关键字顺序。
+# 什么情况下用 SELECT *，如何提升 SELECT 查询效率？
 当我们初学`SELECT`语法的时候，经常会使用`SELECT *`，因为使用方便。实际上这样也增加了数据库的负担。所以如果我们不需要把所有列都检索出来，还是先指定出所需的列名，因为写清列名，可以减少数据表查询的网络传输量，而且考虑到在实际的工作中，我们往往不需要全部的列名，因此你需要养成良好的习惯，写出所需的列名。
 
 如果我们只是练习，或者对数据表进行探索，那么是可以使用`SELECT *`的。它的查询效率和把所有列名都写出来再进行查询的效率相差并不大。这样可以方便你对数据表有个整体的认知。但是在生产环境下，不推荐你直接使用`SELECT *`进行查询。
