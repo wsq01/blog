@@ -1,5 +1,5 @@
 ---
-title: call apply bind
+title: JS History对象
 date: 2019-03-20 22:10:43
 tags: [javascript, JS基础]
 categories: javascript
