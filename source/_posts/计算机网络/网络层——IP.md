@@ -5,8 +5,6 @@ tags: 计算机网络
 categories: 计算机网络
 ---
 
-网际协议 IP 是 TCP/IP 体系中两个最主要的协议之一。
-
 与IP协议配套使用的还有3个协议：
 * 地址解析协议 ARP(`Address Resolution Protocol`)
 * 网际控制报文协议 ICMP(`Internet Control Message Protocol`)

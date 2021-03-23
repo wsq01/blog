@@ -1,4 +1,9 @@
-
+---
+title: MySQL 安装
+date: 2020-04-02 11:55:41
+tags: [MySQL]
+categories: [MySQL]
+---
 
 # 下载安装MySQL教辅
 下载地址：`https://dev.mysql.com/downloads/installer/`。
