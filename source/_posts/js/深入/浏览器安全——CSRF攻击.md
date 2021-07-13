@@ -65,22 +65,6 @@ number
 ## 3. 引诱用户点击链接
 除了自动发起 Get 和 Post 请求之外，还有一种方式是诱惑用户点击黑客站点上的链接，这种方式通常出现在论坛或者恶意邮件上。黑客会采用很多方式去诱惑用户点击链接，示例代码如下所示：
 ```html
-<!DOCTYPE html>
-<html>
-  <body>
-    <h1> 黑客的站点：CSRF 攻击演示 </h1>
-    <form id='hacker-form' action="https://time.geekbang.org/sendcoin" method=POST>
-      <input type="hidden" name="user" value="hacker" />
-      <input type="hidden" name="number" value="100" />
-    </form>
-    <script> document.getElementById('hacker-form').submit(); </script>
-  </body>
-</html>
-```
-在这段代码中，我们可以看到黑客在他的页面中构建了一个隐藏的表单，该表单的内容就是极客时间的转账接口。当用户打开该站点之后，这个表单会被自动执行提交；当表单被提交之后，服务器就会执行转账操作。因此使用构建自动提交表单这种方式，就可以自动实现跨站点 POST 数据提交。
-## 3. 引诱用户点击链接
-除了自动发起 Get 和 Post 请求之外，还有一种方式是诱惑用户点击黑客站点上的链接，这种方式通常出现在论坛或者恶意邮件上。黑客会采用很多方式去诱惑用户点击链接，示例代码如下所示：
-```html
 <div>
   <img width=150 src=http://images.xuejuzi.cn/1612/1_161230185104_1.jpg />
   <a href="https://time.geekbang.org/sendcoin?user=hacker&number=100" taget="_blank">
@@ -115,13 +99,13 @@ number
 
 在 HTTP 响应头中，通过`set-cookie`字段设置`Cookie`时，可以带上`SameSite`选项，如下：
 ```
-1 set-cookie: 1P_JAR=2019-10-20-06; expires=Tue, 19-Nov-2019 06:36:21 GMT; path=/
+set-cookie: 1P_JAR=2019-10-20-06; expires=Tue, 19-Nov-2019 06:36:21 GMT; path=/
 ```
 `SameSite`选项通常有`Strict、Lax`和`None`三个值。
 `Strict`最为严格。如果`SameSite`的值是`Strict`，那么浏览器会完全禁止第三方`Cookie`。简言之，如果你从极客时间的页面中访问 InfoQ 的资源，而 InfoQ 的某些`Cookie`设置了`SameSite = Strict`的话，那么这些`Cookie`是不会被发送到 InfoQ 的服
 务器上的。只有你从 InfoQ 的站点去请求 InfoQ 的资源时，才会带上这些`Cookie`。
 
-`Lax`相对宽松一点。在跨站点的情况下，从第三方站点的链接打开和从第三方站点提交Get 方式的表单这两种方式都会携带`Cookie`。但如果在第三方站点中使用 Post 方法，或者通过`img、iframe`等标签加载的 URL，这些场景都不会携带`Cookie`。
+`Lax`相对宽松一点。在跨站点的情况下，从第三方站点的链接打开和从第三方站点提交`Get`方式的表单这两种方式都会携带`Cookie`。但如果在第三方站点中使用 Post 方法，或者通过`img、iframe`等标签加载的 URL，这些场景都不会携带`Cookie`。
 
 而如果使用`None`的话，在任何情况下都会发送`Cookie`数据。
 
