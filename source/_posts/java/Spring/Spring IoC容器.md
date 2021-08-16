@@ -1,6 +1,6 @@
 ---
 title: Spring Ioc容器
-date: 2021-04-06 17:43:22
+date: 2021-05-16 17:43:22
 tags: [Spring]
 categories: [Spring]
 ---
@@ -14,7 +14,7 @@ Spring 通过读取 XML 或 Java 注解中的信息来获取哪些对象需要�
 
 Spring 提供 2 种不同类型的 IoC 容器，即`BeanFactory`和`ApplicationContext`容器。
 ## BeanFactory容器
-`BeanFactory`是最简单的 IoC 容器，由`org.springframework.beans.facytory.BeanFactory`接口定义，采用懒加载，所以容器启动比较快。
+`BeanFactory`是最简单的容器，由`org.springframework.beans.facytory.BeanFactory`接口定义，采用懒加载，所以容器启动比较快。
 
 为了兼容 Spring 集成的第三方框架（如`BeanFactoryAware`、`InitializingBean`），所以目前仍然保留了该接口。
 
@@ -96,26 +96,26 @@ Spring 配置文件支持两种格式，分别是`XML`文件格式和`Properties
 
 | 属性名称 | 描述 |
 | :--: | :--: |
-| id | 是一个 Bean 的唯一标识符，Spring 容器对 Bean 的配置和管理都通过该属性完成 |
-| name | Spring 容器同样可以通过此属性对容器中的 Bean 进行配置和管理，name 属性中可以为 Bean 指定多个名称，每个名称之间用逗号或分号隔开 |
-| class | 该属性指定了 Bean 的具体实现类，它必须是一个完整的类名，使用类的全限定名 |
-| scope | 用于设定 Bean 实例的作用域，其属性值有 singleton（单例）、prototype（原型）、request、session 和 global Session。默认值是 singleton |
-| constructor-arg | `<bean>`元素的子元素，可以使用此元素传入构造参数进行实例化。该元素的 index 属性指定构造参数的序号（从 0 开始），type 属性指定构造参数的类型 |
-| property | `<bean>`元素的子元素，用于调用 Bean 实例中的 Set 方法完成属性赋值，从而完成依赖注入。该元素的 name 属性指定 Bean 实例中的相应属性名 |
-| ref | `<property>`和`<constructor-arg>`等元素的子元素，该元素中的 bean 属性用于指定对 Bean 工厂中某个 Bean 实例的引用 |
-| value | `<property>`和`<constractor-arg>`等元素的子元素，用于直接指定一个常量值 |
-| list | 用于封装 List 或数组类型的依赖注入 |
-| set | 用于封装 Set 类型属性的依赖注入 |
-| map | 用于封装 Map 类型属性的依赖注入 |
-| entry | `<map>`元素的子元素，用于设置一个键值对。其 key 属性指定字符串类型的键值，ref 或 value 子元素指定其值 |
-| init-method | 容器加载 Bean 时调用该方法，类似于 Servlet 中的 init() 方法 |
-| destroy-method | 容器删除 Bean 时调用该方法，类似于 Servlet 中的 destroy() 方法。该方法只在 scope=singleton 时有效 |
-| lazy-init | 懒加载，值为 true，容器在首次请求时才会创建 Bean 实例；值为 false，容器在启动时创建 Bean 实例。该方法只在 scope=singleton 时有效 |
+| `id` | 是一个`Bean`的唯一标识符，Spring 容器对`Bean`的配置和管理都通过该属性完成 |
+| `name` | Spring 容器同样可以通过此属性对容器中的`Bean`进行配置和管理，`name`属性中可以为`Bean`指定多个名称，每个名称之间用逗号或分号隔开 |
+| `class` | 该属性指定了`Bean`的具体实现类，它必须是一个完整的类名，使用类的全限定名 |
+| `scope` | 用于设定`Bean`实例的作用域，其属性值有`singleton`（单例）、`prototype`（原型）、`request、session`和`global Session`。默认值是`singleton` |
+| `constructor-arg` | `<bean>`元素的子元素，可以使用此元素传入构造参数进行实例化。该元素的`index`属性指定构造参数的序号（从 0 开始），`type`属性指定构造参数的类型 |
+| `property` | `<bean>`元素的子元素，用于调用`Bean`实例中的`Set`方法完成属性赋值，从而完成依赖注入。该元素的`name`属性指定`Bean`实例中的相应属性名 |
+| `ref` | `<property>`和`<constructor-arg>`等元素的子元素，该元素中的`bean`属性用于指定对`Bean`工厂中某个`Bean`实例的引用 |
+| `value` | `<property>`和`<constractor-arg>`等元素的子元素，用于直接指定一个常量值 |
+| `list` | 用于封装`List`或数组类型的依赖注入 |
+| `set` | 用于封装`Set`类型属性的依赖注入 |
+| `map` | 用于封装`Map`类型属性的依赖注入 |
+| `entry` | `<map>`元素的子元素，用于设置一个键值对。其`key`属性指定字符串类型的键值，`ref`或`value`子元素指定其值 |
+| `init-method` | 容器加载`Bean`时调用该方法 |
+| `destroy-method` | 容器删除`Bean`时调用该方法，该方法只在`scope=singleton`时有效 |
+| `lazy-init` | 懒加载，值为`true`，容器在首次请求时才会创建`Bean`实例；值为`false`，容器在启动时创建`Bean`实例。该方法只在`scope=singleton`时有效 |
 
 # Bean作用域
 在配置文件中，除了可以定义`Bean`的属性值和相互之间的依赖关系，还可以声明`Bean`的作用域。例如，如果每次获取`Bean`时，都需要一个`Bean`实例，那么应该将`Bean`的`scope`属性定义为`prototype`，如果 Spring 需要每次都返回一个相同的`Bean`实例，则应将`Bean`的`scope`属性定义为`singleton`。
 ## 作用域的种类
-Spring 容器在初始化一个`Bean`的实例时，同时会指定该实例的作用域。Spring 5 支持以下 6 种作用域。
+Spring 容器在初始化一个`Bean`的实例时，同时会指定该实例的作用域。Spring 支持以下 6 种作用域。
 1. `singleton`
 默认值，单例模式，表示在 Spring 容器中只有一个`Bean`实例，`Bean`以单例的方式存在。
 2. `prototype`
@@ -123,7 +123,7 @@ Spring 容器在初始化一个`Bean`的实例时，同时会指定该实例的�
 3. `request`
 每次 HTTP 请求，容器都会创建一个`Bean`实例。该作用域只在当前 HTTP `Request`内有效。
 4. `session`
-同一个 HTTP Session 共享一个`Bean`实例，不同的`Session`使用不同的`Bean`实例。该作用域仅在当前 HTTP `Session`内有效。
+同一个 HTTP `Session`共享一个`Bean`实例，不同的`Session`使用不同的`Bean`实例。该作用域仅在当前 HTTP `Session`内有效。
 5. `application`
 同一个 Web 应用共享一个`Bean`实例，该作用域在当前`ServletContext`内有效。
 类似于`singleton`，不同的是，`singleton`表示每个 IoC 容器中仅有一个`Bean`实例，而同一个 Web 应用中可能会有多个 IoC 容器，但一个 Web 应用只会有一个`ServletContext`，也可以说`application`才是 Web 应用中货真价实的单例模式。
@@ -154,14 +154,12 @@ java.lang.IllegalStateException: No Scope registered for scope name 'xxx'
 ```
 # Bean生命周期
 Spring 根据`Bean`的作用域来选择管理方式。对于`singleton`作用域的`Bean`，Spring 能够精确地知道该`Bean`何时被创建，何时初始化完成，以及何时被销毁；而对于`prototype`作用域的`Bean`，Spring 只负责创建，当容器创建了`Bean`的实例后，`Bean`的实例就交给客户端代码管理，Spring 容器将不再跟踪其生命周期。
-
-了解 Spring 生命周期的意义就在于，可以利用`Bean`在其存活期间的指定时刻完成一些相关操作。这种时刻可能有很多，但一般情况下，会在`Bean`被初始化后和被销毁前执行一些相关操作。
 ## Bean生命周期执行流程
 Spring 容器在确保一个`Bean`能够使用之前，会进行很多工作。Spring 容器中 Bean 的生命周期流程：
 
 {% asset_img 1.png  Bean 的生命周期 %}
 
-`Bean`生命周期的整个执行过程描述如下。
+`Bean`生命周期的整个执行过程描述如下：
 1. Spring 启动，查找并加载需要被 Spring 管理的`Bean`，并实例化`Bean`。
 2. 利用依赖注入完成`Bean`中所有属性值的配置注入。
 3. 如果`Bean`实现了`BeanNameAware`接口，则 Spring 调用`Bean`的`setBeanName()`方法传入当前`Bean`的`id`值。
@@ -174,9 +172,11 @@ Spring 容器在确保一个`Bean`能够使用之前，会进行很多工作。S
 10. 如果在`<bean>`中指定了该`Bean`的作用范围为`scope="singleton"`，则将该`Bean`放入 Spring IoC 的缓存池中，将触发 Spring 对该`Bean`的生命周期管理；如果在`<bean>`中指定了该`Bean`的作用范围为`scope="prototype"`，则将该`Bean`交给调用者，调用者管理该`Bean`的生命周期，Spring 不再管理该`Bean`。
 11. 如果`Bean`实现了`DisposableBean`接口，则 Spring 会调用`destory()`方法将 Spring 中的`Bean`销毁；如果在配置文件中通过`destory-method`属性指定了`Bean`的销毁方法，则 Spring 将调用该方法对`Bean`进行销毁。
 
-Spring 为`Bean`提供了细致全面的生命周期过程，通过实现特定的接口或`<bean>`的属性设置，都可以对`Bean`的生命周期过程产生影响。建议不要过多地使用`Bean`实现接口，因为这样会导致代码的耦合性过高。
+Spring 为`Bean`提供了细致全面的生命周期过程，通过实现特定的接口或`<bean>`的属性设置，都可以对`Bean`的生命周期过程产生影响。
 
-Spring 官方提供了 3 种方法实现初始化回调和销毁回调：
+了解 Spring 生命周期的意义就在于，可以利用`Bean`在其存活期间的指定时刻完成一些相关操作。一般情况下，会在`Bean`被初始化后和被销毁前执行一些相关操作。
+
+Spring 提供了 3 种方法实现初始化回调和销毁回调：
 * 实现`InitializingBean`和`DisposableBean`接口；
 * 在 XML 中配置`init-method`和`destory-method`；
 * 使用`@PostConstruct`和`@PreDestory`注解。
@@ -227,10 +227,10 @@ void destroy() throws Exception;
 您可以实现以上接口，在`destroy`方法内指定`Bean`初始化后需要执行的操作。
 ```java
 <bean id="..." class="..." />
-public class User implements InitializingBean {
+public class User implements DisposableBean {
   @Override
-  public void afterPropertiesSet() throws Exception {
-    System.out.println("调用接口：InitializingBean，方法：afterPropertiesSet，无参数");
+  public void destroy() throws Exception {
+    System.out.println("调用接口：DisposableBean，方法：destroy，无参数");
   }
 }
 ```
@@ -245,7 +245,7 @@ public class User {
 }
 ```
 ### 3. 使用注解
-使用 @PreDestory 注解标明该方法为 Bean 销毁前执行的方法。
+使用`@PreDestory`注解标明该方法为 Bean 销毁前执行的方法。
 ```java
 public class ExampleBean {
   @PreDestory 
@@ -281,7 +281,108 @@ public interface BeanPostProcessor {
 `postProcessBeforeInitialization`在`Bean`实例化、依赖注入后，初始化前调用。`postProcessAfterInitialization`在`Bean`实例化、依赖注入、初始化都完成后调用。
 
 当需要添加多个后置处理器实现类时，默认情况下 Spring 容器会根据后置处理器的定义顺序来依次调用。也可以通过实现`Ordered`接口的`getOrder`方法指定后置处理器的执行顺序。该方法返回值为整数，默认值为 0，值越大优先级越低。
-
+## 示例
+```java
+package net.biancheng;
+public class HelloWorld {
+  private String message;
+  public void setMessage(String message) {
+    this.message = message;
+  }
+  public void getMessage() {
+    System.out.println("Message : " + message);
+  }
+  public void init() {
+    System.out.println("Bean正在初始化");
+  }
+  public void destroy() {
+    System.out.println("Bean将要被销毁");
+  }
+}
+```
+```java
+package net.biancheng;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.core.Ordered;
+public class InitHelloWorld implements BeanPostProcessor, Ordered {
+  @Override
+  public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    System.out.println("A Before : " + beanName);
+    return bean;
+  }
+  @Override
+  public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    System.out.println("A After : " + beanName);
+    return bean;
+  }
+  @Override
+  public int getOrder() {
+    return 5;
+  }
+}
+```
+```java
+package net.biancheng;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.core.Ordered;
+public class InitHelloWorld2 implements BeanPostProcessor, Ordered {
+  @Override
+  public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    System.out.println("B Before : " + beanName);
+    return bean;
+  }
+  @Override
+  public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    System.out.println("B After : " + beanName);
+    return bean;
+  }
+  @Override
+  public int getOrder() {
+    return 0;
+  }
+}
+```
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+  <bean id="helloWorld" class="net.biancheng.HelloWorld"
+    init-method="init" destroy-method="destroy">
+    <property name="message" value="Hello World！" />
+  </bean>
+  <!-- 注册处理器 -->
+  <bean class="net.biancheng.InitHelloWorld" />
+  <bean class="net.biancheng.InitHelloWorld2" />
+</beans>
+```
+```java
+package net.biancheng;
+import org.springframework.context.support.AbstractApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class MainApp {
+  public static void main(String[] args) {
+    AbstractApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+    HelloWorld obj = (HelloWorld) context.getBean("helloWorld");
+    obj.getMessage();
+    context.registerShutdownHook();
+  }
+}
+```
+运行结果如下。
+```
+B Before : helloWorld
+A Before : helloWorld
+Bean正在初始化
+B After : helloWorld
+A After : helloWorld
+Message : Hello World！
+Bean将要被销毁
+```
+由运行结果可以看出，`postProcessBeforeInitialization`方法是在`Bean`实例化和依赖注入后，自定义初始化方法前执行的。而`postProcessAfterInitialization`方法是在自定义初始化方法后执行的。由于`getOrder`方法返回值越大，优先级越低，所以`InitHelloWorld2`先执行。
 # Bean继承
 `Bean`定义可以包含很多配置信息，包括构造函数参数、属性值和容器的一些具体信息，如初始化方法、销毁方法等。子`Bean`可以继承父`Bean`的配置数据，根据需要，子`Bean`可以重写值或添加其它值。
 
@@ -289,7 +390,6 @@ public interface BeanPostProcessor {
 
 在配置文件中通过`parent`属性来指定继承的父`Bean`。
 ## 示例
-`HelloWorld`类代码如下。
 ```java
 package net.biancheng;
 
@@ -314,7 +414,6 @@ public class HelloWorld {
   }
 }
 ```
-`HelloChina`类代码如下。
 ```java
 package net.biancheng;
 
@@ -367,7 +466,6 @@ public class HelloChina {
   </bean>
 </beans>
 ```
-MainApp 类代码如下。
 ```java
 package net.biancheng;
 
@@ -375,18 +473,18 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class MainApp {
-    public static void main(String[] args) {
-        ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+  public static void main(String[] args) {
+    ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
 
-        HelloWorld objA = (HelloWorld) context.getBean("helloWorld");
-        objA.getMessage1();
-        objA.getMessage2();
+    HelloWorld objA = (HelloWorld) context.getBean("helloWorld");
+    objA.getMessage1();
+    objA.getMessage2();
 
-        HelloChina objB = (HelloChina) context.getBean("helloChina");
-        objB.getMessage1();
-        objB.getMessage2();
-        objB.getMessage3();
-    }
+    HelloChina objB = (HelloChina) context.getBean("helloChina");
+    objB.getMessage1();
+    objB.getMessage2();
+    objB.getMessage3();
+  }
 }
 
 //运行结果如下。
@@ -473,7 +571,7 @@ package com.mengma.instance.static_factory;
 public class MyBeanFactory {
   // 创建Bean实例的静态工厂方法
   public static Person2 createBean() {
-      return new Person2();
+    return new Person2();
   }
 }
 ```
@@ -535,13 +633,13 @@ public class MyBeanFactory {
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
-    <!-- 配置实例工厂 -->
-    <bean id="myBeanFactory" class="com.mengma.instance.factory.MyBeanFactory" />
-    <!-- factory-bean属性指定一个实例工厂，factory-method属性确定使用工厂中的哪个方法 -->
-    <bean id="person3" factory-bean="myBeanFactory" factory-method="createBean" />
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+  <!-- 配置实例工厂 -->
+  <bean id="myBeanFactory" class="com.mengma.instance.factory.MyBeanFactory" />
+  <!-- factory-bean属性指定一个实例工厂，factory-method属性确定使用工厂中的哪个方法 -->
+  <bean id="person3" factory-bean="myBeanFactory" factory-method="createBean" />
 </beans>
 ```
 上述代码中，首先配置了一个实例工厂`Bean`，然后配置了需要实例化的`Bean`。在`id`为`person3`的`Bean`中，使用`factory-bean`属性指定一个实例工厂，该属性值就是实例工厂的`id`属性值。使用`factory-method`属性确定使用工厂中的`createBean()`方法。

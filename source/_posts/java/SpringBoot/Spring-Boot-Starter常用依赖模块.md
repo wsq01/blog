@@ -79,74 +79,83 @@ public class IndexController {
 默认情况下，如果我们没有配置任何 DataSource，那么，SpringBoot 会为我们自动配置一个基于嵌入式数据库的 DataSource，这种自动配置行为其实很适合于测试场景，但对实际的开发帮助不大，基本上我们会自己配置一个 DataSource 实例，或者通过自动配置模块提供的配置参数对 DataSource 实例进行自定义的配置。
 
 假设我们的 SpringBoot 应用只依赖一个数据库，那么，使用 DataSource 自动配置模块提供的配置参数是最方便的：
+```
 spring.datasource.url=jdbc:mysql://{database host}:3306/{databaseName}
 spring.datasource.username={database username}
 spring.datasource.password={database password}
-
+```
 当然，自己配置一个 DataSource 也是可以的，SpringBoot 也会智能地选择我们自己配置的这个 DataSource 实例（只不过必要性真不大）。
 
 除了 DataSource 会自动配置，SpringBoot 还会自动配置相应的 JdbcTemplate、DataSourceTransactionManager 等关联“设施”，可谓服务周到，我们只要在使用的地方注入就可以了：
+```java
 class SomeDao {
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-    public <T> List<T> queryForList(String sql){
-        // ...
-    }
+  @Autowired
+  JdbcTemplate jdbcTemplate;
+  public <T> List<T> queryForList(String sql){
     // ...
+  }
+  // ...
 }
+```
 不过，spring-boot-starter-jdbc 以及与其相关的自动配置也不总是带来便利，在某些场景下，我们可能会在一个应用中需要依赖和访问多个数据库，这个时候就会出现问题了。
 
 假设我们在 ApplicationContext 中配置了多个 DataSource 实例指向多个数据库：
+```java
 @Bean
 public DataSource dataSource1() throws Throwable {
-    DruidDataSource dataSource = new DruidDataSource();
-    dataSource.setUrl(...);
-    dataSource.setUsername(...);
-    dataSource.setPassword(...);
-    // TODO other settings if necessary in the future.
-    return dataSource;
+  DruidDataSource dataSource = new DruidDataSource();
+  dataSource.setUrl(...);
+  dataSource.setUsername(...);
+  dataSource.setPassword(...);
+  // TODO other settings if necessary in the future.
+  return dataSource;
 }
 @Bean
 public DataSource dataSource2() throws Throwable {
-    DruidDataSource dataSource = new DruidDataSource();
-    dataSource.setUrl(...);
-    dataSource.setUsername(...);
-    dataSource.setPassword(...);
-    // TODO other settings if necessary in the future.
-    return dataSource;
+  DruidDataSource dataSource = new DruidDataSource();
+  dataSource.setUrl(...);
+  dataSource.setUsername(...);
+  dataSource.setPassword(...);
+  // TODO other settings if necessary in the future.
+  return dataSource;
 }
+```
 那么，不好意思，启动 SpringBoot 应用的时候会抛出类似如下的异常（Exception）：
+```
 Exception）：No qualifying bean of type [javax.sql.DataSource] is defined: expected single matching bean but found 2 
-
+```
 为了避免这种情况的发生，我们需要在 SpringBoot 的启动类上做点儿“手脚”：
+```java
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class,
-        DataSourceTransactionManagerAutoConfiguration.class })
+    DataSourceTransactionManagerAutoConfiguration.class })
 public class UnveilSpringChapter3Application {
-    public static void main(String[] args) {
-        SpringApplication.run(UnveilSpringChapter3Application.class, args);
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(UnveilSpringChapter3Application.class, args);
+  }
 }
+```
 也就是说，我们需要在这种场景下排除掉对 SpringBoot 默认提供的 DataSource 相关的自动配置。但如果我们还是想要享受 SpringBoot 提供的自动配置 DataSource 的机能，也可以通过为其中一个 DataSource 配置添加 org.springframework.context.annotation.Primary 这个 Annotation 的方式以实现两全其美：
+```java
 @Bean
 @Primary
 public DataSource dataSource1() throws Throwable {
-    DruidDataSource dataSource = new DruidDataSource();
-    dataSource.setUrl(...);
-    dataSource.setUsername(...);
-    dataSource.setPassword(...);
-    // TODO other settings if necessary in the future.
-    return dataSource;
+  DruidDataSource dataSource = new DruidDataSource();
+  dataSource.setUrl(...);
+  dataSource.setUsername(...);
+  dataSource.setPassword(...);
+  // TODO other settings if necessary in the future.
+  return dataSource;
 }
 @Bean
 public DataSource dataSource2() throws Throwable {
-    DruidDataSource dataSource = new DruidDataSource();
-    dataSource.setUrl(...);
-    dataSource.setUsername(...);
-    dataSource.setPassword(...);
-    // TODO other settings if necessary in the future.
-    return dataSource;
-    }
+  DruidDataSource dataSource = new DruidDataSource();
+  dataSource.setUrl(...);
+  dataSource.setUsername(...);
+  dataSource.setPassword(...);
+  // TODO other settings if necessary in the future.
+  return dataSource;
 }
+```
 另外，SpringBoot 还提供了很多其他数据访问相关的自动配置模块，比如`spring-boot-starter-data-jpa、spring-boot-starter-data-mongodb`等。
 
 如果选择了`spring-boot-starter-data-jpa`等关系数据库相关的数据访问自动配置模块，并且还需要同时依赖访问多个数据库，那么，也需要相应的在 SpringBoot 启动类中排除掉这些自动配置模块中的`AutoConfiguration`实现类（对应`spring-boot-starter-data-jpa`是`JpaRepositoriesAutoConfiguration`），或者标注某个`DataSource`为`@Primary`。
@@ -188,32 +197,35 @@ SpringAOP 其实提供了多种横切逻辑织入机制（Weaving），性能损
 笔者一向是只在有必要的时候才重新“造轮子”，绝不会为了炫技而去“造轮子”，所以，本次的主角我们选择 Java 中的 Dropwizard Metrics 这个类库作为打造我们 APM 原型的起点。
 
 Dropwizard Metrics 为我们提供了多种不同类型的应用数据度量方案，且通过相应的数据处理算法在性能和批量状态的管理上做了很优秀的工作，只不过，如果我们直接用它的 API 来对自己的应用代码进行度量的话，那写起来代码太多，而且这些性能代码混杂在应用的核心逻辑执行路径上，一个是界面不友好，另外一个就是不容易维护：
+```java
 public class MockService implements InitializingBean {
-    @Autowired
-    MetricRegistry metricRegistry;
-    private Timer timer;
-    private Counter counter;
-    // define more other metrics...
-    public void doSth() {
-        counter.inc();
-        Timer.Context context = timer.time();
-        try {
-            System.out.println("just do something.");
-        } finally {
-            context.stop();
-        }
+  @Autowired
+  MetricRegistry metricRegistry;
+  private Timer timer;
+  private Counter counter;
+  // define more other metrics...
+  public void doSth() {
+    counter.inc();
+    Timer.Context context = timer.time();
+    try {
+        System.out.println("just do something.");
+    } finally {
+        context.stop();
     }
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        timer = metricRegistry.timer("timerToProfilingDoSthMethod");
-        counter = metricRegistry.counter("counterForDoSthMethod");
-    }
+  }
+  @Override
+  public void afterPropertiesSet() throws Exception {
+    timer = metricRegistry.timer("timerToProfilingDoSthMethod");
+    counter = metricRegistry.counter("counterForDoSthMethod");
+  }
 }
+```
 所以，对于这些非功能性的性能度量代码，我们可以使用 AOP 的方式剥离到相应的 Aspect 中单独维护，而为了能够将这些性能度量的 Aspect 挂接到指定的待度量代码上，基于现有的方案选型。
 
 可以使用 metrics-annotation 提供的一系列 Annotation 来标注织入位置，这样，开发者只要在需要度量的代码位置上标注相应的 Annotation，我们提供的 spring-boot-starter-metrics 自定义的自动配置模块就会自动地收集这些位置上指定的性能度量数据。
 
 首先，我们通过 http://start.spring.io/ 构建一个 SpringBoot 的脚手架项目，选择以 Maven 编译（选择用 Gradle 的同学自行甄别后面的配置如何具体进行），然后在创建好的 SpringBoot 脚手架项目的 pom.xml 中添加如下必要配置：
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -269,6 +281,7 @@ public class MockService implements InitializingBean {
         </dependency>
     </dependencies>
 </project>
+```
 pom.xml 中有几个关键配置需要关注：
 继承了 spring-boot-starter-parent，用于加入 springboot 的相关依赖。
 添加了 spring-boot-starter-aop 依赖。
@@ -280,25 +293,27 @@ pom.xml 中有几个关键配置需要关注：
 如果单单是一个提供必要依赖的自动配置模块，那么到这里其实就可以结束了，但我们的 spring-boot-starter-metrics 需要使用 AOP 提供相应的横切关注点逻辑。
 
 所以，还需要编写并提供一些必要的代码组件，因此，最少我们先要提供一个 @Configuration 配置类，用于将我们即将提供的这些 AOP 逻辑暴露给使用者：
+```java
 @Configuration
 @ComponentScan({ "com.keevol.springboot.metrics.lifecycle",
-        "com.keevol.springboot.metrics.aop" })
+      "com.keevol.springboot.metrics.aop" })
 @AutoConfigureAfter(AopAutoConfiguration.class)
 public class DropwizardMetricsMBeansAutoConfiguration {
-    @Value("${metrics.mbeans.domain.name:com.keevol.metrics}")
-    String metricsMBeansDomainName;
-    @Autowired
-    MBeanServer mbeanServer;
-    @Autowired
-    MetricRegistry metricRegistry;
-    @Bean
-    public JmxReporter jmxReporter() {
-        JmxReporter reporter = JmxReporte.forRegistry(metricRegistry)
-                .inDomain(metricsMBeansDomainName).registerWith(mbeanServer)
-                .build();
-        return reporter;
-    }
+  @Value("${metrics.mbeans.domain.name:com.keevol.metrics}")
+  String metricsMBeansDomainName;
+  @Autowired
+  MBeanServer mbeanServer;
+  @Autowired
+  MetricRegistry metricRegistry;
+  @Bean
+  public JmxReporter jmxReporter() {
+    JmxReporter reporter = JmxReporte.forRegistry(metricRegistry)
+            .inDomain(metricsMBeansDomainName).registerWith(mbeanServer)
+            .build();
+    return reporter;
+  }
 }
+```
 然后就是将这个配置类添加到 META-INF/spring.factories：
 
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\com.keevol.springboot.metrics.autocfg.DropwizardMetricsMBeansAuto-ConfigurationOK， 
@@ -314,6 +329,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\com.keevol.sprin
 现在，最后的秘密就隐藏在 @ComponentScan 背后的两个 java package 之下了。
 
 首先是 com.keevol.springboot.metrics.aop，在这个 java package 下面，我们只提供了一个 AutoMetricsAspect，其定义如下：
+```java
 @Component
 @Aspectpublic
 class AutoMetricsAspect {
@@ -357,24 +373,28 @@ class AutoMetricsAspect {
         }
     }
 }
+```
 @Aspect+@Component 的目的在于告诉 Spring 框架：“我是一个 AOP 的 Aspect 实现类并且你可以通过 @ComponentScan 把我加入 IoC 容器之中。”当然，这不是重点。
 
 io.dropwizard.metrics：metrics-annotation 这个依赖包为我们提供了几个有趣的 Annotation：
+```
 Timed
 Gauge
 Counted
 Metered
 ExceptionMetered
-
+```
 这些语义良好的 Annotation 定义可以用来标注相应的 AOP 逻辑扩展点，比如，针对同一个 MockService，我们可以将性能数据的度量和采集简化为只标注一两个 Annotation 就可以了：
+```java
 @Component
 public class MockService {
-    @Timed
-    @Counted
-    public void doSth() {
-        System.out.println("just do something.");
-    }
-} 
+  @Timed
+  @Counted
+  public void doSth() {
+    System.out.println("just do something.");
+  }
+}
+```
 但是，Annotation 注定只是 Annotation，它们只是一些标记信息，要让它们发挥作用，需要有“伯乐”的眷顾，所以，AutoMetricsAspect 在这里就是这些 Dropwizard Metrics Annotation 的“伯乐”。
 
 通过拦截每一个 public 方法并检查方法上是否存在某个 metrics annotation，我们就可以根据具体的 metrics annotation 的类型，为匹配的方法注入相应性能数据采集代码逻辑，从而完成整个基于 AOP 和 dropwizard metrics 的应用性能数据采集方案的实现。
@@ -474,19 +494,24 @@ FilterChainProxy相关组件关系示意图
 图 2  FilterChainProxy 相关组件关系示意图
 
 当然，这些还只是“骨架”，真正执行防护任务的其实是一个个 org.springframework.security.web.SecurityFilterChain 中定义的一系列 Filter：
+```
 public interface SecurityFilterChain {
     boolean matches(HttpServletRequest request);
     List<Filter> getFilters();
 }
+```
 当我们经常看到如下的 xml schema 形式的配置格式的时候：
+```xml
 <http auto-config='true'>
     <intercept-url pattern="/login.jsp*" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
     <intercept-url pattern="/**" access="ROLE_USER" />
     <form-login login-page='/login.jsp'/>
 </http>
+```
 其实一个个 http 元素背后对应的就是一个个 SecurityFilterChain 实例，而 http 元素的那些子元素，比如 intercept-url，则对应的就是一个个 Filter。
 
 默认情况下，Spring Security 为 SecurityFilterChain 中的 Filter 序列设定了一个注册框架，以 100 为间隔步长，按照一个合理的顺序来规划和排布常用的 Filter 实现（代码参考FilterComparator）：
+```
 int order = 100;
 put(ChannelProcessingFilter.class, order);
 order += STEP;
@@ -539,6 +564,7 @@ order += STEP;
 put(FilterSecurityInterceptor.class, order);
 order += STEP;
 put(SwitchUserFilter.class, order); 
+```
 这些 Filter 虽然很多，但可以简单划分为几类，除个别 Filter 在每个 SecurityFilterChain 都需要，其他可以根据需要选用并添加：
 可以认为是信道与状态管理，比如 ChannelProcessingFilter 用于处理 http 或者 https 之间的切换，而 SecurityContextPersistenceFilter 用于重建或者销毁必要的 SecurityContext 状态。
 是常见 Web 安全防护类，比如 CsrfFilter。
@@ -559,6 +585,7 @@ ExceptionTranslationFilter 属于另一个需要关注的核心类，它负责�
 对默认提供的 WebSecurity 行为进行调整。
 
 为了能够让这些调整生效，我们定义的 WebSecurityConfigurerAdapter 实现类一般在顺序上需要先于 spring-boot-starter-security 默认提供的配置，故此，一般配合@Order（SecurityProperties.ACCESS_OVERRIDE_ORDER）进行标注，代码如下所示：
+```java
 @Configuration
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class DemoSecurityConfiguration extends WebSecurity-ConfigurerAdapter {
@@ -575,120 +602,127 @@ public class DemoSecurityConfiguration extends WebSecurity-ConfigurerAdapter {
     }
     // 通过Override其他方法实现对web安全的定制
 }
+```
 WebSecurityConfigurerAdapter 其实是为我们预先设定了一个框架，并开放了有限的一些扩展点允许我们对 Web 安全相关的设定进行定制，某些场景下还是会感觉“掣肘”，或者，某些有“洁癖”的开发者，往往不想使用在某些场景下显得并非必要的默认设定。
 
 这个时候，我们可以直接实现并注册一个标注了 @EnableWebSecurity 的 JavaConfig 配置类到 IoC 容器，从而实现一种“颠覆性”的定制，即跟 spring-boot-starter-security 默认提供的 Web 安全相关配置一刀两断，完全自建：
+```java
 @Configuration
 @EnableWebSecurity
 public class OverhaulSecurityConfiguration {
-    @Bean
-    public AuthenticationManager authenticationManager() {
-        // ...
-    }
-    @Bean
-    public AccessDecisionManager accessDecisionManager() {
-        // ...
-    }
-    @Bean
-    public SecurityFilterChain mySecurityFilterChain() {
-        // ...
-    }
-    // 其他web安全相关组件和依赖配置}
+  @Bean
+  public AuthenticationManager authenticationManager() {
+    // ...
+  }
+  @Bean
+  public AccessDecisionManager accessDecisionManager() {
+    // ...
+  }
+  @Bean
+  public SecurityFilterChain mySecurityFilterChain() {
+    // ...
+  }
+  // 其他web安全相关组件和依赖配置}
 }
+```
 # spring-boot-starter-actuator与应用监控
 所有的应用开发完成之后，其最终目的都是为了上线运行，SpringBoot 应用也不例外，而在应用运行的漫长生命周期内，为了保障其可以持续稳定的服务，我们通常需要对其进行监控，从而可以了解应用的运行状态，并根据情况决定是否需要对其运行状态进行调整。
 
-顺应需求，SpringBoot 框架提供了 spring-boot-starter-actuator 自动配置模块用于支持 SpringBoot 应用的监控。
+顺应需求，SpringBoot 框架提供了`spring-boot-starter-actuator`自动配置模块用于支持 SpringBoot 应用的监控。
 
-如图 1 所示，形象的描述了 Actuator 是什么。
-Sensor和Actuator示意图
-图 1  Sensor 和 Actuator 示意图
+为了能够感知应用的运行状态，我们通常会设置一些监控指标并采集分析，这些监控指标的采集需要在应用内部设置相应的监控点，这类监控点一般只是读取状态数据，我们通常称它们为`Sensor`，即中文一般称为“传感器”的东西。
 
-为了能够感知应用的运行状态，我们通常会设置一些监控指标并采集分析，这些监控指标的采集需要在应用内部设置相应的监控点，这类监控点一般只是读取状态数据，我们通常称它们为 Sensor，即中文一般称为“传感器”的东西。
+应用的运行状态数据通过`Sensors`采集上来之后，我们通常会有专门的系统对这些数据进行分析和判断，一旦某个指标数据超出了预定的阈值，这往往意味着应用的运行状态在这个指标上出现了“不健康”的现象，我们希望对这个指标进行调整，而为了能够执行调整，我们需要预先在应用内部设置对应的执行调整逻辑的控制器。
 
-应用的运行状态数据通过 Sensors 采集上来之后，我们通常会有专门的系统对这些数据进行分析和判断，一旦某个指标数据超出了预定的阈值，这往往意味着应用的运行状态在这个指标上出现了“不健康”的现象，我们希望对这个指标进行调整，而为了能够执行调整，我们需要预先在应用内部设置对应的执行调整逻辑的控制器。
+比如，直接关闭的开关，或者可以执行微调甚至像刹车一样直接快速拉低某个指标值的装置，这些控制器就称为`Actuator`。虽然我们日常天天在说“监控，监控”，但实际上“监”跟“控”是两个概念，`Sensor`更多服务于“监”的场景，而`Actuator`则服务于“控”的场景。
 
-比如，直接关闭的开关，或者可以执行微调甚至像刹车一样直接快速拉低某个指标值的装置，这些控制器就称为 Actuator。虽然我们日常天天在说“监控，监控”，但实际上“监”跟“控”是两个概念，Sensor 更多服务于“监”的场景，而 Actuator 则服务于“控”的场景。
+`spring-boot-starter-actuator`自动配置模块默认提供了很多`endpoint`，虽然自动配置模块名为`spring-boot-starter-actuator`，但实际上这些`endpoint`可以按照“监”和“控”划分为两类：
+1. `Sensor`类`endpoints`
 
-spring-boot-starter-actuator 自动配置模块默认提供了很多 endpoint，虽然自动配置模块名为 spring-boot-starter-actuator，但实际上这些 endpoint 可以按照“监”和“控”划分为两类：
-1. Sensor 类 endpoints
 
-2. Actuator 类 endpoints
-shutdown：用于关闭当前 SpringBoot 应用的 endpoint。
-dump：用于执行线程的 dump 操作。
+2. `Actuator`类`endpoints`
+* `shutdown`：用于关闭当前 SpringBoot 应用的`endpoint`。
+* `dump`：用于执行线程的`dump`操作。
 
-默认情况下，除了 shutdown 这个 endpoint（因为比较危险，如果没有安全防护，谁都可以访问它，然后关闭应用），其他 endpoints 都是默认启用的。
+默认情况下，除了`shutdown`这个`endpoint`（因为比较危险，如果没有安全防护，谁都可以访问它，然后关闭应用），其他`endpoints`都是默认启用的。
 
-生产环境下，如果没有启用安全防护（比如没有依赖 spring-boot-starter-security），那么，建议遵循 Deny By Default 原则，将所有的 endpoints 都关掉，然后根据具体情况单独启用某些 endpoint：
+生产环境下，如果没有启用安全防护（比如没有依赖`spring-boot-starter-security`），那么，建议遵循`Deny By Default`原则，将所有的`endpoints`都关掉，然后根据具体情况单独启用某些 `endpoint`：
+```
 endpoints.enabled=falseendpoints.info.enabled=trueendpoints.health.enabled=true...
-
-所有配置项以 endpoints. 为前缀，然后根据 endpoint 名称划分具体配置项。大部分 endpoints 都是开箱即用，但依然有些 endpoint 提供给我们进一步扩展的权利，比如健康状态检查相关的 endpoint（health endpoint）。
-自定义应用的健康状态检查
-应用的健康状态检查是很普遍的监控需求，SpringBoot 也预先通过 org.springframework.boot.actuate.autoconfigure.HealthIndicatorAutoConfiguration 为我们提供了一些常见服务的监控检查支持，比如：
+```
+所有配置项以`endpoints.`为前缀，然后根据`endpoint`名称划分具体配置项。大部分`endpoints`都是开箱即用，但依然有些`endpoint`提供给我们进一步扩展的权利，比如健康状态检查相关的`endpoint（health endpoint）`。
+## 自定义应用的健康状态检查
+应用的健康状态检查是很普遍的监控需求，SpringBoot 也预先通过`org.springframework.boot.actuate.autoconfigure.HealthIndicatorAutoConfiguration`为我们提供了一些常见服务的监控检查支持，比如：
+```
 DataSourceHealthIndicator
 DiskSpaceHealthIndicator
 RedisHealthIndicator
 SolrHealthIndicator
 MongoHealthIndicator
+```
+如果这些默认提供的健康检查支持依然无法满足我们的需要，SpringBoot 还允许我们提供更多的`HealthIndicator`实现，只要将这些`HealthIndicator`实现类注册到 IoC 容器，SpringBoot 会自动发现并使用它们。
 
-如果这些默认提供的健康检查支持依然无法满足我们的需要，SpringBoot 还允许我们提供更多的 HealthIndicator 实现，只要将这些 HealthIndicator 实现类注册到 IoC 容器，SpringBoot 会自动发现并使用它们。
-
-假设需要检查依赖的 dubbo 服务是否处于健康状态，我们可以实现一个 DubboHealthIndicator：
+假设需要检查依赖的 dubbo 服务是否处于健康状态，我们可以实现一个`DubboHealthIndicator`：
+```java
 import com.alibaba.dubbo.config.spring.ReferenceBean;
 import com.alibaba.dubbo.rpc.service.EchoService;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 public class DubboHealthIndicator extends AbstractHealthIndicator {
-    private final ReferenceBean bean;
-    public DubboHealthIndicator(ReferenceBean bean) {
-        this.bean = bean;
-    }
-    @Override
-    protected void doHealthCheck(Health.Builder builder) throws Exception {
-        builder.withDetail("interface", bean.getObjectType());
-        final EchoService service = (EchoService) bean.getObject();
-        service.$echo("hi");
-        builder.up();
-    }
+  private final ReferenceBean bean;
+  public DubboHealthIndicator(ReferenceBean bean) {
+    this.bean = bean;
+  }
+  @Override
+  protected void doHealthCheck(Health.Builder builder) throws Exception {
+    builder.withDetail("interface", bean.getObjectType());
+    final EchoService service = (EchoService) bean.getObject();
+    service.$echo("hi");
+    builder.up();
+  }
 }
-要实现一个自定义的 HealthIndicator，一般我们不会直接实现（Implements）HealthIndicator 接口，而是继承 AbstractHealthIndicator：
+```
+要实现一个自定义的`HealthIndicator`，一般我们不会直接实现（`Implements`）`HealthIndicator`接口，而是继承`AbstractHealthIndicator`：
+```java
 public abstract class AbstractHealthIndicator implements HealthIndicator {
-    @Override
-    public final Health health() {
-        Health.Builder builder = new Health.Builder();
-        try {
-            doHealthCheck(builder);
-        } catch (Exception ex) {
-            builder.down(ex);
-        }
-        return builder.build();
+  @Override
+  public final Health health() {
+    Health.Builder builder = new Health.Builder();
+    try {
+      doHealthCheck(builder);
+    } catch (Exception ex) {
+      builder.down(ex);
     }
-    protected abstract void doHealthCheck(Health.Builder builder)
-            throws Exception;
+    return builder.build();
+  }
+  protected abstract void doHealthCheck(Health.Builder builder) throws Exception;
 }
-好处就是，我们只需实现 doHealthCheck，在其中实现我们面向的具体服务的健康检查逻辑就可以了，因此，在 DubboHealthIndicator 实现类中，我们通过 dubbo 框架提供的 EchoService 直接检查相应的 dubbo 服务健康状态即可，只要没有任何异常抛出，我们就认为检查的 dubbo 服务是状态健康的，所以，最后会通过 Health.Builder 的 up() 方法标记服务状态为正常运行。
+```
+好处就是，我们只需实现`doHealthCheck`，在其中实现我们面向的具体服务的健康检查逻辑就可以了，因此，在`DubboHealthIndicator`实现类中，我们通过 dubbo 框架提供的`EchoService`直接检查相应的 dubbo 服务健康状态即可，只要没有任何异常抛出，我们就认为检查的 dubbo 服务是状态健康的，所以，最后会通过 Health.Builder 的 up() 方法标记服务状态为正常运行。
 
 为了完成对 dubbo 服务的健康检查，只实现一个 DubboHealthIndicator 是不够的，我们还需要将其注册到 IoC 容器中，但是一个一个单独注册太费劲了，而且还要自己提供针对某个 dubbo 服务的 ReferenceBean 依赖实例。
 
 所以，为了一劳永逸，也为了其他人能够同样方便地使用针对 dubbo 服务的健康检查支持，我们可以在 DubboHealthIndicator 的基础上实现一个 spring-boot-starter-dubbo-health-indicator 自动配置模块，即：
+```java
 @Configuration
 @ConditionalOnClass(name = { "com.alibaba.dubbo.rpc.Exporter" })
 public class DubboHealthIndicatorConfiguration {
-    @Autowired
-    HealthAggregator healthAggregator;
-    @Autowired(required = false)
-    Map<String, ReferenceBean> references;
-    @Bean
-    public HealthIndicator dubboHealthIndicator() {
-        Map<String, HealthIndicator> indicators = new HashMap<>();
-        for (String key : references.keySet()) {
-            final ReferenceBean bean = references.get(key);
-            indicators.put(key.startsWith("&") ? key.replaceFirst("&", "")
-                    : key, new DubboHealthIndicator(bean));
-        }
-        return new CompositeHealthIndicator(healthAggregator, indicators);
+  @Autowired
+  HealthAggregator healthAggregator;
+  @Autowired(required = false)
+  Map<String, ReferenceBean> references;
+  @Bean
+  public HealthIndicator dubboHealthIndicator() {
+    Map<String, HealthIndicator> indicators = new HashMap<>();
+    for (String key : references.keySet()) {
+        final ReferenceBean bean = references.get(key);
+        indicators.put(key.startsWith("&") ? key.replaceFirst("&", "")
+                : key, new DubboHealthIndicator(bean));
     }
+    return new CompositeHealthIndicator(healthAggregator, indicators);
+  }
 }
+```
 然后我们在 spring-boot-starter-dubbo-health-indicator 的 META-INF/spring.factories 文件中添加如下配置：
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\com.keevol...DubboHealthIndicatorConfiguration 
 
@@ -705,16 +739,17 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\com.keevol...Dub
 默认情况下，这些 Endpoint 对应的 JMX MBean 会放在 org.springframework.boot 命名空间下面，不过可以通过 endpoints.jmx.domain 配置项进行更改，比如 endpoints.jmx.domain=com.keevol.management。
 
 EndpointMBeanExportAutoConfiguration 为我们提供了一条很好的应用监控实践之路，既然它会把所有的 org.springframework.boot.actuate.endpoint.Endpoint 实例都作为 JMX Mbean 开放出去，那么，我们就可以提供一批用于某些场景下的自定义 Endpoint 实现类，比如：
+```java
 public class HelloEndpoint extends AbstractEndpoint<String> {
-    public HelloEndpoint(String id) {
-        super(id, false);
-    }
-    @Override
-    public String invoke() {
-        return "Hello, SpringBoot";
-    }
+  public HelloEndpoint(String id) {
+    super(id, false);
+  }
+  @Override
+  public String invoke() {
+    return "Hello, SpringBoot";
+  }
 }
-
+```
 然后，将像 HelloEndpoint 这样的实现类注册到 SpringBoot 应用的 IoC 容器，就可以扩展 SpringBoot 的 endpoints 功能了。
 
 Endpoint 其实更适合简单的 Sensor 场景（即用于读取或者提供信息），或者简单功能的 actuator 场景（不需要行为参数），如果需要对 SpringBoot 进行更细粒度的监控，可以考虑直接使用 Spring 框架的 JMX 支持。

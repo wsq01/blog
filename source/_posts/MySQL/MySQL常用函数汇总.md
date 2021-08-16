@@ -1,4 +1,9 @@
-
+---
+title: MySQL常用函数汇总
+date: 2020-04-21 16:41:23
+tags: [MySQL]
+categories: [MySQL]
+---
 
 # 函数简介
 MySQL 函数是 MySQL 数据库提供的内部函数，这些内部函数可以帮助用户更加方便地处理表中的数据。函数就像预定的公式一样存放在数据库里，每个用户都可以调用已经存在的函数来完成某些功能。
@@ -328,3 +333,279 @@ mysql> SELECT LEFT('MySQL',2);
 1 row in set (0.04 sec)
 由运行结果可知，返回字符串“MySQL”左边开始的长度为 2 的子字符串，结果为“My”。
 ## RIGHT函数：从右侧截取字符串
+MySQL 中的 RIGHT(s，n) 函数返回字符串 s 最右边的 n 个字符。
+
+【实例】使用 RIGHT 函数返回字符串中右边的字符，输入的 SQL 语句和执行结果如下所示。
+mysql> SELECT RIGHT('MySQL',3);
++------------------+
+| RIGHT('MySQL',3) |
++------------------+
+| SQL              |
++------------------+
+1 row in set (0.00 sec)
+由执行结果可知，函数返回字符串“MySQL”右边开始的长度为3的子字符串，结果为“SQL”。
+## TRIM函数：删除空格
+MySQL 中删除空格函数 TRIM(s) 删除字符串 s 两侧的空格。
+
+【实例】SELECT CONCAT('['，TRIM('mobile')，']')；输入的 SQL 语句和执行结果如下所示。
+mysql> SELECT '[   mobile   ]',CONCAT('[',TRIM('   mobile   '),']');
++----------------+--------------------------------------+
+| [   mobile   ] | CONCAT('[',TRIM('   mobile   '),']') |
++----------------+--------------------------------------+
+| [   mobile   ] | [mobile]                             |
++----------------+--------------------------------------+
+1 row in set (0.07 sec)
+由执行结果可知，函数执行之后字符串“mobile”两边的空格被删除，结果为“mobile”。
+## REPLACE函数：字符串替换
+MySQL 中替换函数 REPLACE(s，s1，s2) 使用字符串 s2 替换字符串 s 中所有的字符串 s1。
+
+【实例】使用 REPLACE 函数进行字符串替换操作，输入的 SQL 语句和执行过程如下所示。
+mysql> SELECT REPLACE('aaa.mysql.com','a','w');
++----------------------------------+
+| REPLACE('aaa.mysql.com','a','w') |
++----------------------------------+
+| www.mysql.com                    |
++----------------------------------+
+1 row in set (0.00 sec)
+由运行结果可以看出，使用 REPLACE('aaa.mysql.com'，'a'，'w') 将“aaa.mysql.com”字符串的“a”字符替换为“w”字符，结果为“www.mysql.com”。
+## SUBSTRING函数：截取字符串
+MySQL 中获取子串函数 SUBSTRING(s，n，len) 带有 len 参数的格式，从字符串 s 返回一个长度同 len 字符相同的子字符串，起始于位置 n。
+
+也可能对 n 使用一个负值。假若这样，则子字符串的位置起始于字符串结尾的第 n 个字符，即倒数第 n 个字符，而不是字符串的开头位置。
+
+【实例】使用 SUBSTRING 函数获取指定位置处的子字符串，输入的 SQL 语句和执行结果如下所示。
+mysql> SELECT SUBSTRING('computer',3) AS col1,
+    -> SUBSTRING('computer',3,4) AS col2,
+    -> SUBSTRING('computer',-3) AS col3,
+    -> SUBSTRING('computer',-5,3) AS col4;
++--------+------+------+------+
+| col1   | col2 | col3 | col4 |
++--------+------+------+------+
+| mputer | mput | ter  | put  |
++--------+------+------+------+
+1 row in set (0.00 sec)
+SUBSTRING('computer'，3) 返回从第 3 个位置开始到字符串结尾的子字符串，结果为“mputer”；SUBSTRING('computer'，3，4) 返回从第 3 个位置开始长度为 4 的子字符串，结果为“mput”；
+
+SUBSTRING(computer，-3) 返回从倒数第 3 个位置到字符串结尾的子字符串，结果为“ter”；SUBSTRING(computer，-5，3) 返回从倒数第 5 个位置开始长度为 3 的子字符串，结果为“put”。
+## REVERSE函数：反转字符串
+MySQL 中字符串逆序函数 REVERSE(s) 可以将字符串 s 反转，返回的字符串的顺序和 s 字符串的顺序相反。
+
+【实例】使用 REVERSE 函数反转字符串，输入的 SQL 语句和执行过程如下所示。
+mysql> SELECT REVERSE('hello');
++------------------+
+| REVERSE('hello') |
++------------------+
+| olleh            |
++------------------+
+1 row in set (0.00 sec)
+由运行结果可以看出，字符串“hello”经过 REVERSE 函数处理之后所有字符顺序被反转，结果为“olleh”。
+# 聚合函数
+## MAX函数：查询指定列的最大值
+MySQL MAX() 函数是用来返回指定列中的最大值。
+
+为了方便理解，首先创建一个学生成绩表 tb_students_score，学生成绩表的数据内容如下所示。
+mysql> use test_db;
+Database changed
+mysql> SELECT * FROM tb_students_score;
++--------------+---------------+
+| student_name | student_score |
++--------------+---------------+
+| Dany         |            90 |
+| Green        |            99 |
+| Henry        |            95 |
+| Jane         |            98 |
+| Jim          |            88 |
+| John         |            94 |
+| Lily         |           100 |
+| Susan        |            96 |
+| Thomas       |            93 |
+| Tom          |            89 |
++--------------+---------------+
+10 rows in set (0.13 sec)
+【实例 1】在 tb_students_score 表中查找最高的成绩，输入的 SQL 语句和执行结果如下所示。
+mysql> SELECT MAX(student_score)
+    -> AS max_score
+    -> FROM tb_students_score;
++-----------+
+| max_score |
++-----------+
+|       100 |
++-----------+
+1 row in set (0.06 sec)
+由运行结果可以看到，MAX() 函数查询出 student_score 字段的最大值为 100。
+
+MAX() 函数不仅适用于查找数值类型，也可应用于字符类型。
+
+【实例 2】在 tb_students_score 表中查找 student_name 的最大值，输入的 SQL 语句和执行结果如下所示。
+mysql> SELECT MAX(student_name)
+    -> AS max_name
+    -> FROM tb_students_score;
++----------+
+| max_name |
++----------+
+| Tom      |
++----------+
+1 row in set (0.03 sec)
+由运行结果可以看到，MAX() 函数可以对字母进行大小判断，并返回最大的字符或者字符串值。
+注意：MAX() 函数还可以返回任意列中的最大值，包括返回字符类型的最大值。在对字符类型的数据进行比较时，按照字符的 ASCII 码值大小进行比较，从 a～z，a 的 ASCII 码最小，z 的最大。在比较时，先比较第一个字符，如果相等，继续比较下一个字符，一直到两个字符不相等或者字符结束为止。例如，b 与 t 比较时，t 为最大值；bcd 与 bca 比较时，bcd 为最大值。
+## MIN函数：查询指定列的最小值
+MySQL MIN() 函数是用来返回查询列中的最小值。
+
+为了便于理解，需要用到在上一节讲 MAX() 函数时创建的数据表 tb_students_score。
+
+【实例】在 tb_students_score 表中查找最低的成绩，输入的 SQL 语句和执行结果如下所示。
+mysql> SELECT MIN(student_score)
+    -> AS min_score
+    -> FROM tb_students_score;
++-----------+
+| min_score |
++-----------+
+|        88 |
++-----------+
+1 row in set (0.00 sec)
+由结果可以看到，MIN() 函数查询出 student_score 字段的最小值为 88。
+提示：MIN() 函数与 MAX() 函数类似，不仅适用于查找数值类型，也可应用于字符类型。
+## COUNT函数：统计查询结果的行数
+MySQL COUNT() 函数统计数据表中包含的记录行的总数，或者根据查询结果返回列中包含的数据行数，使用方法有以下两种：
+COUNT(*) 计算表中总的行数，无论某列有数值或者为空值。
+COUNT（字段名）计算指定列下总的行数，计算时将忽略空值的行。
+
+这里需要用到以下在介绍 MAX() 函数时创建的表 tb_students_score 。
+
+【实例】查询 tb_students_score 表中总的行数，输入的 SQL 语句和执行结果如下所示。
+mysql> SELECT COUNT(student_name)
+    -> AS students_number
+    -> FROM tb_students_score;
++-----------------+
+| students_number |
++-----------------+
+|              10 |
++-----------------+
+1 row in set (0.03 sec)
+由查询结果可以看到，COUNT(*) 返回 tb_students_score 表中记录的总行数，无论值是什么。返回的总数的名称为 students_number。
+提示：在计算总数的时候对待 NULL 值的方式是，指定列的值为空的行被 COUNT() 函数忽略，但若不指定列，而在 COUNT() 函数中使用星号“*”，则所有记录都不忽略。
+## SUM函数：求和
+MySQL SUM() 是一个求总和的函数，返回指定列值的总和。
+
+SUM() 函数是如何工作的？
+如果在没有返回匹配行 SELECT 语句中使用 SUM 函数，则 SUM 函数返回 NULL，而不是 0。
+DISTINCT 运算符允许计算集合中的不同值。
+SUM 函数忽略计算中的 NULL 值。
+
+这里需要用到以下在介绍 MAX() 函数时创建的表 tb_students_score 。
+
+【实例】在 tb_students_score 表中计算学生成绩的总分，输入的 SQL 语句和执行结果如下所示。
+mysql> SELECT SUM(student_score)
+    -> AS score_sum
+    -> FROM tb_students_score;
++-----------+
+| score_sum |
++-----------+
+|       942 |
++-----------+
+1 row in set (0.00 sec)
+由查询结果可以看到，SUM() 函数返回学生的所有成绩之和为 942。
+提示：SUM() 函数在计算时，忽略列值为 NULL 的行。
+## AVG函数：求平均值
+MySQL AVG() 函数通过计算返回的行数和每一行数据的和，求得指定列数据的平均值。
+
+这里需要用到以下在介绍 MAX() 函数时创建的表 tb_students_score 。
+
+【实例】在 tb_students_score 表中，查询所有学生成绩的平均值，输入的 SQL 语句和执行结果如下所示。
+mysql> SELECT AVG(student_score)
+    -> AS score_avg
+    -> FROM tb_students_score;
++-----------+
+| score_avg |
++-----------+
+|   94.2000 |
++-----------+
+1 row in set (0.03 sec)
+提示：使用 AVG() 函数时，参数为要计算的列名称，若要得到多个列的平均值，则需要在每一列都使用 AVG() 函数。
+# 流程控制函数
+## IF函数：判断
+MySQL IF 语句允许您根据表达式的某个条件或值结果来执行一组 SQL 语句。
+
+要在 MySQL 中形成一个表达式，可以结合文字，变量，运算符，甚至函数来组合。表达式可以返回 TRUE,FALSE 或 NULL，这三个值之一。
+
+语法结构如下：
+IF(expr,v1,v2)
+
+其中：表达式 expr 得到不同的结果，当 expr 为真是返回 v1 的值，否则返回 v2.
+
+【实例】使用 IF(expr,v1,v2) 函数根据 expr 表达式结果返回相应值，输入 SQL 语句和执行结果如下。
+mysql> SELECT IF(1<2,1,0) c1,IF(1>5,'√','×') c2,IF(STRCMP('abc','ab'),'yes','no') c3;
++----+----+-----+
+| c1 | c2 | c3  |
++----+----+-----+
+|  1 | × | yes |
++----+----+-----+
+1 row in set, 2 warnings (0.00 sec)
+由执行结果可以看出，在 c1 中，表达式 1<2 所得的结果是 TRUE，则返回结果为 v1，即数值 1；在 c2 中，表达式 1>5 所得的结果是 FALSE，则返回结果为 v2，即字符串 '×'；在 c3 中，先用 STRCMP(s1,s2) 函数比较两个字符串的大小，字符串 'abc' 和 'ab' 比较结果的返回值为 1，也就是表达式 expr 的返回结果不等于 0 且不等于 NULL，则返回值为 v1，即字符串 'yes'。
+## IFNULL函数：判断是否为空
+MySQL IFNULL 函数是 MySQL 控制流函数之一，它接受两个参数，如果不是 NULL，则返回第一个参数。 否则，IFNULL 函数返回第二个参数。两个参数可以是文字值或表达式。
+
+函数的语法：
+IFNULL(v1,v2);
+
+其中：如果 v1 不为 NULL，则 IFNULL 函数返回 v1; 否则返回 v2 的结果。
+
+【实例】使用 IFNULL(v1,v2) 函数根据 v1 的取值返回相应值。输入 SQL 语句和执行结果如下。
+mysql> SELECT IFNULL(5,8),IFNULL(NULL,'OK'),IFNULL(SQRT(-8),'FALSE'),SQRT(-8);
++-------------+-------------------+--------------------------+----------+
+| IFNULL(5,8) | IFNULL(NULL,'OK') | IFNULL(SQRT(-8),'FALSE') | SQRT(-8) |
++-------------+-------------------+--------------------------+----------+
+|           5 | OK                | FALSE                    |     NULL |
++-------------+-------------------+--------------------------+----------+
+1 row in set (0.00 sec)
+由执行结果可以看出，IFNULL(v1,v2) 函数中的参数 v1=5、v2=8，都不为空，即 v1=5 不为空，返回 v1 的值为 5；当 v1=NULL 时，返回 v2 的值，即字符串 'OK'；当 v1=SQRT(-8) 时，SQRT(-8) 函数的返回值为NULL，即 v1=NULL，所以返回 v2 为字符串 'false'。
+## CASE函数：搜索语句
+除了 IF 函数，MySQL 还提供了一个替代的条件语句 CASE。 MySQL CASE 语句使代码更加可读和高效。
+
+CASE 语句有两种形式：简单的和可搜索 CASE 语句。
+简单的 CASE 语句
+简单的 CASE 语句就是指使用简单 CASE 语句来检查表达式的值与一组唯一值的匹配。
+
+简单的 CASE 语句的语法：
+CASE  <表达式>
+   WHEN <值1> THEN <操作>
+   WHEN <值2> THEN <操作>
+   ...
+   ELSE <操作>
+END CASE;
+其中：<表达式> 可以是任何有效的表达式。我们将 <表达式> 的值与每个 WHEN 子句中的值进行比较，例如 <值1>，<值2> 等。如果 <表达式> 和 <值n> 的值相等，则执行相应的 WHEN 分支中的命令 <操作>。如果 WHEN 子句中的 <值n> 没有与 <表达式> 的值匹配，则 ELSE 子句中的命令将被执行。ELSE 子句是可选的。 如果省略 ELSE 子句，并且找不到匹配项，MySQL 将引发错误。
+【实例 1】使用 CASE 函数根据表达式的取值返回相应值，输入SQL 语句和执行结果如下
+mysql> SELECT CASE WEEKDAY(NOW()) WHEN 0 THEN '星期一' WHEN 1 THEN '星期二' WHEN
+2 THEN '星期三' WHEN 3 THEN '星期四' WHEN 4 THEN '星期五' WHEN 5 THEN '星期六'
+ELSE '星期天' END AS COLUMN1,NOW(),WEEKDAY(NOW()),DAYNAME(NOW());
++---------+---------------------+----------------+----------------+
+| COLUMN1 | NOW()               | WEEKDAY(NOW()) | DAYNAME(NOW()) |
++---------+---------------------+----------------+----------------+
+| 星期四  | 2019-02-28 13:45:43 |              3 | Thursday       |
++---------+---------------------+----------------+----------------+
+1 row in set, 7 warnings (0.00 sec)
+由执行结果可以看出，NOW() 函数得到当前系统时间是 2019 年 2 月 28 日，DAYNAME(NOW()) 得到当天是 'Thursday '，WEEKDAY(NOW()) 函数返回当前时间的工作日索引是 3，即对应的是星期四。
+可搜索的 CASE 语句
+简单 CASE 语句仅允许将表达式的值与一组不同的值进行匹配。 为了执行更复杂的匹配，如范围，则可以使用可搜索 CASE 语句。 可搜索 CASE 语句等同于 IF 语句，但是它的构造更加可读。
+可搜索CASE语句的语法：
+CASE
+    WHEN <条件1> THEN <命令>
+    WHEN <条件2> THEN <命令>
+    ...
+    ELSE commands
+END CASE;
+MySQL 分别计算 WHEN 子句中的每个条件，直到找到一个值为 TRUE 的条件，然后执行 THEN 子句中的相应 <命令>。如果没有一个条件为 TRUE，则执行 ELSE 子句中的 <命令>。如果不指定 ELSE 子句，并且没有一个条件为 TRUE，MySQL 将发出错误消息。MySQL 不允许在 THEN 或 ELSE 子句中使用空的命令。 如果您不想处理 ELSE 子句中的逻辑，同时又要防止 MySQL 引发错误，则可以在 ELSE 子句中放置一个空的 BEGIN END 块。
+
+【实例 2】使用 CASE 函数根据表达式的取值返回相应值，输入SQL 语句和执行结果如下
+mysql> SELECT CASE WHEN WEEKDAY(NOW())=0 THEN '星期一' WHEN WEEKDAY(NOW())=1 THE
+N '星期二'  WHEN WEEKDAY(NOW())=2 THEN '星期三' WHEN WEEKDAY(NOW())=3 THEN '星期
+四' WHEN WEEKDAY(NOW())=4 THEN '星期五' WHEN WEEKDAY(NOW())=5 THEN '星期六' WHEN
+WEEKDAY(NOW())=6 THEN '星期天' END AS COLUMN1,NOW(),WEEKDAY(NOW()),DAYNAME(NOW(
+));
++---------+---------------------+----------------+----------------+
+| COLUMN1 | NOW()               | WEEKDAY(NOW()) | DAYNAME(NOW()) |
++---------+---------------------+----------------+----------------+
+| 星期四  | 2019-02-28 14:08:00 |              3 | Thursday       |
++---------+---------------------+----------------+----------------+
+1 row in set, 7 warnings (0.00 sec)
+此例跟上例的返回结果一样，只是使用了 CASE 函数的不同写法，WHEN 后面为表达式，当表达式的返回结果为 TRUE 时取 THEN 后面的值，如果都不是，则返回 ELSE 后面的值。

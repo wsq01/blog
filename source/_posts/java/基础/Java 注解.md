@@ -1,7 +1,11 @@
+---
+title: Java 注解
+date: 2020-11-15 11:31:41
+tags: [java]
+categories: java
+---
 
-
-
-从 Java 5 版本之后可以在源代码中嵌入一些补充信息，这种补充信息称为注解（·Annotation·）。注解都是`@`符号开头的。同`Class`和`Interface`一样，注解也属于一种类型。
+从 Java 5 之后可以在源代码中嵌入一些补充信息，这种补充信息称为注解（`Annotation`）。注解都是`@`符号开头的。
 
 注解并不能改变程序的运行结果，也不会影响程序运行的性能。有些注解可以在编译时给用户提示或警告，有的注解可以在运行时读写字节码文件信息。
 
@@ -9,21 +13,19 @@
 ```java
 @Override
 public String toString() {
-  return "C语言中文网Java教程";
+  return "hello";
 }
 ```
-上面的代码重写了`Object`类的`toString()`方法并使用了`@Override`注解。如果不使用`@Override`注解标记代码，程序也能够正常执行。那么这么写有什么好处吗？事实上，使用`@Override`注解就相当于告诉编译器这个方法是一个重写方法，如果父类中不存在该方法，编译器便会报错，提示该方法没有重写父类中的方法。这样可以防止不小心拼写错误造成麻烦。
-
-例如，在没有使用`@Override`注解的情况下，将`toString()`写成了`toStrring()`，这时程序依然能编译运行，但运行结果会和所期望的结果大不相同。
+上面的代码重写了`Object`类的`toString()`方法并使用了`@Override`注解。如果不使用`@Override`注解标记代码，程序也能够正常执行。使用`@Override`注解就相当于告诉编译器这个方法是一个重写方法，如果父类中不存在该方法，编译器便会报错，提示该方法没有重写父类中的方法。这样可以防止不小心拼写错误造成麻烦。
 
 注解常见的作用有以下几种：
-* 生成帮助文档。这是最常见的，也是 Java 最早提供的注解。常用的有 @see、@param 和 @return 等；
+* 生成帮助文档。这是最常见的，也是 Java 最早提供的注解。常用的有`@see、@param`和`@return`等；
 * 跟踪代码依赖性，实现替代配置文件功能。作用就是减少配置。现在的框架基本都使用了这种配置来减少配置文件的数量；
 * 在编译时进行格式检查。如把`@Override`注解放在方法前，如果这个方法并不是重写了父类方法，则编译时就能检查出。
 
-无论是哪一种注解，本质上都是一种接口类型。到 Java 8 为止 Java SE 提供了 11 个内置注解。其中有 5 个是基本注解，它们来自于·java.lang·包。有 6 个是元注解，它们来自于·java.lang.annotation·包，自定义注解会用到元注解。
+无论是哪一种注解，本质上都是一种接口类型。到 Java 8 为止 Java SE 提供了 11 个内置注解。其中有 5 个是基本注解，它们来自于`java.lang`包。有 6 个是元注解，它们来自于`java.lang.annotation`包，自定义注解会用到元注解。
 
-提示：元注解就是负责注解其他的注解。
+> 提示：元注解就是负责注解其他的注解。
 
 基本注解包括：`@Override、@Deprecated、@SuppressWarnings、@SafeVarargs`和`@FunctionalInterface`。
 # @Override注解
@@ -41,13 +43,13 @@ public class Person {
 ```
 上述代码第 6 行是重写`Object`类的`toString()`方法，该方法使用`@Override`注解。如果`toString()`不小心写成了`t0String()`，那么程序会发生编译错误。
 
-所以`@Override`的作用是告诉编译器检查这个方法，保证父类要包含一个被该方法重写的方法，否则就会编译出错。这样可以帮助程序员避免一些低级错误。
+所以`@Override`的作用是告诉编译器检查这个方法，保证父类要包含一个被该方法重写的方法，否则就会编译出错。这样可以避免一些低级错误。
 
 当然如果代码中的方法前面不加`@Override`注解，即便是方法编辑错误了，编译器也不会有提示。这时`Object`父类的`toString()`方法并没有被重写，将会引起程序出现 Bug。
 # @Deprecated注解
 `@Deprecated`可以用来注解类、接口、成员方法和成员变量等，用于表示某个元素（类、方法等）已过时。当其他程序使用已过时的元素时，编译器将会给出警告。
 
-Java 9 为 @Deprecated 注解增加了以下两个属性：
+Java 9 为`@Deprecated`注解增加了以下两个属性：
 * `forRemoval`：该`boolean`类型的属性指定该 API 在将来是否会被删除。
 * `since`：该`String`类型的属性指定该 API 从哪个版本被标记为过时。
 
@@ -68,7 +70,7 @@ public class DeprecatedTest {
 ```
 上面程序的第 12 行代码使用了`Test`的`print()`方法，而`Test`类中定义`print()`方法时使用了`@Deprecated`修饰，表明该方法已过时，所以将会引起编译器警告。
 
-`@Deprecated`的作用与文档注释中的`@deprecated`标记的作用基本相同，但它们的用法不同，前者无须放在文档注释语法（/** ... */部分）中，而是直接用于修饰程序中的程序单元，如方法、类和接口等。
+`@Deprecated`的作用与文档注释中的`@deprecated`标记的作用基本相同，但它们的用法不同，前者无须放在文档注释语法（`/** ... */`部分）中，而是直接用于修饰程序中的程序单元，如方法、类和接口等。
 # @SuppressWarnings：抑制编译器警告
 `@SuppressWarnings`注解指示被该注解修饰的程序元素（以及该程序元素中的所有子元素）取消显示指定的编译器警告，且会一直作用于该程序元素的所有子元素。例如，使用`@SuppressWarnings`修饰某个类取消显示某个编译器警告，同时又修饰该类里的某个方法取消显示另一个编译器警告，那么该方法将会同时取消显示这两个编译器警告。
 
@@ -84,6 +86,7 @@ public class DeprecatedTest {
 抑制警告的关键字如下表所示。
 
 | 关键字 | 用途 |
+| :--: | :--: |
 | all | 抑制所有警告 |
 | boxing | 抑制装箱、拆箱操作时候的警告 |
 | cast | 抑制映射相关的警告 |
@@ -109,8 +112,8 @@ public class HelloWorld {
   @SuppressWarnings({ "deprecation" })
   public static void main(String[] args) {
     Person p = new Person();
-    p.setNameAndAge("C语言中文网", 20);
-    p.name = "Java教程";
+    p.setNameAndAge("zhangsan", 20);
+    p.name = "lisi";
   }
 }
 ```
@@ -130,7 +133,7 @@ public class HelloWorld {
   }
 }
 ```
-代码第 10 行声明了一种可变参数方法`display`，`display`方法参数个数可以变化，它可以接受不确定数量的相同类型的参数。可以通过在参数类型名后面加入...的方式来表示这是可变参数。可变参数方法中的参数类型相同，为此声明参数是需要指定泛型。
+代码第 8 行声明了一种可变参数方法`display`，`display`方法参数个数可以变化，它可以接受不确定数量的相同类型的参数。可以通过在参数类型名后面加入...的方式来表示这是可变参数。可变参数方法中的参数类型相同，为此声明参数是需要指定泛型。
 
 但是调用可变参数方法时，应该提供相同类型的参数，代码第 4 行调用时没有警告，而代码第 6 行调用时则会发生警告，这个警告是`unchecked`（未检查不安全代码），就是因为将非泛型变量赋值给泛型变量所发生的。
 
@@ -157,9 +160,7 @@ public class HelloWorld {
 # @FunctionalInterface注解
 如果接口中只有一个抽象方法（可以包含多个默认方法或多个`static`方法），那么该接口就是函数式接口。`@FunctionalInterface`就是用来指定某个接口必须是函数式接口，所以`@FunInterface`只能修饰接口，不能修饰其它程序元素。
 
-函数式接口就是为 Java 8 的 Lambda 表达式准备的，Java 8 允许使用 Lambda 表达式创建函数式接口的实例，因此 Java 8 专门增加了`@FunctionalInterface`。
-
-如下程序使用`@FunctionalInterface`修饰了函数式接口。
+函数式接口就是为 Java 8 的`Lambda`表达式准备的，Java 8 允许使用`Lambda`表达式创建函数式接口的实例，因此 Java 8 专门增加了`@FunctionalInterface`。
 ```java
 @FunctionalInterface
 public interface FunInterface {
@@ -172,9 +173,7 @@ public interface FunInterface {
   void test(); // 只定义一个抽象方法
 }
 ```
-编译上面程序，可能丝毫看不出程序中的`@FunctionalInterface`有何作用，因为`@FunctionalInterface`注解的作用只是告诉编译器检查这个接口，保证该接口只能包含一个抽象方法，否则就会编译出错。
-
-`@FunctionalInterface`注解主要是帮助程序员避免一些低级错误，例如，在上面的`FunInterface`接口中再增加一个抽象方法`abc()`，编译程序时将出现如下错误提示：
+编译上面程序，可能丝毫看不出程序中的`@FunctionalInterface`有何作用，因为`@FunctionalInterface`注解的作用只是告诉编译器检查这个接口，保证该接口只能包含一个抽象方法，否则就会编译出错。如果在上面的`FunInterface`接口中再增加一个抽象方法`abc()`，编译程序时将出现如下错误提示：
 `“@FunctionInterface”批注无效；FunInterface不是functional接口`。
 # 元注解作用及使用
 元注解是负责对其它注解进行说明的注解，自定义注解时可以使用元注解。Java 5 定义了 4 个注解，分别是`@Documented、@Target、@Retention`和`@Inherited`。Java 8 又增加了`@Repeatable`和`@Native`两个注解。这些注解都可以在`java.lang.annotation`包中找到。
@@ -198,14 +197,8 @@ public class DocumentedTest {
   }
 }
 ```
-打开 Java 文件所在的目录，分别输入如下两条命令行：
-```
-javac MyDocumented.java DocumentedTest.java
-javadoc -d doc MyDocumented.java DocumentedTest.java
-```
-运行成功后，打开生成的帮助文档，可以看到在类和方法上都保留了`MyDocument`的注解信息。
 ## @Target
-`@Target`注解用来指定一个注解的使用范围，即被`@Target`修饰的注解可以用在什么地方。`@Target`注解有一个成员变量（`value`）用来设置适用目标，`value`是`java.lang.annotation.ElementType`枚举类型的数组，下表为 ElementType 常用的枚举常量。
+`@Target`注解用来指定一个注解的使用范围，即被`@Target`修饰的注解可以用在什么地方。`@Target`注解有一个成员变量（`value`）用来设置适用目标，`value`是`java.lang.annotation.ElementType`枚举类型的数组，下表为`ElementType`常用的枚举常量。
 
 | 名称 | 说明 |
 | :--: | :--: |
@@ -225,7 +218,7 @@ class Test {
   String name;
 }
 ```
-如上代码第 6 行会编译错误，错误信息为：`The annotation @MyTarget is disallowed for this location`。提示此位置不允许使用注解`@MyDocumented`，`@MyTarget`不能修饰成员变量，只能修饰方法。
+如上代码第 4 行会编译错误，错误信息为：`The annotation @MyTarget is disallowed for this location`。提示此位置不允许使用注解`@MyDocumented`，`@MyTarget`不能修饰成员变量，只能修饰方法。
 ## @Retention
 `@Retention`用于描述注解的生命周期，也就是该注解被保留的时间长短。`@Retention`注解中的成员变量（`value`）用来设置保留策略，`value`是`java.lang.annotation.RetentionPolicy`枚举类型，`RetentionPolicy`有 3 个枚举常量。
 * `SOURCE`：在源文件中有效（即源文件保留）
@@ -259,7 +252,7 @@ class TestC extends TestB {}
 //@MyInherited()
 ```
 ## @Repeatable
-`@Repeatable`注解是 Java 8 新增加的，它允许在相同的程序元素中重复注解，在需要对同一种注解多次使用时，往往需要借助 @Repeatable 注解。Java 8 版本以前，同一个程序元素前最多只能有一个相同类型的注解，如果需要在同一个元素前使用多个相同类型的注解，则必须使用注解“容器”。
+`@Repeatable`注解是 Java 8 新增加的，它允许在相同的程序元素中重复注解，在需要对同一种注解多次使用时，往往需要借助`@Repeatable`注解。Java 8 版本以前，同一个程序元素前最多只能有一个相同类型的注解，如果需要在同一个元素前使用多个相同类型的注解，则必须使用注解“容器”。
 
 Java 8 之前的做法：
 ```java
@@ -272,7 +265,7 @@ public @interface Roles {
 public class RoleTest {
   @Roles(roles = {@Role(roleName = "role1"), @Role(roleName = "role2")})
   public String doString(){
-    return "这是C语言中国网Java教程";
+    return "hello";
   }
 }
 ```
@@ -289,7 +282,7 @@ public class RoleTest {
   @Role(roleName = "role1")
   @Role(roleName = "role2")
   public String doString(){
-    return "这是C语言中文网Java教程";
+    return "hello";
   }
 }
 ```

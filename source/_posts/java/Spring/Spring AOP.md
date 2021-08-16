@@ -1,20 +1,20 @@
 ---
 title: Spring AOP
-date: 2021-04-09 16:24:15
+date: 2021-05-26 16:24:15
 tags: [Spring]
 categories: [Spring]
 ---
 
 
-面向切面编程（AOP）和面向对象编程（OOP）类似，也是一种编程模式。Spring AOP 是基于 AOP 编程模式的一个框架，它的使用有效减少了系统间的重复代码，达到了模块间的松耦合目的。
+AOP 的全称是“Aspect Oriented Programming”，即面向切面编程，和 OOP（面向对象编程）类似，也是一种编程思想。
 
-AOP 的全称是“Aspect Oriented Programming”，即面向切面编程，它将业务逻辑的各个部分进行隔离，使开发人员在编写业务逻辑时可以专心于核心业务，从而提高了开发效率。
+AOP 采取横向抽取机制（动态代理），取代了传统纵向继承机制的重复性代码，其应用主要体现在事务处理、日志管理、权限控制、异常处理等方面。主要作用是分离功能性需求和非功能性需求，使开发人员可以集中处理某一个关注点或者横切逻辑，减少对业务代码的侵入，增强代码的可读性和可维护性。
 
-AOP 采取横向抽取机制，取代了传统纵向继承体系的重复性代码，其应用主要体现在事务处理、日志管理、权限控制、异常处理等方面。
+简单的说，AOP 的作用就是保证开发者在不修改源代码的前提下，为系统中的业务组件添加某种通用功能。AOP 就是代理模式的典型应用。
 
 目前最流行的 AOP 框架有两个，分别为 Spring AOP 和 AspectJ。
 
-Spring AOP 使用纯 Java 实现，不需要专门的编译过程和类加载器，在运行期间通过代理方式向目标类植入增强的代码。
+Spring AOP 是基于 AOP 编程模式的一个框架，它能够有效的减少系统间的重复代码，达到松耦合的目的。Spring AOP 使用纯 Java 实现，不需要专门的编译过程和类加载器，在运行期间通过代理方式向目标类植入增强的代码。有两种实现方式：基于接口的 JDK 动态代理和基于继承的 CGLIB 动态代理。
 
 AspectJ 是一个基于 Java 语言的 AOP 框架，从 Spring 2.0 开始，Spring AOP 引入了对 AspectJ 的支持。AspectJ 扩展了 Java 语言，提供了一个专门的编译器，在编译时提供横向代码的植入。
 # AOP术语
@@ -29,7 +29,7 @@ AspectJ 是一个基于 Java 语言的 AOP 框架，从 Spring 2.0 开始，Spri
 | Proxy（代理） | 指生成的代理对象。 |
 | Aspect（切面） | 切入点和通知的结合。 |
 
-Advice 直译为通知，也有的资料翻译为“增强处理”，共有 5 种类型，如下表所示。
+`Advice`直译为通知，也有的资料翻译为“增强处理”，共有 5 种类型，如下表所示。
 
 | 通知 | 说明 |
 | :--: | :--: |
@@ -40,51 +40,44 @@ Advice 直译为通知，也有的资料翻译为“增强处理”，共有 5 �
 | around（环绕通知） | 通知方法会将目标方法封装起来 |
 
 在 Spring 框架中使用 AOP 主要有以下优势。
-提供声明式企业服务，特别是作为 EJB 声明式服务的替代品。最重要的是，这种服务是声明式事务管理。
-允许用户实现自定义切面。在某些不适合用 OOP 编程的场景中，采用 AOP 来补充。
-可以对业务逻辑的各个部分进行隔离，从而使业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时也提高了开发效率。
+* 提供声明式企业服务，这种服务是声明式事务管理。
+* 允许用户实现自定义切面。在某些不适合用 OOP 编程的场景中，采用 AOP 来补充。
+* 可以对业务逻辑的各个部分进行隔离，从而使业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时也提高了开发效率。
+
 # JDK动态代理
-JDK 动态代理是通过 JDK 中的`java.lang.reflect.Proxy`类实现的。下面通过具体的案例演示 JDK 动态代理的使用。
-## 1. 创建项目
-创建一个名称为`springDemo03`的 Web 项目，将 Spring 支持和依赖的 JAR 包复制到 Web 项目的 WEB-INF/lib 目录中，并发布到类路径下。
-## 2. 创建接口 CustomerDao
-在项目的`src`目录下创建一个名为`com.mengma.dao`的包，在该包下创建一个`CustomerDao`接口。
+Spring JDK 动态代理需要实现`InvocationHandler`接口，重写`invoke`方法，客户端使用`Java.lang.reflect.Proxy`类产生动态代理类的对象。
+## 示例
+步骤如下：
+* 创建`SpringDemo`项目，并在`src`目录下创建`net.biancheng`包。
+* 在`net.biancheng`包下创建`UserManager`（用户管理接口）、`UserManagerImpl`（用户管理接口实现类）、`MyAspect`（切面类）和`JdkProxy`（动态代理类）。
+* 运行`SpringDemo`项目。
+
 ```java
-package com.mengma.dao;
-public interface CustomerDao {
-  public void add(); // 添加
-  public void update(); // 修改
-  public void delete(); // 删除
-  public void find(); // 查询
+package net.biancheng;
+public interface UserManager {
+  // 新增用户抽象方法
+  void addUser(String userName, String password);
+  // 删除用户抽象方法
+  void delUser(String userName);
 }
 ```
-## 3. 创建实现类 CustomerDaoImpl
-在`com.mengma.dao`包下创建`CustomerDao`接口的实现类`CustomerDaoImpl`，并实现该接口中的所有方法。
 ```java
-package com.mengma.dao;
-public class CustomerDaoImpl implements CustomerDao {
+package net.biancheng;
+public class UserManagerImpl implements UserManager {
   @Override
-  public void add() {
-    System.out.println("添加客户...");
+  public void addUser(String userName, String password) {
+    System.out.println("正在执行添加用户方法");
+    System.out.println("用户名称: " + userName + " 密码: " + password);
   }
   @Override
-  public void update() {
-    System.out.println("修改客户...");
-  }
-  @Override
-  public void delete() {
-    System.out.println("删除客户...");
-  }
-  @Override
-  public void find() {
-    System.out.println("修改客户...");
+  public void delUser(String userName) {
+    System.out.println("正在执行删除用户方法");
+    System.out.println("用户名称: " + userName);
   }
 }
 ```
-## 4. 创建切面类 MyAspect
-在`src`目录下，创建一个名为`com.mengma.jdk`的包，在该包下创建一个切面类`MyAspect`。
 ```java
-package com.mengma.jdk;
+package net.biancheng;
 public class MyAspect {
   public void myBefore() {
     System.out.println("方法执行之前");
@@ -94,63 +87,547 @@ public class MyAspect {
   }
 }
 ```
-上述代码中，在切面中定义了两个增强的方法，分别为 myBefore() 方法和 myAfter() 方法，用于对目标类（CustomerDaoImpl）进行增强。
-## 5. 创建代理类 MyBeanFactory
-在 com.mengma.jdk 包下创建一个名为 MyBeanFactory 的类，在该类中使用 java.lang.reflect.Proxy 实现 JDK 动态代理，如下所示。
 ```java
-package com.mengma.jdk;
+package net.biancheng;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import com.mengma.dao.CustomerDao;
-import com.mengma.dao.CustomerDaoImpl;
-public class MyBeanFactory {
-  public static CustomerDao getBean() {
-    // 准备目标类
-    final CustomerDao customerDao = new CustomerDaoImpl();
-    // 创建切面类实例
-    final MyAspect myAspect = new MyAspect();
-    // 使用代理类，进行增强
-    return (CustomerDao) Proxy.newProxyInstance(
-            MyBeanFactory.class.getClassLoader(),
-            new Class[] { CustomerDao.class }, new InvocationHandler() {
-              public Object invoke(Object proxy, Method method,
-                      Object[] args) throws Throwable {
-                  myAspect.myBefore(); // 前增强
-                  Object obj = method.invoke(customerDao, args);
-                  myAspect.myAfter(); // 后增强
-                  return obj;
-              }
-            });
+/**
+* JDK动态代理实现InvocationHandler接口
+*
+* @author 编程帮
+*
+*/
+public class JdkProxy implements InvocationHandler {
+  private Object target; // 需要代理的目标对象
+  final MyAspect myAspect = new MyAspect();
+  @Override
+  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    myAspect.myBefore();
+    Object result = method.invoke(target, args);
+    myAspect.myAfter();
+    return result;
+  }
+  // 定义获取代理对象方法
+  private Object getJDKProxy(Object targetObject) {
+    // 为目标对象target赋值
+    this.target = targetObject;
+    
+    // JDK动态代理只能代理实现了接口的类，从 newProxyInstance 函数所需的参数就可以看出来
+    return Proxy.newProxyInstance(targetObject.getClass().getClassLoader(), targetObject.getClass().getInterfaces(),this);
+  }
+  public static void main(String[] args) {
+    JdkProxy jdkProxy = new JdkProxy();    // 实例化JDKProxy对象
+    UserManager user = (UserManager) jdkProxy.getJDKProxy(new UserManagerImpl());    // 获取代理对象
+    user.addUser("bianchengbang", "www.biancheng.net");    // 执行新增方法
+    user.delUser("bianchengbang");    // 执行删除方法
   }
 }
 ```
-上述代码中，定义了一个静态的 getBean() 方法，这里模拟 Spring 框架的 IoC 思想，通过调用 getBean() 方法创建实例，第 14 行代码创建了 customerDao 实例。
+运行结果如下。
+```
+方法执行之前
+正在执行添加用户方法
+用户名称: bianchengbang 密码: www.biancheng.net
+方法执行之后
+方法执行之前
+正在执行删除用户方法
+用户名称: bianchengbang
+方法执行之后
+```
+# CGLlB动态代理
+JDK 动态代理使用起来非常简单，但是 JDK 动态代理的目标类必须要实现一个或多个接口，具有一定的局限性。如果不希望实现接口，可以使用 CGLIB代理。
 
-第 16 行代码创建的切面类实例用于调用切面类中相应的方法；第 18～26 行就是使用代理类对创建的实例 customerDao 中的方法进行增强的代码，其中 Proxy 的 newProxyInstance() 方法的第一个参数是当前类的类加载器，第二参数是所创建实例的实现类的接口，第三个参数就是需要增强的方法。
+CGLIB（Code Generation Library）是一个高性能开源的代码生成包，它被许多 AOP 框架所使用，其底层是通过使用一个小而快的字节码处理框架 ASM（Java 字节码操控框架）转换字节码并生成新的类。使用 CGLIB 需要导入 CGLIB 和 ASM 包，即 asm-x.x.jar 和 CGLIB-x.x.x.jar 。如果您已经导入了 Spring 的核心包 spring-core-x.x.x.RELEASE.jar，就不用再导入 asm-x.x.jar 和 cglib-x.x.x.jar 了。
 
-在目标类方法执行的前后，分别执行切面类中的 myBefore() 方法和 myAfter() 方法。
-## 6. 创建测试类 JDKProxyTest
-在`com.mengma.jdk`包下创建一个名为 JDKProxyTest 的测试类。
+Spring 核心包中包含 CGLIB 和 asm，也就是说 Spring 核心包已经集成了 CGLIB 所需要的包，所以在开发中不需要另外导入asm-x.x.jar 和 cglib-x.x.x.jar 包了。
+示例
+下面使用 Eclipse IDE 演示 CGLIB 动态代理的使用，步骤如下：
+创建 SpringDemo 项目，并在 src 目录下创建 net.biancheng 包。
+导入相关 JAR 包。
+在 net.biancheng 包下创建 UserManager（用户管理接口）、UserManagerImpl（用户管理接口实现类）、MyAspect（切面类）和 CGLIBProxy（动态代理类）。
+运行 SpringDemo 项目。
+
+UserManager 类代码如下。
 ```java
-package com.mengma.jdk;
-import org.junit.Test;
-import com.mengma.dao.CustomerDao;
-public class JDKProxyTest {
-  @Test
-  public void test() {
-    // 从工厂获得指定的内容（相当于spring获得，但此内容时代理对象）
-    CustomerDao customerDao = MyBeanFactory.getBean();
-    // 执行方法
-    customerDao.add();
-    customerDao.update();
-    customerDao.delete();
-    customerDao.find();
+package net.biancheng;
+public interface UserManager {
+   
+    // 新增用户抽象方法
+    void addUser(String userName, String password);
+    // 删除用户抽象方法
+    void delUser(String userName);
+}
+```
+UserManagerImpl 类代码如下。
+```java
+package net.biancheng;
+public class UserManagerImpl implements UserManager {
+    @Override
+    public void addUser(String userName, String password) {
+        System.out.println("正在执行添加用户方法");
+        System.out.println("用户名称: " + userName + " 密码: " + password);
+    }
+    @Override
+    public void delUser(String userName) {
+        System.out.println("正在执行删除用户方法");
+        System.out.println("用户名称: " + userName);
+    }
+}
+```
+MyAspect 类代码如下。
+```java
+package net.biancheng;
+public class MyAspect {
+    public void myBefore() {
+        System.out.println("方法执行之前");
+    }
+    public void myAfter() {
+        System.out.println("方法执行之后");
+    }
+}
+```
+CglibProxy 类代码如下。
+```java
+package net.biancheng;
+import java.lang.reflect.Method;
+import org.springframework.CGLIB.proxy.Enhancer;
+import org.springframework.CGLIB.proxy.MethodInterceptor;
+import org.springframework.CGLIB.proxy.MethodProxy;
+/**
+* CGLIB动态代理，实现MethodInterceptor接口
+*
+* @author 编程帮
+*
+*/
+public class CglibProxy implements MethodInterceptor {
+    private Object target;// 需要代理的目标对象
+    final MyAspect myAspect = new MyAspect();
+    // 重写拦截方法
+    @Override
+    public Object intercept(Object obj, Method method, Object[] arr, MethodProxy proxy) throws Throwable {
+        myAspect.myBefore();
+        Object invoke = method.invoke(target, arr);// 方法执行，参数：target目标对象 arr参数数组
+        myAspect.myAfter();
+        return invoke;
+    }
+    // 定义获取代理对象方法
+    public Object getCglibProxy(Object objectTarget) {
+        // 为目标对象target赋值
+        this.target = objectTarget;
+        Enhancer enhancer = new Enhancer();
+        // 设置父类,因为CGLIB是针对指定的类生成一个子类，所以需要指定父类
+        enhancer.setSuperclass(objectTarget.getClass());
+        enhancer.setCallback(this);// 设置回调
+        Object result = enhancer.create();// 创建并返回代理对象
+        return result;
+    }
+    public static void main(String[] args) {
+        CglibProxy cglib= new CglibProxy();// 实例化CglibBProxy对象
+        UserManager user = (UserManager) cglib.getCglibProxy(new UserManagerImpl());// 获取代理对象
+        user.addUser("bianchengbang", "www.biancheng.net"); // 执行新增方法
+        user.delUser("bianchengbang"); // 执行删除方法
+    }
+}
+```
+运行结果如下。
+方法执行之前
+正在执行添加用户方法
+用户名称: bianchengbang 密码: www.biancheng.net
+方法执行之后
+方法执行之前
+正在执行删除用户方法
+用户名称: bianchengbang
+方法执行之后
+
+## JDK代理和CGLIB代理的区别
+JDK 动态代理是利用反射机制生成一个实现代理接口的匿名类，在调用具体方法前调用 InvokeHandler 来处理。而 CGLIB 动态代理是利用 ASM 开源包，加载代理对象类的 class 文件，通过修改其字节码生成子类来处理。
+
+JDK 动态代理只能对实现了接口的类生成代理，而不能针对类。
+
+CGLIB 是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法。因为是继承，所以该类或方法不能声明成 final 类型。
+JDK动态代理特点
+代理对象必须实现一个或多个接口
+以接口的形式接收代理实例，而不是代理类
+CGLIB动态代理特点
+代理对象不能被 final 修饰
+以类或接口形式接收代理实例
+JDK与CGLIB动态代理的性能比较
+生成代理实例性能：JDK > CGLIB
+代理实例运行性能：JDK > CGLIB
+# 基于AspectJ XML开发
+AspectJ 是一个基于 Java 语言的 AOP 框架，它扩展了 Java 语言，提供了强大的 AOP 功能。
+
+基于 XML 的声明式是指通过 Spring 配置文件的方式来定义切面、切入点及通知，而所有的切面和通知都必须定义在`<aop:config>`元素中。
+
+在使用`<aop:config>`元素之前，我们需要先导入 Spring aop 命名空间。
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
+    
+    ...
+</beans>
+```
+## 定义切面\<aop:aspect\>
+在 Spring 配置文件中，使用`<aop:aspect>`元素定义切面，该元素可以将定义好的`Bean`转换为切面`Bean`，所以使用`<aop:aspect>`之前需要先定义一个普通的`Spring Bean`。
+```xml
+<aop:config>
+  <aop:aspect id="myAspect" ref="aBean">
+    ...
+  </aop:aspect>
+</aop:config>
+```
+其中，`id`用来定义该切面的唯一表示名称，`ref`用于引用普通的`Spring Bean`。
+## 定义切入点 \<aop:pointcut\>
+`<aop:pointcut>`用来定义一个切入点，当`<aop:pointcut>`元素作为`<aop:config>`元素的子元素定义时，表示该切入点是全局切入点，它可被多个切面所共享；当`<aop:pointcut>`元素作为 `<aop:aspect>`元素的子元素时，表示该切入点只对当前切面有效。
+```xml
+<aop:config>
+  <aop:pointcut id="myPointCut" expression="execution(* net.biancheng.service.*.*(..))"/>
+</aop:config>
+```
+其中，`id`用于指定切入点的唯一标识名称，`execution`用于指定切入点关联的切入点表达式。
+
+`execution`格式为：
+```
+execution(modifiers-pattern returning-type-pattern declaring-type-pattern name-pattern(param-pattern)throws-pattern)
+```
+其中：
+returning-type-pattern、name-pattern、param-pattern 是必须的，其它参数为可选项。
+modifiers-pattern：指定修饰符，如 private、public。
+returning-type-pattern：指定返回值类型，*表示可以为任何返回值。如果返回值为对象，则需指定全路径的类名。
+declaring-type-pattern：指定方法的包名。
+name-pattern：指定方法名，*代表所有，set* 代表以 set 开头的所有方法。
+param-pattern：指定方法参数（声明的类型），(..)代表所有参数，(*)代表一个参数，(*,String)代表第一个参数可以为任何值，第二个为 String 类型的值。
+throws-pattern：指定抛出的异常类型。
+
+例如：execution(* net.biancheng.*.*(..))表示匹配 net.biancheng 包中任意类的任意方法。
+定义通知
+AspectJ 支持 5 种类型的 advice，如下。
+```xml
+<aop:aspect id="myAspect" ref="aBean">
+  <!-- 前置通知 -->
+  <aop:before pointcut-ref="myPointCut" method="..."/>
+  
+  <!-- 后置通知 -->
+  <aop:after-returning pointcut-ref="myPointCut" method="..."/>
+  <!-- 环绕通知 -->
+  <aop:around pointcut-ref="myPointCut" method="..."/>
+  <!-- 异常通知 -->
+  <aop:after-throwing pointcut-ref="myPointCut" method="..."/>
+  <!-- 最终通知 -->
+  <aop:after pointcut-ref="myPointCut" method="..."/>
+  .... 
+</aop:aspect>
+```
+示例
+下面使用 Eclipse IDE 演示 AspectJ 基于 XML 开发 AOP，步骤如下：
+创建 SpringDemo 项目，并在 src 目录下创建 net.biancheng 包。
+导入 Spring 相关 JAR 包及 Aspectjrt.jar、Aspectjweaver.jar、Aspectj.jar。
+在 net.biancheng 包下创建 Logging、Man、Beans.xml 和 MainApp。
+运行 SpringDemo 项目。
+
+Logging 类的代码如下，定义了在各个点要调用的方法。
+```java
+package net.biancheng;
+public class Logging {
+    /**
+     * 前置通知
+     */
+    public void beforeAdvice() {
+        System.out.println("前置通知");
+    }
+    /**
+     * 后置通知
+     */
+    public void afterAdvice() {
+        System.out.println("后置通知");
+    }
+    /**
+     * 返回后通知
+     */
+    public void afterReturningAdvice(Object retVal) {
+        System.out.println("返回值为：" + retVal.toString());
+    }
+    /**
+     * 抛出异常通知
+     */
+    public void afterThrowingAdvice(IllegalArgumentException ex) {
+        System.out.println("这里的异常为：" + ex.toString());
+    }
+}
+```
+Man 类的代码如下。
+```java
+package net.biancheng;
+public class Man {
+    private String name;
+    private int age;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public int getAge() {
+        return age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+    public void throwException() {
+        System.out.println("抛出异常");
+        throw new IllegalArgumentException();
+    }
+}
+```
+Beans.xml 代码如下。
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
+    <aop:config>
+        <aop:aspect id="log" ref="logging">
+            <aop:pointcut id="selectAll"
+                expression="execution(* net.biancheng.*.*(..))" />
+            <aop:before pointcut-ref="selectAll" method="beforeAdvice" />
+            <aop:after pointcut-ref="selectAll" method="afterAdvice" />
+            <aop:after-returning pointcut-ref="selectAll"
+                returning="retVal" method="afterReturningAdvice" />
+            <aop:after-throwing pointcut-ref="selectAll"
+                throwing="ex" method="afterThrowingAdvice" />
+        </aop:aspect>
+    </aop:config>
+    <bean id="man" class="net.biancheng.Man">
+        <property name="name" value="bianchengbang" />
+        <property name="age" value="12" />
+    </bean>
+    <bean id="logging" class="net.biancheng.Logging" />
+</beans>
+```
+MainApp 类代码如下。
+```
+package net.biancheng;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class MainApp {
+    public static void main(String[] args) {
+        ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+        Man man = (Man) context.getBean("man");
+        man.getName();
+        man.getAge();
+        man.throwException();
+    }
+}
+```
+运行结果如下。
+前置通知
+后置通知
+返回值为：bianchengbang
+前置通知
+后置通知
+返回值为：12
+前置通知
+抛出异常
+后置通知
+这里的异常为：java.lang.IllegalArgumentException
+```
+Exception in thread "main" java.lang.IllegalArgumentException
+```
+# 基于AspectJ注解开发
+在 Spring 中，尽管使用 XML 配置文件可以实现 AOP 开发，但是如果所有的相关配置都集中在配置文件中，势必会导致 XML 配置文件过于臃肿，从而给维护和升级带来一定的困难。
+
+为此，AspectJ 框架为 AOP 开发提供了一套注解。AspectJ 允许使用注解定义切面、切入点和增强处理，Spring 框架可以根据这些注解生成 AOP 代理。
+
+关于注解的介绍如表 1 所示。
+表 1 Annotation 注解介绍
+名称	说明
+@Aspect	用于定义一个切面。
+@Pointcut	用于定义一个切入点。
+@Before	用于定义前置通知，相当于 BeforeAdvice。
+@AfterReturning	用于定义后置通知，相当于 AfterReturningAdvice。
+@Around	用于定义环绕通知，相当于MethodInterceptor。
+@AfterThrowing	用于定义抛出通知，相当于ThrowAdvice。
+@After	用于定义最终final通知，不管是否异常，该通知都会执行。
+@DeclareParents	用于定义引介通知，相当于IntroductionInterceptor（不要求掌握）。
+启用 @AspectJ 注解有以下两种方法：
+1）使用@Configuration和@EnableAspectJAutoProxy注解
+@Configuration 
+@EnableAspectJAutoProxy
+public class Appconfig {
+}
+2）基于XML配置
+在 XML 文件中添加以下内容启用 @AspectJ。
+```
+<aop:aspectj-autoproxy>
+```
+定义切面@Aspect
+AspectJ 类和其它普通的 Bean 一样，可以有方法和字段，不同的是 AspectJ 类需要使用 @Aspect 注解，如下所示。
+```
+package net.biancheng;
+import org.aspectj.lang.annotation.Aspect;
+@Aspect
+public class AspectModule {
+}
+```
+AspectJ 类也可以像其它 Bean 一样在 XML 中配置，如下。
+```
+<bean id = "myAspect" class = "net.biancheng.AspectModule">
+   ...
+</bean>
+```
+定义切入点@Pointcut
+@Pointcut 注解用来定义一个切入点，如下。
+```
+// 要求：方法必须是private，返回值类型为void，名称自定义，没有参数
+@Pointcut("execution(*net.biancheng..*.*(..))")
+private void myPointCut() {
+}
+```
+相当于以下代码
+```
+<aop:pointcut expression="execution(*net.biancheng..*.*(..))"  id="myPointCut"/>
+```
+关于 execution 中表达式的使用说明，我们在《AspectJ基于XML开发AOP》一节介绍。
+定义通知advice
+@AspectJ 支持 5 种类型的 advice，以下为使用 @Before 的示例。
+```
+@Before("myPointCut()")
+public void beforeAdvice(){
+    ...
+}
+```
+示例
+下面使用 Eclipse IDE 演示 AspectJ 基于注解开发 AOP，步骤如下：
+创建 SpringDemo 项目，并在 src 目录下创建 net.biancheng 包。
+导入 Spring 相关 JAR 包及 Aspectjrt.jar、Aspectjweaver.jar、Aspectj.jar。
+在 net.biancheng 包下创建 Logging、Man、Beans.xml 和 MainApp。
+运行 SpringDemo 项目。
+
+Logging 类代码如下。
+```java
+package net.biancheng;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+@Aspect
+public class Logging {
+    /**
+     * 定义切入点
+     */
+    @Pointcut("execution(* net.biancheng.*.*(..))")
+    private void selectAll() {
+    }
+    /**
+     * 前置通知
+     */
+    @Before("selectAll()")
+    public void beforeAdvice() {
+        System.out.println("前置通知");
+    }
+    /**
+     * 后置通知
+     */
+    @After("selectAll()")
+    public void afterAdvice() {
+        System.out.println("后置通知");
+    }
+    /**
+     * 返回后通知
+     */
+    @AfterReturning(pointcut = "selectAll()", returning = "retVal")
+    public void afterReturningAdvice(Object retVal) {
+        System.out.println("返回值为：" + retVal.toString());
+    }
+    /**
+     * 抛出异常通知
+     */
+    @AfterThrowing(pointcut = "selectAll()", throwing = "ex")
+    public void afterThrowingAdvice(IllegalArgumentException ex) {
+        System.out.println("这里的异常为：" + ex.toString());
+    }
+}
+```
+Man 类代码如下。
+```java
+package net.biancheng;
+public class Man {
+    private String name;
+    private int age;
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public int getAge() {
+        return age;
+    }
+    public void setAge(int age) {
+        this.age = age;
+    }
+    public void throwException() {
+        System.out.println("抛出异常");
+        throw new IllegalArgumentException();
+    }
+}
+```
+Beans.xml 代码如下。
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd ">
+    <aop:aspectj-autoproxy />
+    <bean id="man" class="net.biancheng.Man">
+        <property name="name" value="bianchengbang" />
+        <property name="age" value="12" />
+    </bean>
+    <bean id="logging" class="net.biancheng.Logging" />
+</beans>
+```
+MainApp 类代码如下。
+```java
+package net.biancheng;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public class MainApp {
+  public static void main(String[] args) {
+    ApplicationContext context = new ClassPathXmlApplicationContext("Beans.xml");
+    Man man = (Man) context.getBean("man");
+    man.getName();
+    man.getAge();
+    man.throwException();
   }
 }
 ```
-上述代码中，在调用 getBean() 方法时，获取的是 CustomerDao 类的代理对象，然后调用了该对象中的方法。
-## 7. 运行项目并查看结果
-使用 JUnit 测试运行 test() 方法，运行成功后，控制台的输出结果如图 1 所示。
-
-从图 1 的输出结果中可以看出，在调用目标类的方法前后，成功调用了增强的代码，由此说明，JDK 动态代理已经实现。
+运行结果如下。
+```
+前置通知
+后置通知
+返回值为：bianchengbang
+前置通知
+后置通知
+返回值为：12
+前置通知
+抛出异常
+后置通知
+这里的异常为：java.lang.IllegalArgumentException
+```

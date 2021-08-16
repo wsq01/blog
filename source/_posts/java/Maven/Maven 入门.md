@@ -254,9 +254,9 @@ java  net.biancheng.www.App
 # Maven坐标
 在 Maven 中，任何一个依赖、插件或者项目构建的输出，都可以称为构件。
 
-Maven 坐标规定：世界上任何一个构件都可以使用 Maven 坐标并作为其唯一标识，Maven 坐标包括`groupId、artifactId、version、packaging`等元素，只要用户提供了正确的坐标元素，Maven 就能找到对应的构件。 
+Maven 坐标规定：任何一个构件都可以使用 Maven 坐标并作为其唯一标识，Maven 坐标包括`groupId、artifactId、version、packaging`等元素，只要用户提供了正确的坐标元素，Maven 就能找到对应的构件。 
 
-任何一个构件都必须明确定义自己的坐标，这是 Maven 的强制要求，任何构件都不能例外。我们在开发 Maven 项目时，也需要为其定义合适的坐标，只有定义了坐标，其他项目才能引用该项目生成的构件。
+任何一个构件都必须明确定义自己的坐标，这是 Maven 的强制要求。我们在开发 Maven 项目时，也需要为其定义合适的坐标，只有定义了坐标，其他项目才能引用该项目生成的构件。
 ```xml
 <project> 
     <groupId>net.xxx.www</groupId>
@@ -271,7 +271,7 @@ Maven 坐标主要由以下元素组成：
 * `version`：版本。
 * `packaging`：项目的打包方式，默认值为`jar`。
 
-`groupId、artifactId`和`version`是必须定义的，packaging 是可选的。
+`groupId、artifactId`和`version`是必须定义的，`packaging`是可选的。
 # Maven依赖
 如果一个 Maven 构建所产生的构件（例如 Jar 文件）被其他项目引用，那么该构件就是其他项目的依赖。
 ## 依赖声明
@@ -279,7 +279,7 @@ Maven 坐标是依赖的前提，所有 Maven 项目必须明确定义自己的�
 
 当 Maven 项目需要声明某一个依赖时，通常只需要在其 POM 中配置该依赖的坐标信息，Maven 会根据坐标自动将依赖下载到项目中。
 
-例如，某个项目中使用`servlet-api`作为其依赖，其配置如下。
+某个项目中使用`servlet-api`作为其依赖，其配置如下。
 ```xml
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -310,7 +310,7 @@ Maven 在某个统一的位置存储所有项目的构件，这个统一的位�
 
 项目构建完成生成的构件，也可以安装或者部署到仓库中，供其他项目使用。
 ## 仓库的分类
-Maven 仓库可以分为 2 个大类：本地仓库、远程仓库。
+Maven 仓库可以分为 2 大类：本地仓库、远程仓库。
 
 当 Maven 根据坐标寻找构件时，它会首先查看本地仓库，若本地仓库存在此构件，则直接使用；若本地仓库不存在此构件，Maven 就会去远程仓库查找，若发现所需的构件后，则下载到本地仓库使用。如果本地仓库和远程仓库都没有所需的构件，则 Maven 就会报错。
 
@@ -321,8 +321,6 @@ Maven 仓库可以分为 2 个大类：本地仓库、远程仓库。
 私服是一种特殊的远程仓库，它通常设立在局域网内，用来代理所有外部的远程仓库。它的好处是可以节省带宽，比外部的远程仓库更加稳定。
 
 除了中央仓库和私服外，还有很多其他公共仓库，例如 JBoss Maven 库，Java.net Maven 库等等。
-
-Maven 仓库的分类如下图。
 
 {% asset_img 4.png Maven 仓库分类 %}
 

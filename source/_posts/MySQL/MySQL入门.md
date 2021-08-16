@@ -1,6 +1,6 @@
 ---
 title: MySQL入门
-date: 2020-04-1 17:12:01
+date: 2020-04-01 17:12:01
 tags: [MySQL]
 categories: [MySQL]
 ---

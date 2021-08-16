@@ -1,4 +1,9 @@
-
+---
+title: MySQL 视图
+date: 2020-04-27 18:21:41
+tags: [MySQL]
+categories: [MySQL]
+---
 
 
 # 视图是什么

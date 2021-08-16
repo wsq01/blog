@@ -29,7 +29,7 @@ categories: [MySQL]
 
 使用主键应注意以下几点：
 * 每个表只能定义一个主键。
-* 主键值必须唯一标识表中的每一行，且不能为 NULL，即表中不可能存在有相同主键值的两行数据。这是唯一性原则。
+* 主键值必须唯一标识表中的每一行，且不能为`NULL`，即表中不可能存在有相同主键值的两行数据。这是唯一性原则。
 * 一个字段名只能在联合主键字段表中出现一次。
 * 联合主键不能包含不必要的多余字段。当把联合主键的某一字段删除后，如果剩下的字段构成的主键仍然满足唯一性原则，那么这个联合主键是不正确的。这是最小化原则。
 
@@ -60,7 +60,6 @@ mysql> DESC tb_emp3;
 | deptId | int(11)     | YES  |     | NULL    |       |
 | salary | float       | YES  |     | NULL    |       |
 +--------+-------------+------+-----+---------+-------+
-4 rows in set (0.14 sec)
 ```
 或者是在定义完所有字段之后指定主键，语法格式如下：
 ```
@@ -85,7 +84,6 @@ mysql> DESC tb_emp4;
 | deptId | int(11)     | YES  |     | NULL    |       |
 | salary | float       | YES  |     | NULL    |       |
 +--------+-------------+------+-----+---------+-------+
-4 rows in set (0.14 sec)
 ```
 ### 在创建表时设置联合主键
 所谓的联合主键，就是这个主键是由一张表中多个字段组成的。
@@ -116,7 +114,6 @@ mysql> DESC tb_emp5;
 | deptId | int(11)     | NO   | PRI | NULL    |       |
 | salary | float       | YES  |     | NULL    |       |
 +--------+-------------+------+-----+---------+-------+
-3 rows in set (0.14 sec)
 ```
 ## 在修改表时添加主键约束
 主键约束不仅可以在创建表的同时创建，也可以在修改表时添加。但是需要注意的是，设置成主键约束的字段中不允许有空值。
@@ -176,14 +173,13 @@ Records: 0  Duplicates: 0  Warnings: 0
 * 一个表中只能有一个字段使用`AUTO_INCREMENT`约束，且该字段必须有唯一索引，以避免序号重复（即为主键或主键的一部分）。
 * `AUTO_INCREMENT`约束的字段必须具备`NOT NULL`属性。
 * `AUTO_INCREMENT`约束的字段只能是整数类型（`TINYINT、SMALLINT、INT、BIGINT`等）。
-* AUTO_INCREMENT 约束字段的最大值受该字段的数据类型约束，如果达到上限，`AUTO_INCREMENT`就会失效。
+* `AUTO_INCREMENT`约束字段的最大值受该字段的数据类型约束，如果达到上限，`AUTO_INCREMENT`就会失效。
 
 ```
 mysql> CREATE TABLE tb_student(
     -> id INT(4) PRIMARY KEY AUTO_INCREMENT,
     -> name VARCHAR(25) NOT NULL
     -> );
-Query OK, 0 rows affected (0.07 sec)
 ```
 上述语句执行成功后，会创建名为`tb_student`的数据表。其中，`id`为主键，每插入一条新记录，`id`的值就会在前一条记录的基础上自动加 1。`name`为非空字段，该字段的值不能为空值（`NULL`）。
 
@@ -216,7 +212,6 @@ mysql> CREATE TABLE tb_student3(
     -> name VARCHAR(20) UNIQUE KEY,
     -> age INT DEFAULT NULL
     -> );
-Query OK, 0 rows affected (0.04 sec)
 ```
 向`tb_student3`表中插入数据，SQL 语句如下：
 ```
@@ -229,7 +224,7 @@ ERROR 1062 (23000): Duplicate entry '1' for key 'name'
 ```
 由于表中已经存在`name=1`的记录，所以报`Duplicate key error`（唯一键冲突）。在这之后，再插入新的数据时，自增`id`就是 3，这样就出现了自增字段值不连续的情况。
 # 外键约束
-MySQL 外键约束（FOREIGN KEY）是表的一个特殊字段，经常与主键约束一起使用。对于两个具有关联关系的表而言，相关联字段中主键所在的表就是主表（父表），外键所在的表就是从表（子表）。
+MySQL 外键约束（`FOREIGN KEY`）是表的一个特殊字段，经常与主键约束一起使用。对于两个具有关联关系的表而言，相关联字段中主键所在的表就是主表（父表），外键所在的表就是从表（子表）。
 
 外键用来建立主表与从表的关联关系，为两个表的数据建立连接，约束两个表中数据的一致性和完整性。比如，一个水果摊，只有苹果、桃子、李子、西瓜等 4 种水果，那么，你来到水果摊要买水果就只能选择苹果、桃子、李子和西瓜，其它的水果都是不能购买的。
 
@@ -264,7 +259,6 @@ mysql> CREATE TABLE tb_dept1
     -> name VARCHAR(22) NOT NULL,
     -> location VARCHAR(50)
     -> );
-Query OK, 0 rows affected (0.37 sec)
 ```
 创建数据表`tb_emp6`，并在表`tb_emp6`上创建外键约束，让它的键`deptId`作为外键关联到表`tb_dept1`的主键`id`，SQL 语句和运行结果如下所示。
 ```
@@ -288,7 +282,6 @@ mysql> DESC tb_emp6;
 | deptId | int(11)     | YES  | MUL | NULL    |       |
 | salary | float       | YES  |     | NULL    |       |
 +--------+-------------+------+-----+---------+-------+
-4 rows in set (1.33 sec)
 ```
 以上语句执行成功之后，在表`tb_emp6`上添加了名称为`fk_emp_dept1`的外键约束，外键名称为`deptId`，其依赖于表`tb_dept1`的主键`id`。
 
@@ -353,7 +346,7 @@ Create Table: CREATE TABLE `tb_emp2` (
 ```
 可以看到，`tb_emp2`中已经不存在`FOREIGN KEY`，原有的名称为`fk_emp_dept`的外键约束删除成功。
 # 唯一约束
-MySQL 唯一约束（`Unique Key`）是指所有记录中字段的值不能重复出现。例如，为`id`字段加上唯一性约束后，每条记录的`id`值都是唯一的，不能出现重复的情况。如果其中一条记录的`id`值为‘0001’，那么该表中就不能出现另一条记录的`id`值也为‘0001’。
+MySQL 唯一约束（`Unique Key`）是指所有记录中字段的值不能重复出现。例如，为`id`字段加上唯一性约束后，每条记录的`id`值都是唯一的，不能出现重复的情况。
 
 唯一约束与主键约束相似的是它们都可以确保列的唯一性。不同的是，唯一约束在一个表中可有多个，并且设置唯一约束的列允许有空值，但是只能有一个空值。而主键约束在一个表中只能有一个，且不允许有空值。比如，在用户信息表中，为了避免表中用户名重名，可以把用户名设置为唯一约束。
 ## 在创建表时设置唯一约束
@@ -380,7 +373,6 @@ mysql> DESC tb_dept2;
 | name     | varchar(40) | YES  | UNI | NULL    |       |
 | location | varchar(50) | YES  |     | NULL    |       |
 +----------+-------------+------+-----+---------+-------+
-3 rows in set (0.08 sec)
 ```
 ## 在修改表时添加唯一约束
 在修改表时添加唯一约束的语法格式为：
@@ -400,7 +392,6 @@ mysql> DESC tb_dept1;
 | name     | varchar(22) | NO   | UNI | NULL    |       |
 | location | varchar(50) | YES  |     | NULL    |       |
 +----------+-------------+------+-----+---------+-------+
-3 rows in set (0.00 sec)
 ```
 ## 删除唯一约束
 在 MySQL 中删除唯一约束的语法格式如下：
@@ -423,7 +414,7 @@ mysql> DESC tb_dept1;
 3 rows in set (0.00 sec)
 ```
 # 检查约束
-MySQL 检查约束（`CHECK`）是用来检查数据表中字段值有效性的一种手段，可以通过 CREATE TABLE 或 ALTER TABLE 语句实现。设置检查约束时要根据实际情况进行设置，这样能够减少无效数据的输入。
+MySQL 检查约束（`CHECK`）是用来检查数据表中字段值有效性的一种手段，可以通过`CREATE TABLE`或`ALTER TABLE`语句实现。设置检查约束时要根据实际情况进行设置，这样能够减少无效数据的输入。
 ## 选取设置检查约束的字段
 检查约束使用`CHECK`关键字，具体的语法格式如下：
 ```
@@ -480,8 +471,8 @@ mysql> ALTER TABLE tb_emp7 DROP CONSTRAINT check_id;
 Query OK, 0 rows affected (0.19 sec)
 Records: 0  Duplicates: 0  Warnings: 0
 ```
-# 默认值
-默认值（`Default`）的完整称呼是“默认值约束（`Default Constraint`）”，用来指定某列的默认值。在表中插入一条新记录时，如果没有为某个字段赋值，系统就会自动为这个字段插入默认值。
+# 默认值约束
+默认值约束用来指定某列的默认值。在表中插入一条新记录时，如果没有为某个字段赋值，系统就会自动为这个字段插入默认值。
 
 默认值约束通常用在已经设置了非空约束的列，这样能够防止数据表在录入数据时出现错误。
 ## 在创建表时设置默认值约束
@@ -507,7 +498,6 @@ mysql> DESC tb_dept3;
 | name     | varchar(22) | YES  |     | NULL    |       |
 | location | varchar(50) | YES  |     | Beijing |       |
 +----------+-------------+------+-----+---------+-------+
-3 rows in set (0.06 sec)
 ```
 以上语句执行成功之后，表`tb_dept3`上的字段`location`拥有了一个默认值`Beijing`，新插入的记录如果没有指定部门位置，则默认都为`Beijing`。
 
@@ -533,7 +523,6 @@ mysql> DESC tb_dept3;
 | name     | varchar(22) | YES  |     | NULL     |       |
 | location | varchar(50) | YES  |     | Shanghai |       |
 +----------+-------------+------+-----+----------+-------+
-3 rows in set (0.00 sec)
 ```
 ## 删除默认值约束
 当一个表中的列不需要设置默认值时，就需要从表中将其删除。
@@ -558,12 +547,9 @@ mysql> DESC tb_dept3;
 | name     | varchar(22) | YES  |     | NULL     |       |
 | location | varchar(50) | YES  |     | NULL     |       |
 +----------+-------------+------+-----+----------+-------+
-3 rows in set (0.00 sec)
 ```
 # 非空约束
 MySQL 非空约束（`NOT NULL`）指字段的值不能为空。对于使用了非空约束的字段，如果用户在添加数据时没有指定值，数据库系统就会报错。可以通过`CREATE TABLE`或`ALTER TABLE`语句实现。在表中某个列的定义后加上关键字`NOT NULL`作为限定词，来约束该列的取值不能为空。
-
-比如，在用户信息表中，如果不添加用户名，那么这条用户信息就是无效的，这时就可以为用户名字段设置非空约束。
 ## 在创建表时设置非空约束
 创建表时可以使用`NOT NULL`关键字设置非空约束，具体的语法格式如下：
 ```
@@ -586,7 +572,6 @@ mysql> DESC tb_dept3;
 | name     | varchar(22) | NO   |     | NULL    |       |
 | location | varchar(50) | YES  |     | NULL    |       |
 +----------+-------------+------+-----+---------+-------+
-3 rows in set (0.06 sec)
 ```
 ## 在修改表时添加非空约束
 如果在创建表时忘记了为字段设置非空约束，也可以通过修改表进行非空约束的添加。
@@ -612,7 +597,6 @@ mysql> DESC tb_dept4;
 | name     | varchar(22) | NO   |     | NULL     |       |
 | location | varchar(50) | NO   |     | NULL     |       |
 +----------+-------------+------+-----+----------+-------+
-3 rows in set (0.00 sec)
 ```
 ## 删除非空约束
 修改表时删除非空约束的语法规则如下：
@@ -635,7 +619,6 @@ mysql> DESC tb_dept4;
 | name     | varchar(22) | NO   |     | NULL     |       |
 | location | varchar(50) | YES  |     | NULL     |       |
 +----------+-------------+------+-----+----------+-------+
-3 rows in set (0.00 sec)
 ```
 # 查看表中的约束
 在 MySQL 中可以使用`SHOW CREATE TABLE`语句来查看表中的约束。
@@ -669,5 +652,4 @@ Create Table: CREATE TABLE `tb_emp8` (
   KEY `deptId` (`deptId`),
   CONSTRAINT `tb_emp8_ibfk_1` FOREIGN KEY (`deptId`) REFERENCES `tb_dept1` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=gb2312
-1 row in set (0.19 sec)
 ```
