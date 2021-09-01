@@ -309,6 +309,7 @@ public class DefaultErrorAttributes implements ErrorAttributes, HandlerException
 我们还可以使用 4xx.html 和 5xx.html  作为动态错误页面的文件名，并将它们存放在模板引擎文件夹下的 error 目录中，来模糊匹配对应类型的所有错误，例如 404、400 等错误状态码以“4”开头的所有异常，都会解析到动态错误页面 4xx.html 上。
 示例 3
 在 spring-boot-adminex 的模板引擎文件夹下 error 目录中，创建一个名为 4xx.html 的错误页面，代码如下。
+```html
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -324,7 +325,7 @@ public class DefaultErrorAttributes implements ErrorAttributes, HandlerException
 <p>path：<span th:text="${path}"></span></p>
 </body>
 </html>
-
+```
 2. 启动 Spring Boot，在完成登陆跳转到主页后，使用浏览器访问“http://localhost:8080/111”，结果如下图。
 
 
@@ -335,6 +336,7 @@ public class DefaultErrorAttributes implements ErrorAttributes, HandlerException
 我们可以根据错误状态码（例如 404、500、400 等等）的不同，分别创建不同的静态错误页面（例如 404.html、500.html、400.html 等等），并将它们存放在静态资源文件夹下的 error 目录中。当发生异常时，Spring Boot 会根据错误状态码精确匹配到对应的错误页面上。
 示例 4
 1. 在 spring-boot-adminex 的静态资源文件夹 src/recources/static 下的 error 目录中，创建一个名为 404.html 的静态错误页面，代码如下。
+```html
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -350,7 +352,7 @@ public class DefaultErrorAttributes implements ErrorAttributes, HandlerException
 <p>path：<span th:text="${path}"></span></p>
 </body>
 </html>
-
+```
 2. 启动 Spring Boot，在完成登陆跳转到主页后，使用浏览器访问“http://localhost:8080/111”，结果如下图。
 
 静态错误页面404
@@ -361,6 +363,7 @@ public class DefaultErrorAttributes implements ErrorAttributes, HandlerException
 我们还可以使用 4xx.html 和 5xx.html 作为静态错误页面的文件名，并将它们存放在静态资源文件夹下的 error 目录中，来模糊匹配对应类型的所有错误，例如 404、400 等错误状态码以“4”开头的所有错误，都会解析到静态错误页面 4xx.html 上。
 示例 3
 在 spring-boot-adminex 的模板引擎文件夹下的 error 目录中，创建一个名为 4xx.html 的错误页面，代码如下。
+```html
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -376,7 +379,7 @@ public class DefaultErrorAttributes implements ErrorAttributes, HandlerException
 <p>path：<span th:text="${path}"></span></p>
 </body>
 </html>
-
+```
 2. 启动 Spring Boot，在完成登陆跳转到主页后，使用浏览器访问“http://localhost:8080/111”，结果如下图。
 
 
@@ -398,6 +401,7 @@ BasicErrorController 处理异常时，会调用 DefaultErrorAttributes（默认
 被 @ControllerAdvice 注解的类可以用来实现全局异常处理，这是 Spring MVC 中提供的功能，在 Spring Boot 中可以直接使用。
 
 1）在 net.biancheng.net.exception 包内，创建一个名为 UserNotExistException 的异常类，代码如下。
+```java
 package net.biancheng.www.exception;
 /**
 * 自定义异常
@@ -407,8 +411,9 @@ public class UserNotExistException extends RuntimeException {
         super("用户不存在！");
     }
 }
-
+```
 2）在 IndexController 添加以下方法，触发 UserNotExistException 异常，代码如下。
+```java
 @Controller
 public class IndexController {
     ......
@@ -421,8 +426,9 @@ public class IndexController {
         return "login";
     }
 }
-
+```
 3）在 net.biancheng.www.controller 中，创建一个名为 MyExceptionHandler 异常处理类，代码如下。
+```java
 package net.biancheng.www.controller;
 import net.biancheng.www.exception.UserNotExistException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -445,8 +451,10 @@ public class MyExceptionHandler {
         return "forward:/error";
     }
 }
+```
 2. 自定义错误属性处理工具
 1）在 net.biancheng.www.componet 包内，创建一个错误属性处理工具类 MyErrorAttributes（继承 DefaultErrorAttributes ），通过该类我们便可以添加自定义的错误数据，代码如下。
+```java
 package net.biancheng.www.componet;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -467,8 +475,9 @@ public class MyErrorAttributes extends DefaultErrorAttributes {
         return errorAttributes;
     }
 }
-
+```
 2）在 templates/error 目录下，创建动态错误页面 5xx.html，代码如下。
+```
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -488,7 +497,7 @@ public class MyErrorAttributes extends DefaultErrorAttributes {
 <p>path：<span th:text="${ext.message}"></span></p>
 </body>
 </html>
-
+```
 3）启动 Spring Boot，访问“http://localhost:8080/testException?user=user”，结果如下图。
 
 

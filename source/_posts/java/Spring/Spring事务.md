@@ -147,8 +147,8 @@ public interface UserDao {
     List<User> listUser();
 }
 ```
-UserDaoImpl 代码如下。
-```
+`UserDaoImpl`代码如下。
+```java
 package net.biancheng;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -217,7 +217,7 @@ public class UserDaoImpl implements UserDao {
     }
 }
 ```
-Beans.xml 代码如下。
+`Beans.xml`代码如下。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -253,8 +253,8 @@ Beans.xml 代码如下。
     </bean>
 </beans>
 ```
-MainApp 类代码如下。
-```
+`MainApp`类代码如下。
+```java
 package net.biancheng;
 import java.util.List;
 import org.springframework.context.ApplicationContext;
@@ -287,18 +287,18 @@ Spring 声明式事务管理是通过 AOP 实现的，其本质是对方法前�
 声明式事务最大的优点就是不需要通过编程的方式管理事务，可以将业务逻辑代码和事务管理代码很好的分开。
 
 Spring 实现声明式事务管理主要有 2 种方式：
-基于 XML 方式的声明式事务管理。
-通过 Annotation 注解方式的事务管理。
+* 基于 XML 方式的声明式事务管理。
+* 通过 Annotation 注解方式的事务管理。
 
 下面介绍如何通过 XML 的方式实现声明式事务管理，步骤如下。
-示例
-下面使用 Eclipse IDE 演示通过 XML 方式实现声明式事务管理，步骤如下：
-创建 SpringDemo 项目，并在 src 目录下创建 net.biancheng 包。
-导入 Spring 相关 JAR 包及 mysql-connector-java.x.x.x.jar 包。
-在 net.biancheng 包下创建 User、UserDao、UserDaoImpl、Beans.xml 和 MainApp。
-运行 SpringDemo 项目。
+## 示例
+通过 XML 方式实现声明式事务管理，步骤如下：
+* 创建 SpringDemo 项目，并在 src 目录下创建 net.biancheng 包。
+* 导入 Spring 相关 JAR 包及 mysql-connector-java.x.x.x.jar 包。
+* 在 net.biancheng 包下创建 User、UserDao、UserDaoImpl、Beans.xml 和 MainApp。
+* 运行 SpringDemo 项目。
 
-User 类代码如下。
+`User`类代码如下。
 ```java
 package net.biancheng;
 public class User {
@@ -311,11 +311,10 @@ public class User {
         this.name = name;
         this.age = age;
     }
-    
     // 省略set和get方法
 }
 ```
-UserDao 代码如下。
+`UserDao`代码如下。
 ```java
 package net.biancheng;
 import java.util.List;
@@ -334,7 +333,7 @@ public interface UserDao {
     List<User> listUser();
 }
 ```
-UserDaoImpl 代码如下。
+`UserDaoImpl`代码如下。
 ```java
 package net.biancheng;
 import java.sql.ResultSet;
@@ -391,7 +390,7 @@ public class UserDaoImpl implements UserDao {
     }
 }
 ```
-Beans.xml 代码如下。
+`Beans.xml`代码如下。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -448,7 +447,7 @@ Beans.xml 代码如下。
     </bean>
 </beans>
 ```
-MainApp 类代码如下。
+`MainApp`类代码如下。
 ```java
 package net.biancheng;
 import java.util.List;
@@ -475,28 +474,29 @@ Exception in thread "main" java.lang.RuntimeException: simulate Error condition
 ...
 ```
 # 基于注解实现事务管理
-在 Spring 中，声明式事务除了可以使用 XML 实现外，还可以使用 Annotation 注解。使用注解实现可以减少代码之间的耦合度。
+在 Spring 中，声明式事务除了可以使用 XML 实现外，还可以使用`Annotation`注解。使用注解实现可以减少代码之间的耦合度。
 
-使用 Annotation 的方式非常简单，只需要在项目中做两件事，具体如下。
-1）在 Spring 容器中注册驱动，代码如下所示：
+使用`Annotation`的方式非常简单，只需要在项目中做两件事：
+1. 在 Spring 容器中注册驱动：
 ```
 <tx:annotation-driven transaction-manager="txManager"/>
 ```
-2）在需要使用事务的业务类或者方法中添加注解 @Transactional，并配置 @Transactional 的参数。关于 @Transactional 的参数如图 1 所示。
+2. 在需要使用事务的业务类或者方法中添加注解`@Transactional`，并配置`@Transactional`的参数。
 
-常用属性说明如下：
-propagation：设置事务的传播行为；
-isolation：设置事务的隔离级别；
-readOnly：设置是读写事务还是只读事务；
-timeout：事务超时事件（单位：s）。
-示例
-下面使用 Eclipse IDE 演示使用注解实现声明式事务管理，步骤如下：
-创建 SpringDemo 项目，并在 src 目录下创建 net.biancheng 包。
-导入 Spring 相关 JAR 包及 mysql-connector-java.x.x.x.jar 包。
-在 net.biancheng 包下创建 User、UserDao、UserDaoImpl、Beans.xml 和 MainApp。
-运行 SpringDemo 项目。
+`@Transactional`常用属性说明如下：
+* `propagation`：设置事务的传播行为；
+* `isolation`：设置事务的隔离级别；
+* `readOnly`：设置是读写事务还是只读事务；
+* `timeout`：事务超时事件（单位：`s`）。
 
-User 类代码如下。
+## 示例
+步骤如下：
+* 创建`SpringDemo`项目，并在`src`目录下创建`net.biancheng`包。
+* 导入 Spring 相关 JAR 包及`mysql-connector-java.x.x.x.jar`包。
+* 在`net.biancheng`包下创建`User、UserDao、UserDaoImpl、Beans.xml`和`MainApp`。
+* 运行`SpringDemo`项目。
+
+`User`类代码如下。
 ```java
 package net.biancheng;
 public class User {
@@ -513,7 +513,7 @@ public class User {
     // 省略set和get方法
 }
 ```
-UserDao 代码如下。
+`UserDao`代码如下。
 ```java
 package net.biancheng;
 import java.util.List;
@@ -532,7 +532,7 @@ public interface UserDao {
     List<User> listUser();
 }
 ```
-UserDaoImpl 代码如下。
+`UserDaoImpl`代码如下。
 ```java
 package net.biancheng;
 import java.sql.ResultSet;
@@ -594,9 +594,9 @@ public class UserDaoImpl implements UserDao {
     }
 }
 ```
-@Transactional 注解的参数之间用“，”进行分隔
+`@Transactional`注解的参数之间用“，”进行分隔
 
-Beans.xml 代码如下。
+`Beans.xml`代码如下。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
