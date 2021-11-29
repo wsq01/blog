@@ -1,4 +1,9 @@
-
+---
+title: SpringMVC 传递参数
+date: 2021-07-14 19:16:21
+tags: [SpringMVC]
+categories: [SpringMVC]
+---
 
 
 # 传递参数
@@ -29,7 +34,7 @@ public String login(User user, Model model) {
 ```java
 @RequestMapping("/login")
 public String login(String name, String pwd, Model model) {
-  if ("bianchengbang".equals(user.getName()) && "123456".equals(user.getPwd())) { 
+  if ("zhangsan".equals(user.getName()) && "123456".equals(user.getPwd())) { 
     model.addAttribute("message", "登录成功");
     return "main"; // 登录成功，跳转到 main.jsp
   } else {
@@ -46,7 +51,7 @@ public String login(HttpServletRequest request, Model model) {
   String name = request.getParameter("name");
   String pwd = request.getParameter("pwd");
   
-  if ("bianchengbang".equals(name) && "123456".equals(pwd)) {
+  if ("zhangsan".equals(name) && "123456".equals(pwd)) {
     model.addAttribute("message", "登录成功");
     return "main"; // 登录成功，跳转到 main.jsp
   } else {
@@ -60,7 +65,7 @@ public String login(HttpServletRequest request, Model model) {
 ```java
 @RequestMapping("/login/{name}/{pwd}")
 public String login(@PathVariable String name, @PathVariable String pwd, Model model) {
-  if ("bianchengbang".equals(name) && "123456".equals(pwd)) {
+  if ("zhangsan".equals(name) && "123456".equals(pwd)) {
     model.addAttribute("message", "登录成功");
     return "main"; // 登录成功，跳转到 main.jsp
   } else {
@@ -69,7 +74,7 @@ public String login(@PathVariable String name, @PathVariable String pwd, Model m
   }
 }
 ```
-在访问`http://localhost:8080/springMVCDemo02/user/register/bianchengbang/123456`路径时，上述代码会自动将 URL 中的模板变量`{name}`和`{pwd}`绑定到通过`@PathVariable`注解的同名参数上，即`name=bianchengbang、pwd=123456`。
+在访问`http://localhost:8080/springMVCDemo02/user/register/zhangsan/123456`路径时，上述代码会自动将 URL 中的模板变量`{name}`和`{pwd}`绑定到通过`@PathVariable`注解的同名参数上，即`name=zhangsan、pwd=123456`。
 ## 通过@RequestParam接收请求参数
 在方法入参处使用`@RequestParam`注解指定其对应的请求参数。`@RequestParam`有以下三个参数：
 * `value`：参数名
@@ -80,7 +85,7 @@ public String login(@PathVariable String name, @PathVariable String pwd, Model m
 ```java
 @RequestMapping("/login")
 public String login(@RequestParam String name, @RequestParam String pwd, Model model) {
-  if ("bianchengbang".equals(name) && "123456".equals(pwd)) {
+  if ("zhangsan".equals(name) && "123456".equals(pwd)) {
     model.addAttribute("message", "登录成功");
     return "main"; // 登录成功，跳转到 main.jsp
   } else {
@@ -89,7 +94,7 @@ public String login(@RequestParam String name, @RequestParam String pwd, Model m
   }
 }
 ```
-该方式与“通过处理方法的形参接收请求参数”部分的区别如下：当请求参数与接收参数名不一致时，“通过处理方法的形参接收请求参数”不会报 404 错误，而“通过`@RequestParam`接收请求参数”会报 404 错误。
+该方式与“通过处理方法的形参接收请求参数”部分的区别：当请求参数与接收参数名不一致时，“通过处理方法的形参接收请求参数”不会报 404 错误，而“通过`@RequestParam`接收请求参数”会报 404 错误。
 ## 通过@ModelAttribute接收请求参数
 `@ModelAttribute`注解用于将多个请求参数封装到一个实体对象中，从而简化数据绑定流程，而且自动暴露为模型数据，在视图页面展示时使用。
 
@@ -99,7 +104,7 @@ public String login(@RequestParam String name, @RequestParam String pwd, Model m
 ```java
 @RequestMapping("/login")
 public String login(@ModelAttribute("user") User user, Model model) {
-  if ("bianchengbang".equals(name) && "123456".equals(pwd)) {
+  if ("zhangsan".equals(name) && "123456".equals(pwd)) {
     model.addAttribute("message", "登录成功");
     return "main"; // 登录成功，跳转到 main.jsp
   } else {

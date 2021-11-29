@@ -7,7 +7,7 @@ categories: [SpringMVC]
 
 
 # MVC设计模式
-MVC 设计模式一般指 MVC 框架，M（`Model`）指数据模型层，V（`View`）指视图层，C（`Controller`）指控制层。使用 MVC 的目的是将 M 和 V 的实现代码分离，使同一个程序可以有不同的表现形式。其中，View 的定义比较清晰，就是用户界面。
+MVC 设计模式一般指 MVC 框架，M（`Model`）指数据模型层，V（`View`）指视图层，C（`Controller`）指控制层。使用 MVC 的目的是将 M 和 V 的实现代码分离，使同一个程序可以有不同的表现形式。
 
 在 Web 项目的开发中，能够及时、正确地响应用户的请求是非常重要的。用户在网页上单击一个 URL 路径，这对 Web 服务器来说，相当于用户发送了一个请求。而获取请求后如何解析用户的输入，并执行相关处理逻辑，最终跳转至正确的页面显示反馈结果，这些工作往往是控制层（`Controller`）来完成的。
 
@@ -57,13 +57,11 @@ MVC 并不适合小型甚至中型规模的项目，花费大量时间将 MVC �
 # Spring MVC是什么
 Spring MVC 是 Spring 提供的一个基于 MVC 设计模式的轻量级 Web 开发框架，本质上相当于 Servlet。Spring MVC 是结构最清晰的 Servlet+JSP+JavaBean 的实现，是一个典型的教科书式的 MVC 构架。
 
-Spring MVC 角色划分清晰，分工明细，并且和 Spring 框架无缝结合。
-
 在 Spring MVC 框架中，Controller 替换 Servlet 来担负控制器的职责，用于接收请求，调用相应的 Model 进行处理，处理器完成业务处理后返回处理结果。Controller 调用相应的 View 并对处理结果进行视图渲染，最终客户端得到响应信息。
 
 Spring MVC 框架采用松耦合可插拔的组件结构，具有高度可配置性，比起其它 MVC 框架更具有扩展性和灵活性。
 
-此外，Spring MVC 的注解驱动和对 REST 风格的支持，也是它最具特色的功能。无论是在框架设计，还是扩展性、灵活性等方面都全面超越了 Struts2 等 MVC 框架。并且由于 Spring MVC 本身就是 Spring 框架的一部分，所以可以说与 Spring 框架是无缝集成，性能方面具有先天的优越性，对于开发者来说，开发效率也高于其它的 Web 框架，在企业中的应用越来越广泛，成为主流的 MVC 框架。
+此外，Spring MVC 的注解驱动和对 REST 风格的支持，也是它最具特色的功能。并且由于 Spring MVC 本身就是 Spring 框架的一部分，所以可以说与 Spring 框架是无缝集成，性能方面具有先天的优越性，对于开发者来说，开发效率也高于其它的 Web 框架。
 
 Spring MVC优点：
 * 清晰地角色划分，Spring MVC 在 Model、View 和 Controller 方面提供了一个非常清晰的角色划分，这 3 个方面真正是各司其职，各负其责。
@@ -413,7 +411,7 @@ Spring MVC 框架是高度可配置的，包含多种视图技术，例如 JSP�
 
 Spring MVC 执行流程如图
 
-{% asset_img %}
+{% asset_img 6.png %}
 
 SpringMVC 的执行流程如下。
 * 用户点击某个请求路径，发起一个 HTTP request 请求，该请求会被提交到`DispatcherServlet`（前端控制器）；
@@ -438,7 +436,7 @@ Spring MVC 涉及到的组件有`DispatcherServlet`（前端控制器）、`Hand
 4. `Handler`
 `Handler`是处理器，和 Java Servlet 扮演的角色一致。其作用是执行相关的请求处理逻辑，并返回相应的数据和视图信息，将其封装至`ModelAndView`对象中。
 5. `View Resolver`
-View Resolver 是视图解析器，其作用是进行解析操作，通过`ModelAndView`对象中的`View`信息将逻辑视图名解析成真正的视图`View`（如通过一个 JSP 路径返回一个真正的 JSP 页面）。
+`View Resolver`是视图解析器，其作用是进行解析操作，通过`ModelAndView`对象中的`View`信息将逻辑视图名解析成真正的视图`View`（如通过一个 JSP 路径返回一个真正的 JSP 页面）。
 6. `View`
 `View`是视图，其本身是一个接口，实现类支持不同的`View`类型（JSP、FreeMarker、Excel 等）。
 

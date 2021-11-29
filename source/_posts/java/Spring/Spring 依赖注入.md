@@ -23,7 +23,6 @@ Spring 容器在创建被调用者的实例时，会自动将调用者需要的�
 
 ## 构造函数注入
 在`<constructor-arg>`标签中，包含`ref、value、type、index`等属性。`value`属性用于注入基本数据类型以及字符串类型的值；`ref`属性用于注入已经定义好的`Bean`；`type`属性用来指定对应的构造函数，当构造函数有多个参数时，可以使用`index`属性指定参数的位置，`index`属性值从 0 开始。
-### 示例
 ```java
 package net.biancheng;
 public class Person {
@@ -102,9 +101,6 @@ public class MainApp {
 ```
 ## setter注入
 在`<property>`标签中，包含`name、ref、value`等属性。`name`用于指定参数名称；`value`属性用于注入基本数据类型以及字符串类型的值；`ref`属性用于注入已经定义好的`Bean`。
-
-### 示例
-在上例的基础上修改`Man`类的内容，代码如下。
 ```java
 package net.biancheng;
 public class Man {
@@ -135,7 +131,6 @@ public class Man {
   }
 }
 ```
-`Beans.xml`配置文件如下。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -162,15 +157,15 @@ Java 中在类内部定义的类称为内部类，同理在`Bean`中定义的`Be
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
-    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-    <bean id="outerBean" class="...">
-        <property name="target">
-            <!-- 定义内部Bean -->
-            <bean class="..." />
-        </property>
-    </bean>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+  <bean id="outerBean" class="...">
+    <property name="target">
+      <!-- 定义内部Bean -->
+      <bean class="..." />
+    </property>
+  </bean>
 </beans>
 ```
 内部`Bean`的定义不需要指定`id`和`name`。如果指定了，容器也不会将其作为区分`Bean`的标识符，反而会无视内部`Bean`的`scope`属性。所以内部`Bean`总是匿名的，而且总是随着外部`Bean`创建。
@@ -255,49 +250,48 @@ public class MainApp {
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
-   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="javaCollection" class="net.biancheng.JavaCollection">
+  <bean id="javaCollection" class="net.biancheng.JavaCollection">
 
-      <property name="manList">
-        <list>
-          <value>a</value>
-          <value>b</value>
-          <value>c</value>
-          <value>d</value>
-        </list>
-      </property>
+    <property name="manList">
+      <list>
+        <value>a</value>
+        <value>b</value>
+        <value>c</value>
+        <value>d</value>
+      </list>
+    </property>
 
-      <property name="manSet">
-        <set>
-          <value>a</value>
-          <value>b</value>
-          <value>c</value>
-          <value>d</value>
-        </set>
-      </property>
+    <property name="manSet">
+      <set>
+        <value>a</value>
+        <value>b</value>
+        <value>c</value>
+        <value>d</value>
+      </set>
+    </property>
 
-      <property name="manMap">
-        <map>
-          <entry key="1" value="a" />
-          <entry key="2" value="b" />
-          <entry key="3" value="c" />
-          <entry key="4" value="d" />
-        </map>
-      </property>
+    <property name="manMap">
+      <map>
+        <entry key="1" value="a" />
+        <entry key="2" value="b" />
+        <entry key="3" value="c" />
+        <entry key="4" value="d" />
+      </map>
+    </property>
 
-      <property name="manProp">
-        <props>
-          <prop key="one">a</prop>
-          <prop key="two">b</prop>
-          <prop key="three">C语言中文网</prop>
-          <prop key="four">C语言中文网</prop>
-        </props>
-      </property>
-    </bean>
-
+    <property name="manProp">
+      <props>
+        <prop key="one">a</prop>
+        <prop key="two">b</prop>
+        <prop key="three">C</prop>
+        <prop key="four">C</prop>
+      </props>
+    </property>
+  </bean>
 </beans>
 ```
 运行结果如下。
@@ -347,22 +341,22 @@ Property Elements :{two=b, one=a, three=c, four=d}
 ```
 # 注入null和空字符串的值
 Spring 会把属性的空参数直接当成空字符串来处理，如果您需要传递一个空字符串值，可以这样写：
-```
+```xml
 <bean id = "..." class = "exampleBean">
     <property name = "email" value = ""/>
 </bean>
 ```
 等效于以下代码
-```
+```java
 exampleBean.setEmail("")
 ```
 如果需要传递`NULL`值，`<null/>`元素用来处理`Null`值。
-```
+```xml
 <bean id = "..." class = "exampleBean">
-    <property name = "email"><null/></property>
+  <property name = "email"><null/></property>
 </bean>
 ```
 等效于以下代码
-```
+```java
 exampleBean.setEmail(null)
 ```

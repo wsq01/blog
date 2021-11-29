@@ -1,8 +1,8 @@
 ---
 title: JDBC 结果集
 date: 2021-03-08 15:51:24
-tags: [java]
-categories: java
+tags: [JDBC]
+categories: JDBC
 ---
 
 

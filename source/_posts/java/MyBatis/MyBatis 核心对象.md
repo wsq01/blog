@@ -1,5 +1,5 @@
 ---
-title: Spring AOP
+title: MyBatis 核心对象
 date: 2021-04-09 16:24:15
 tags: [MyBatis]
 categories: [MyBatis]
@@ -8,7 +8,9 @@ categories: [MyBatis]
 
 使用 MyBatis 的主要 Java 接口就是`SqlSession`。可以通过这个接口来执行命令，获取映射器实例和管理事务。
 
-如何获取一个`SqlSession`实例？`SqlSessions`是由`SqlSessionFactory`实例创建的。`SqlSessionFactory`对象包含创建`SqlSession`实例的各种方法。而`SqlSessionFactory`本身是由`SqlSessionFactoryBuilder`创建的，它可以从 XML、注解或 Java 配置代码来创建`SqlSessionFactory`。
+`SqlSessions`是由`SqlSessionFactory`实例创建的。`SqlSessionFactory`对象包含创建`SqlSession`实例的各种方法。而`SqlSessionFactory`本身是由`SqlSessionFactoryBuilder`创建的，它可以从 XML、注解或 Java 配置代码来创建`SqlSessionFactory`。
+
+{% asset_img 1.png %}
 
 当 Mybatis 与一些依赖注入框架（如 Spring ）搭配使用时，`SqlSession`将被依赖注入框架创建并注入，所以不需要使用`SqlSessionFactoryBuilder`或者`SqlSessionFactory`。
 # SqlSessionFactoryBuilder
@@ -20,23 +22,8 @@ SqlSessionFactory build(InputStream inputStream, Properties properties)
 SqlSessionFactory build(InputStream inputStream, String env, Properties props)
 SqlSessionFactory build(Configuration config)
 ```
-第一种方法是最常用的，它接受一个指向 XML 文件的`InputStream`实例。可选的参数是`environment`和`properties`。`environment`决定加载哪种环境，包括数据源和事务管理器。比如：
-```xml
-<environments default="development">
-  <environment id="development">
-    <transactionManager type="JDBC">
-        ...
-    <dataSource type="POOLED">
-        ...
-  </environment>
-  <environment id="production">
-    <transactionManager type="MANAGED">
-        ...
-    <dataSource type="JNDI">
-        ...
-  </environment>
-</environments>
-```
+第一种方法是最常用的，它接受一个指向 XML 文件的`InputStream`实例。可选的参数是`environment`和`properties`。`environment`决定加载哪种环境，包括数据源和事务管理器。
+
 如果你调用了带`environment`参数的`build`方法，那么 MyBatis 将使用该环境对应的配置。当然，如果你指定了一个无效的环境，会收到错误。如果你调用了不带`environment`参数的`build`方法，那么就会使用默认的环境配置。
 
 如果你调用了接受`properties`实例的方法，那么 MyBatis 就会加载这些属性，并在配置中提供使用。绝大多数场合下，可以用`${propName}`形式引用这些配置值。
@@ -50,40 +37,14 @@ SqlSessionFactory build(Configuration config)
 
 因此，通过方法参数传递的属性的优先级最高，`resource`或`url`指定的属性优先级中等，在`properties`元素体中指定的属性优先级最低。
 
-总结一下，前四个方法很大程度上是相同的，但提供了不同的覆盖选项，允许你可选地指定`environment`和/或`properties`。以下给出一个从`mybatis-config.xml`文件创建`SqlSessionFactory`的示例：
 ```java
 String resource = "org/mybatis/builder/mybatis-config.xml";
 InputStream inputStream = Resources.getResourceAsReader(resource);
 SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
 SqlSessionFactory factory = builder.build(inputStream);
 ```
-最后一个`build`方法接受一个`Configuration`实例。`Configuration`类包含了对一个`SqlSessionFactory`实例你可能关心的所有内容。在检查配置时，`Configuration`类很有用，它允许你查找和操纵 SQL 映射（但当应用开始接收请求时不推荐使用）。所有配置开关都存在于`Configuration`类，只不过它们是以 Java API 形式暴露的。以下是一个简单的示例，演示如何手动配置`Configuration`实例，然后将它传递给`build()`方法来创建`SqlSessionFactory`。
-```java
-DataSource dataSource = BaseDataTest.createBlogDataSource();
-TransactionFactory transactionFactory = new JdbcTransactionFactory();
-
-Environment environment = new Environment("development", transactionFactory, dataSource);
-
-Configuration configuration = new Configuration(environment);
-configuration.setLazyLoadingEnabled(true);
-configuration.setEnhancementEnabled(true);
-configuration.getTypeAliasRegistry().registerAlias(Blog.class);
-configuration.getTypeAliasRegistry().registerAlias(Post.class);
-configuration.getTypeAliasRegistry().registerAlias(Author.class);
-configuration.addMapper(BoundBlogMapper.class);
-configuration.addMapper(BoundAuthorMapper.class);
-
-SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-SqlSessionFactory factory = builder.build(configuration);
-```
-现在你就获得一个可以用来创建`SqlSession`实例的`SqlSessionFactory`了。
 # SqlSessionFactory
-`SqlSessionFactory`有六个方法创建`SqlSession`实例。通常来说，当你选择其中一个方法时，你需要考虑以下几点：
-* 事务处理：你希望在`session`作用域中使用事务作用域，还是使用自动提交（`auto-commit`）？（对很多数据库和/或 JDBC 驱动来说，等同于关闭事务支持）
-* 数据库连接：你希望 MyBatis 帮你从已配置的数据源获取连接，还是使用自己提供的连接？
-* 语句执行：你希望 MyBatis 复用`PreparedStatement`和/或批量更新语句（包括插入语句和删除语句）吗？
-
-基于以上需求，有下列已重载的多个`openSession()`方法供使用。
+`SqlSessionFactory`有六个方法创建`SqlSession`实例。
 ```java
 SqlSession openSession()
 SqlSession openSession(boolean autoCommit)
@@ -104,9 +65,9 @@ Configuration getConfiguration();
 向`autoCommit`可选参数传递`true`值即可开启自动提交功能。若要使用自己的`Connection`实例，传递一个`Connection`实例给`connection`参数即可。注意，我们没有提供同时设置`Connection`和`autoCommit`的方法，这是因为 MyBatis 会依据传入的`Connection`来决定是否启用`autoCommit`。对于事务隔离级别，MyBatis 使用了一个 Java 枚举包装器来表示，称为`TransactionIsolationLevel`，事务隔离级别支持 JDBC 的五个隔离级别（`NONE、READ_UNCOMMITTED、READ_COMMITTED、REPEATABLE_READ`和`SERIALIZABLE`），并且与预期的行为一致。
 
 `ExecutorType`这个枚举类型定义了三个值:
-`ExecutorType.SIMPLE`：该类型的执行器没有特别的行为。它为每个语句的执行创建一个新的预处理语句。
-`ExecutorType.REUSE`：该类型的执行器会复用预处理语句。
-`ExecutorType.BATCH`：该类型的执行器会批量执行所有更新语句，如果`SELECT`在多个更新中间执行，将在必要时将多条更新语句分隔开来，以方便理解。
+* `ExecutorType.SIMPLE`：该类型的执行器没有特别的行为。它为每个语句的执行创建一个新的预处理语句。
+* `ExecutorType.REUSE`：该类型的执行器会复用预处理语句。
+* `ExecutorType.BATCH`：该类型的执行器会批量执行所有更新语句，如果`SELECT`在多个更新中间执行，将在必要时将多条更新语句分隔开来，以方便理解。
 
 在`SqlSessionFactory`中还有一个方法就是`getConfiguration()`。这个方法会返回一个`Configuration`实例，你可以在运行时使用它来检查 MyBatis 的配置。
 # SqlSession
@@ -116,7 +77,6 @@ Configuration getConfiguration();
 ```java
 <T> T selectOne(String statement, Object parameter)
 <E> List<E> selectList(String statement, Object parameter)
-<T> Cursor<T> selectCursor(String statement, Object parameter)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey)
 int insert(String statement, Object parameter)
 int update(String statement, Object parameter)
@@ -124,19 +84,10 @@ int delete(String statement, Object parameter)
 ```
 `selectOne`和`selectList`的不同仅仅是`selectOne`必须返回一个对象或`null`值。如果返回值多于一个，就会抛出异常。如果你不知道返回对象会有多少，请使用`selectList`。如果需要查看某个对象是否存在，最好的办法是查询一个`count` 值（0 或 1）。`selectMap`稍微特殊一点，它会将返回对象的其中一个属性作为`key`值，将对象作为`value`值，从而将多个结果集转为`Map`类型值。由于并不是所有语句都需要参数，所以这些方法都具有一个不需要参数的重载形式。
 
-游标（`Cursor`）与列表（`List`）返回的结果相同，不同的是，游标借助迭代器实现了数据的惰性加载。
-```java
-try (Cursor<MyEntity> entities = session.selectCursor(statement, param)) {
-  for (MyEntity entity:entities) {
-    // 处理单个实体
-  }
-}
-```
 `insert、update`以及`delete`方法返回的值表示受该语句影响的行数。
 ```java
 <T> T selectOne(String statement)
 <E> List<E> selectList(String statement)
-<T> Cursor<T> selectCursor(String statement)
 <K,V> Map<K,V> selectMap(String statement, String mapKey)
 int insert(String statement)
 int update(String statement)
@@ -145,7 +96,6 @@ int delete(String statement)
 最后，还有`select`方法的三个高级版本，它们允许你限制返回行数的范围，或是提供自定义结果处理逻辑，通常在数据集非常庞大的情形下使用。
 ```java
 <E> List<E> selectList (String statement, Object parameter, RowBounds rowBounds)
-<T> Cursor<T> selectCursor(String statement, Object parameter, RowBounds rowBounds)
 <K,V> Map<K,V> selectMap(String statement, Object parameter, String mapKey, RowBounds rowbounds)
 void select (String statement, Object parameter, ResultHandler<T> handler)
 void select (String statement, Object parameter, RowBounds rowBounds, ResultHandler<T> handler)
@@ -161,17 +111,15 @@ RowBounds rowBounds = new RowBounds(offset, limit);
 `ResultHandler`参数允许自定义每行结果的处理过程。你可以将它添加到`List`中、创建`Map`和`Set`，甚至丢弃每个返回值，只保留计算后的统计结果。你可以使用`ResultHandler`做很多事，这其实就是 MyBatis 构建 结果列表的内部实现办法。
 
 `ResultHandler`会在存储过程的`REFCURSOR`输出参数中传递使用的`CALLABLE`语句。
-
-它的接口很简单：
 ```java
 package org.apache.ibatis.session;
 public interface ResultHandler<T> {
   void handleResult(ResultContext<? extends T> context);
 }
 ```
-`ResultContext`参数允许你访问结果对象和当前已被创建的对象数目，另外还提供了一个返回值为 Boolean 的 stop 方法，你可以使用此 stop 方法来停止 MyBatis 加载更多的结果。
+`ResultContext`参数允许你访问结果对象和当前已被创建的对象数目，另外还提供了一个返回值为`Boolean`的`stop`方法，你可以使用此`stop`方法来停止 MyBatis 加载更多的结果。
 
-使用 ResultHandler 的时候需要注意以下两个限制：
+使用`ResultHandler`的时候需要注意以下两个限制：
 * 使用带`ResultHandler`参数的方法时，收到的数据不会被缓存。
 * 当使用高级的结果映射集（`resultMap`）时，MyBatis 很可能需要数行结果来构造一个对象。如果你使用了`ResultHandler`，你可能会接收到关联（`association`）或者集合（`collection`）中尚未被完整填充的对象。
 
@@ -181,7 +129,7 @@ public interface ResultHandler<T> {
 List<BatchResult> flushStatements()
 ```
 ## 事务控制方法
-有四个方法用来控制事务作用域。当然，如果你已经设置了自动提交或你使用了外部事务管理器，这些方法就没什么作用了。然而，如果你正在使用由 Connection 实例控制的 JDBC 事务管理器，那么这四个方法就会派上用场：
+有四个方法用来控制事务作用域。当然，如果你已经设置了自动提交或你使用了外部事务管理器，这些方法就没什么作用了。然而，如果你正在使用由`Connection`实例控制的 JDBC 事务管理器，那么这四个方法就会派上用场：
 ```java
 void commit()
 void commit(boolean force)
@@ -206,17 +154,8 @@ void clearCache()
 ```java
 void close()
 ```
-对于你打开的任何`session`，你都要保证它们被妥善关闭，这很重要。保证妥善关闭的最佳代码模式是这样的：
-```java
-SqlSession session = sqlSessionFactory.openSession();
-try (SqlSession session = sqlSessionFactory.openSession()) {
-  // 假设下面三行代码是你的业务逻辑
-  session.insert(...);
-  session.update(...);
-  session.delete(...);
-  session.commit();
-}
-```
+对于你打开的任何`session`，你都要保证它们被妥善关闭，这很重要。
+
 和`SqlSessionFactory`一样，你可以调用当前使用的`SqlSession`的`getConfiguration`方法来获得`Configuration`实例。
 ```java
 Configuration getConfiguration()
@@ -256,5 +195,3 @@ public interface AuthorMapper {
 你可以传递多个参数给一个映射器方法。在多个参数的情况下，默认它们将会以`param`加上它们在参数列表中的位置来命名，比如：`#{param1}、#{param2}`等。如果你想（在有多个参数时）自定义参数的名称，那么你可以在参数上使用`@Param("paramName")`注解。
 
 你也可以给方法传递一个`RowBounds`实例来限制查询结果。
-## 映射器注解
-注解提供了一种简单且低成本的方式来实现简单的映射语句。

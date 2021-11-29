@@ -36,7 +36,7 @@ AspectJ 是一个基于 Java 语言的 AOP 框架。AspectJ 扩展了 Java 语�
 | after-throwing（抛出异常通知） | 通知方法会在目标方法抛出异常后调用 |
 | around（环绕通知） | 通知方法会将目标方法封装起来 |
 
-在 Spring 框架中使用 AOP 主要有以下优势。
+使用 AOP 主要有以下优势。
 * 提供声明式企业服务，这种服务是声明式事务管理。
 * 允许用户实现自定义切面。在某些不适合用 OOP 编程的场景中，采用 AOP 来补充。
 * 可以对业务逻辑的各个部分进行隔离，从而使业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时也提高了开发效率。
@@ -143,7 +143,6 @@ Spring 核心包中包含 CGLIB 和 asm，也就是说 Spring 核心包已经集
 * 在`net.biancheng`包下创建`UserManager`（用户管理接口）、`UserManagerImpl`（用户管理接口实现类）、`MyAspect`（切面类）和`CGLIBProxy`（动态代理类）。
 * 运行`SpringDemo`项目。
 
-`UserManager`类代码如下。
 ```java
 package net.biancheng;
 public interface UserManager {
@@ -153,7 +152,6 @@ public interface UserManager {
     void delUser(String userName);
 }
 ```
-`UserManagerImpl`类代码如下。
 ```java
 package net.biancheng;
 public class UserManagerImpl implements UserManager {
@@ -169,7 +167,6 @@ public class UserManagerImpl implements UserManager {
     }
 }
 ```
-`MyAspect`类代码如下。
 ```java
 package net.biancheng;
 public class MyAspect {
@@ -181,7 +178,6 @@ public class MyAspect {
     }
 }
 ```
-`CglibProxy`类代码如下。
 ```java
 package net.biancheng;
 import java.lang.reflect.Method;
@@ -240,13 +236,15 @@ JDK 动态代理只能对实现了接口的类生成代理，而不能针对类�
 
 CGLIB 是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法。因为是继承，所以该类或方法不能声明成`final`类型。
 
-JDK动态代理特点
+JDK动态代理特点：
 * 代理对象必须实现一个或多个接口
 * 以接口的形式接收代理实例，而不是代理类
-CGLIB动态代理特点
+
+CGLIB动态代理特点：
 * 代理对象不能被`final`修饰
 * 以类或接口形式接收代理实例
-JDK与CGLIB动态代理的性能比较
+
+JDK与CGLIB动态代理的性能比较：
 * 生成代理实例性能：JDK > CGLIB
 * 代理实例运行性能：JDK > CGLIB
 
@@ -302,7 +300,7 @@ execution(modifiers-pattern returning-type-pattern declaring-type-pattern name-p
 
 例如：`execution(* net.biancheng.*.*(..))`表示匹配`net.biancheng`包中任意类的任意方法。
 ## 定义通知
-AspectJ 支持 5 种类型的`advice`，如下。
+AspectJ 支持 5 种类型的`advice`。
 ```xml
 <aop:aspect id="myAspect" ref="aBean">
   <!-- 前置通知 -->
@@ -325,7 +323,6 @@ AspectJ 支持 5 种类型的`advice`，如下。
 * 在`net.biancheng`包下创建`Logging、Man、Beans.xml`和`MainApp`。
 * 运行`SpringDemo`项目。
 
-`Logging`类的代码如下，定义了在各个点要调用的方法。
 ```java
 package net.biancheng;
 public class Logging {
@@ -355,7 +352,6 @@ public class Logging {
     }
 }
 ```
-`Man`类的代码如下。
 ```java
 package net.biancheng;
 public class Man {
@@ -379,7 +375,6 @@ public class Man {
     }
 }
 ```
-`Beans.xml`代码如下。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -408,7 +403,6 @@ public class Man {
     <bean id="logging" class="net.biancheng.Logging" />
 </beans>
 ```
-`MainApp`类代码如下。
 ```java
 package net.biancheng;
 import org.springframework.context.ApplicationContext;
@@ -438,9 +432,7 @@ public class MainApp {
 Exception in thread "main" java.lang.IllegalArgumentException
 ```
 # 基于AspectJ注解开发
-在 Spring 中，尽管使用 XML 配置文件可以实现 AOP 开发，但是如果所有的相关配置都集中在配置文件中，势必会导致 XML 配置文件过于臃肿，从而给维护和升级带来一定的困难。
-
-为此，AspectJ 框架为 AOP 开发提供了一套注解。AspectJ 允许使用注解定义切面、切入点和增强处理，Spring 框架可以根据这些注解生成 AOP 代理。
+AspectJ 框架为 AOP 开发提供了一套注解。AspectJ 允许使用注解定义切面、切入点和增强处理，Spring 框架可以根据这些注解生成 AOP 代理。
 
 | 名称            | 说明 |
 | :--: | :--: |
@@ -467,27 +459,25 @@ public class Appconfig {}
 ```
 
 ## 定义切面@Aspect
-`AspectJ`类和其它普通的`Bean`一样，可以有方法和字段，不同的是`AspectJ`类需要使用`@Aspect`注解，如下所示。
+`AspectJ`类和其它普通的`Bean`一样，可以有方法和字段，不同的是`AspectJ`类需要使用`@Aspect`注解。
 ```java
 package net.biancheng;
 import org.aspectj.lang.annotation.Aspect;
 @Aspect
-public class AspectModule {
-}
+public class AspectModule {}
 ```
-`AspectJ`类也可以像其它`Bean`一样在 XML 中配置，如下。
+`AspectJ`类也可以像其它`Bean`一样在 XML 中配置。
 ```xml
 <bean id = "myAspect" class = "net.biancheng.AspectModule">
    ...
 </bean>
 ```
 ## 定义切入点@Pointcut
-`@Pointcut`注解用来定义一个切入点，如下。
+`@Pointcut`注解用来定义一个切入点。
 ```java
 // 要求：方法必须是private，返回值类型为void，名称自定义，没有参数
 @Pointcut("execution(*net.biancheng..*.*(..))")
-private void myPointCut() {
-}
+private void myPointCut() {}
 ```
 相当于以下代码
 ```
@@ -508,7 +498,6 @@ public void beforeAdvice(){
 * 在`net.biancheng`包下创建`Logging、Man、Beans.xml`和`MainApp`。
 * 运行`SpringDemo`项目。
 
-`Logging`类代码如下。
 ```java
 package net.biancheng;
 import org.aspectj.lang.annotation.After;
@@ -555,7 +544,6 @@ public class Logging {
     }
 }
 ```
-`Man`类代码如下。
 ```java
 package net.biancheng;
 public class Man {
@@ -579,7 +567,6 @@ public class Man {
     }
 }
 ```
-`Beans.xml`代码如下。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -597,7 +584,6 @@ public class Man {
     <bean id="logging" class="net.biancheng.Logging" />
 </beans>
 ```
-`MainApp`类代码如下。
 ```java
 package net.biancheng;
 import org.springframework.context.ApplicationContext;

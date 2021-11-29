@@ -1,4 +1,9 @@
-
+---
+title: SpringMVC 注解
+date: 2021-07-16 12:33:42
+tags: [SpringMVC]
+categories: [SpringMVC]
+---
 
 # @Controller注解
 `@Controller`注解用于声明某类的实例是一个控制器。
@@ -37,7 +42,7 @@ Spring MVC 使用扫描机制找到应用中所有基于注解的控制器类，
 
 `path`属性支持通配符匹配，如`@RequestMapping(path="toUser/*")`表示`http://localhost:8080/toUser/1`或`http://localhost:8080/toUser/hahaha`都能够正常访问。
 ## 3. name属性
-`name`属性相当于方法的注释，使方法更易理解。如`@RequestMapping(value = "toUser",name = "获取用户信息")`。
+`name`属性相当于方法的注释。如`@RequestMapping(value = "toUser",name = "获取用户信息")`。
 ## 4. method属性
 `method`属性用于表示该方法支持哪些`HTTP`请求。如果省略`method`属性，则说明该方法支持全部的`HTTP`请求。
 
@@ -124,64 +129,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class IndexController {
-  @RequestMapping(value = "/index/success" method=RequestMethod.GET, Params="username")
+  @RequestMapping(value = "/index/success" method=RequestMethod.GET, params="username")
   public String success(@RequestParam String username) {
     return "index";
   }
 }
 ```
-上述代码中，`@RequestMapping`的`value`表示请求的 URL；`method`表示请求方法。`params`表示请求参数。
-## 编写请求处理方法
-在控制类中每个请求处理方法可以有多个不同类型的参数，以及一个多种类型的返回结果。
-### 请求处理方法中常出现的参数类型
-如果需要在请求处理方法中使用 Servlet API 类型，那么可以将这些类型作为请求处理方法的参数类型。Servlet API 参数类型的示例代码如下：
-```java
-package net.biancheng.controller;
-import javax.servlet.http.HttpSession;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-@Controller
-@RequestMapping("/index")
-public class IndexController {
-  @RequestMapping("/login")
-  public String login(HttpSession session,HttpServletRequest request) {
-    session.setAttribute("skey", "session范围的值");
-    session.setAttribute("rkey", "request范围的值");
-    return "login";
-  }
-}
-```
-除了 Servlet API 参数类型以外，还有输入输出流、表单实体类、注解类型、与 Spring 框架相关的类型等。
-
-其中特别重要的类型是`org.springframework.ui.Model`类型，该类型是一个包含`Map`的 Spring MVC 类型。在每次调用请求处理方法时 Spring MVC 都将创建`org.springframework.ui.Model`对象。`Model`参数类型的示例代码如下：
-```java
-package net.biancheng.controller;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-@Controller
-@RequestMapping("/index")
-public class IndexController {
-  @RequestMapping("/register")
-  public String register(Model model) {
-    /*在视图中可以使用EL表达式${success}取出model中的值*/
-    model.addAttribute("success", "注册成功");
-    return "register";
-  }
-}
-```
-### 请求处理方法常见的返回类型
-请求处理方法可以返回如下类型的对象：
-* `ModelAndView`
-* `Model`
-* 包含模型属性的`Map`
-* `View`
-* 代表逻辑视图名的`String`
-* `void`
-* 其它任意 Java 类型
-
 # @Autowired和@Service注解
 将依赖注入到 Spring MVC 控制器时需要用到`@Autowired`和`@Service`注解。
 
@@ -195,8 +148,6 @@ public class IndexController {
 ```
 ## 示例
 新建 Web 应用`springmvcDemo3`进一步说明 Spring MVC 如何应用依赖注入。
-
-`User`实体类如下。
 ```java
 package net.biancheng.po;
 public class User {
@@ -205,7 +156,6 @@ public class User {
     /*省略setter和getter方法*/
 }
 ```
-新建`net.biancheng.service`包，创建`UserService`接口。
 ```java
 package net.biancheng.service;
 import net.biancheng.po.User;
@@ -214,7 +164,6 @@ public interface UserService {
     boolean register(User user);
 }
 ```
-创建`UserServiceImpl`类，实现`UserService`接口。
 ```java
 package net.biancheng.service;
 import org.springframework.stereotype.Service;
@@ -238,8 +187,6 @@ public class UserServiceImpl implements UserService {
 }
 ```
 注意：为了使类能被 Spring 扫描到，必须为其标注`@Service`。
-
-新建`net.biancheng.controller`包，创建`UserController`类。
 ```java
 package net.biancheng.controller;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -375,7 +322,6 @@ pageEncoding="UTF-8"%>
 </body>
 </html>
 ```
-
 # @ModelAttribute注解
 `@ModelAttribute`用来将请求参数绑定到`Model`对象。
 
@@ -474,14 +420,14 @@ pageEncoding="UTF-8"%>
 ```
 访问地址和运行结果与示例 1 相同。
 
-对于以上情况，返回值对象 name 会被默认放到隐含的 Model 中，在 Model 中 key 为返回值首字母小写，value 为返回的值。等同于 model.addAttribute("string", name);。
+对于以上情况，返回值对象`name`会被默认放到隐含的`Model`中，在`Model`中`key`为返回值首字母小写，`value`为返回的值。等同于`model.addAttribute("string", name);`。
 
-但正常情况下，程序中尽量不要出现 key 为 string、int、float 等这样数据类型的返回值。使用 @ModelAttribute 注解 value 属性可以自定义 key，代码如下。
+但正常情况下，程序中尽量不要出现`key`为`string、int、float`等这样数据类型的返回值。使用`@ModelAttribute`注解`value`属性可以自定义`key`，代码如下。
 ```java
 // 方法有返回值
 @ModelAttribute("name")
 public String myModel(@RequestParam(required = false) String name) {
-    return name;
+  return name;
 }
 // 等同于
 model.addAttribute("name", name);
@@ -500,11 +446,11 @@ public String register(@ModelAttribute("user") UserForm user) {
   }
 }
 ```
-上述代码中“@ModelAttribute("user") UserForm user”语句的功能有两个：
-* 将请求参数的输入封装到 user 对象中
-* 创建 UserForm 实例
+上述代码中`@ModelAttribute("user") UserForm user`语句的功能有两个：
+* 将请求参数的输入封装到`user`对象中
+* 创建`UserForm`实例
 
-以“user”为键值存储在 Model 对象中，和“model.addAttribute("user",user)”语句的功能一样。如果没有指定键值，即“@ModelAttribute UserForm user”，那么在创建 UserForm 实例时以“userForm”为键值存储在 Model 对象中，和“model.addAtttribute("userForm", user)”语句的功能一样。
+以`user`为键值存储在`Model`对象中，和`model.addAttribute("user",user)`语句的功能一样。如果没有指定键值，即`@ModelAttribute UserForm user`，那么在创建`UserForm`实例时以`userForm`为键值存储在`Model`对象中，和`model.addAtttribute("userForm", user)`语句的功能一样。
 ## ModelAttribute+RequestMapping
 示例 3：修改`ModelAttributeController`，代码如下。
 ```java
@@ -516,12 +462,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ModelAttributeController {
-    // @ModelAttribute和@RequestMapping同时放在方法上
-    @RequestMapping(value = "/index")
-    @ModelAttribute("name")
-    public String model(@RequestParam(required = false) String name) {
-        return name;
-    }
+  // @ModelAttribute和@RequestMapping同时放在方法上
+  @RequestMapping(value = "/index")
+  @ModelAttribute("name")
+  public String model(@RequestParam(required = false) String name) {
+    return name;
+  }
 }
 ```
 `index.jsp`代码如下。
@@ -539,7 +485,7 @@ pageEncoding="UTF-8"%>
 </body>
 </html>
 ```
-访问地址：`http://localhost:8080/springmvcDemo2/index?name=%E7%BC%96%E7%A8%8B%E5%B8%AE`，运行结果如图 1 所示。
+访问地址：`http://localhost:8080/springmvcDemo2/index?name=%E7%BC%96%E7%A8%8B%E5%B8%AE`。
 
 `@ModelAttribute`和`@RequestMapping`注解同时应用在方法上时，有以下作用：
 1. 方法的返回值会存入到`Model`对象中，`key`为`ModelAttribute`的`value`属性值。

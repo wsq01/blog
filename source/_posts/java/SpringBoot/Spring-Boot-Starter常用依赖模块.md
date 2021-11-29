@@ -1,9 +1,9 @@
 
 
 
-SpringBoot 提供的依赖模块都约定以 spring-boot-starter- 作为命名的前缀，并且皆位于 org.springframework.boot 包或者命名空间下。
+SpringBoot 提供的依赖模块都约定以`spring-boot-starter-`作为命名的前缀，并且皆位于`org.springframework.boot`包或者命名空间下。
 
-所有的 spring-boot-starter 都有约定俗成的默认配置，但允许我们调整这些配置以改变默认的配置行为，即“约定优先于配置”。
+所有的`spring-boot-starter`都有约定俗成的默认配置，但允许我们调整这些配置以改变默认的配置行为，即“约定优先于配置”。
 # 应用日志和spring-boot-starter-logging
 Java 的日志系统多种多样，从`java.util`默认提供的日志支持，到`log4j，log4j2，commons logging`等，复杂繁多，所以，应用日志系统的配置就会比较特殊，从而`spring-boot-starter-logging`也比较特殊一些。
 
@@ -24,7 +24,7 @@ logging.config=/{some.path.you.defined}/any-logfile-name-I-like.log
 ```
 SpringBoot 默认允许我们通过在配置文件或者命令行等方式使用 logging.file 和 logging.path 来自定义日志文件的名称和存放路径，不过，这只是允许我们在 SpringBoot 框架预先定义的默认日志系统设定的基础上做有限的设置，如果我们希望更灵活的配置，最好通过框架特定的配置方式提供相应的配置文件，然后通过 logging.config 来启用。
 
-如果大家更习惯使用 log4j 或者 log4j2，那么也可以采用类似的方式将它们对应的 spring-boot-starter 依赖模块加到 Maven 依赖中即可：
+如果大家更习惯使用 log4j 或者 log4j2，那么也可以采用类似的方式将它们对应的`spring-boot-starter`依赖模块加到 Maven 依赖中即可：
 ```xml
 <dependency>
     <groupId> org.springframework.boot </groupId>
@@ -51,10 +51,10 @@ SpringBoot 默认允许我们通过在配置文件或者命令行等方式使用
 ```java
 @RestController
 public class IndexController {
-    @RequestMapping("/")
-    public String index() {
-        return "hello, there";
-    }
+  @RequestMapping("/")
+  public String index() {
+    return "hello, there";
+  }
 }
 ```
 重新运行 mvn spring-boot：run 并访问`http://localhost：8080`，错误页面将被我们的`Controller`返回的消息所替代，一个简单的 Web 应用就这样完成了。
@@ -66,10 +66,10 @@ public class IndexController {
 当然，如果还是希望以 war 包的形式，而不是 SpringBoot 推荐使用的独立 jar 包形式发布 Web 应用，也可以继续原来 Java Web 应用的项目结构约定。
 ## SpringMVC 框架层面的约定和定制
 `spring-boot-starter-web`默认将为我们自动配置如下一些 SpringMVC 必要组件：
-* 必要的 ViewResolver，比如 ContentNegotiatingViewResolver 和 Bean-NameViewResolver。
-* 将必要的 Converter、GenericConverter 和 Formatter 等 bean 注册到 IoC 容器。
-* 添加一系列的 HttpMessageConverter 以便支持对 Web 请求和相应的类型转换。
-* 自动配置和注册 MessageCodesResolver。
+* 必要的`ViewResolver`，比如`ContentNegotiatingViewResolver`和`Bean-NameViewResolver`。
+* 将必要的`Converter、GenericConverter`和`Formatter`等`bean`注册到 IoC 容器。
+* 添加一系列的`HttpMessageConverter`以便支持对 Web 请求和相应的类型转换。
+* 自动配置和注册`MessageCodesResolver`。
 * 其他。
 
 任何时候，如果我们对默认提供的 SpringMVC 组件设定不满意，都可以在 IoC 容器中注册新的同类型的`bean`定义来替换，或者直接提供一个基于`WebMvcConfigurerAdapter`类型的`bean`定义来定制，甚至直接提供一个标注了`@EnableWebMvc`的`@Configuration`配置类完全接管所有 SpringMVC 的相关配置，自己完全重新配置。
@@ -78,7 +78,7 @@ public class IndexController {
 
 默认情况下，如果我们没有配置任何 DataSource，那么，SpringBoot 会为我们自动配置一个基于嵌入式数据库的 DataSource，这种自动配置行为其实很适合于测试场景，但对实际的开发帮助不大，基本上我们会自己配置一个 DataSource 实例，或者通过自动配置模块提供的配置参数对 DataSource 实例进行自定义的配置。
 
-假设我们的 SpringBoot 应用只依赖一个数据库，那么，使用 DataSource 自动配置模块提供的配置参数是最方便的：
+假设我们的 SpringBoot 应用只依赖一个数据库，那么，使用`DataSource`自动配置模块提供的配置参数是最方便的：
 ```
 spring.datasource.url=jdbc:mysql://{database host}:3306/{databaseName}
 spring.datasource.username={database username}
@@ -120,7 +120,7 @@ public DataSource dataSource2() throws Throwable {
   return dataSource;
 }
 ```
-那么，不好意思，启动 SpringBoot 应用的时候会抛出类似如下的异常（Exception）：
+那么，启动 SpringBoot 应用的时候会抛出类似如下的异常（Exception）：
 ```
 Exception）：No qualifying bean of type [javax.sql.DataSource] is defined: expected single matching bean but found 2 
 ```
@@ -134,7 +134,7 @@ public class UnveilSpringChapter3Application {
   }
 }
 ```
-也就是说，我们需要在这种场景下排除掉对 SpringBoot 默认提供的 DataSource 相关的自动配置。但如果我们还是想要享受 SpringBoot 提供的自动配置 DataSource 的机能，也可以通过为其中一个 DataSource 配置添加 org.springframework.context.annotation.Primary 这个 Annotation 的方式以实现两全其美：
+也就是说，我们需要在这种场景下排除掉对 SpringBoot 默认提供的`DataSource`相关的自动配置。但如果我们还是想要享受 SpringBoot 提供的自动配置`DataSource`的机能，也可以通过为其中一个`DataSource`配置添加`org.springframework.context.annotation.Primary`这个`Annotation`的方式以实现两全其美：
 ```java
 @Bean
 @Primary
@@ -162,7 +162,7 @@ public DataSource dataSource2() throws Throwable {
 # spring-boot-starter-aop
 现在 Spring 框架提供的 AOP 方案倡导了一种各取所长的方案，即使用 SpringAOP 的面向对象的方式来编写和组织织入逻辑，并使用 AspectJ 的 Pointcut 描述语言配合 Annotation 来标注和指明织入点（Jointpoint）。
 
-SpringBoot 为我们提供了一个 spring-boot-starter-aop 自动配置模块。
+SpringBoot 为我们提供了一个`spring-boot-starter-aop`自动配置模块。
 
 spring-boot-starter-aop 自动配置行为由两部分内容组成：
 位于 spring-boot-autoconfigure的org.springframework.boot.autoconfigure.aop.AopAutoConfiguration 提供 @Configuration 配置类和相应的配置项。
@@ -208,9 +208,9 @@ public class MockService implements InitializingBean {
     counter.inc();
     Timer.Context context = timer.time();
     try {
-        System.out.println("just do something.");
+      System.out.println("just do something.");
     } finally {
-        context.stop();
+      context.stop();
     }
   }
   @Override
@@ -228,58 +228,58 @@ public class MockService implements InitializingBean {
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-        http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.keevol</groupId>
-    <artifactId>spring-boot-starter-metrics</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
-    <name>spring-boot-starter-metrics</name>
-    <description>auto configuration module for dropwizard metrics</description>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.3.0.RELEASE</version>
-        <relativePath /> <!-- lookup parent from repository -->
-    </parent>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.8</java.version>
-        <metrics.version>3.1.2</metrics.version>
-    </properties> <!--其他配置 -->
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-            <version>
-                ${metrics.version}
-            </version>
-        </dependency>
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-annotation</artifactId>
-            <version>${metrics.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.aspectj</groupId>
-            <artifactId>aspectjrt</artifactId>
-            <version>1.8.7</version>
-        </dependency>
-    </dependencies>
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.keevol</groupId>
+  <artifactId>spring-boot-starter-metrics</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>spring-boot-starter-metrics</name>
+  <description>auto configuration module for dropwizard metrics</description>
+  <parent>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-parent</artifactId>
+      <version>1.3.0.RELEASE</version>
+      <relativePath /> <!-- lookup parent from repository -->
+  </parent>
+  <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <java.version>1.8</java.version>
+      <metrics.version>3.1.2</metrics.version>
+  </properties> <!--其他配置 -->
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-aop</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-actuator</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-core</artifactId>
+      <version>
+        ${metrics.version}
+      </version>
+    </dependency>
+    <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-annotation</artifactId>
+      <version>${metrics.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <version>1.8.7</version>
+    </dependency>
+  </dependencies>
 </project>
 ```
 pom.xml 中有几个关键配置需要关注：
@@ -296,7 +296,7 @@ pom.xml 中有几个关键配置需要关注：
 ```java
 @Configuration
 @ComponentScan({ "com.keevol.springboot.metrics.lifecycle",
-      "com.keevol.springboot.metrics.aop" })
+    "com.keevol.springboot.metrics.aop" })
 @AutoConfigureAfter(AopAutoConfiguration.class)
 public class DropwizardMetricsMBeansAutoConfiguration {
   @Value("${metrics.mbeans.domain.name:com.keevol.metrics}")
@@ -308,8 +308,8 @@ public class DropwizardMetricsMBeansAutoConfiguration {
   @Bean
   public JmxReporter jmxReporter() {
     JmxReporter reporter = JmxReporte.forRegistry(metricRegistry)
-            .inDomain(metricsMBeansDomainName).registerWith(mbeanServer)
-            .build();
+        .inDomain(metricsMBeansDomainName).registerWith(mbeanServer)
+        .build();
     return reporter;
   }
 }
@@ -333,45 +333,45 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\com.keevol.sprin
 @Component
 @Aspectpublic
 class AutoMetricsAspect {
-    protected ConcurrentMap<String, Meter> meters = new ConcurrentHashMap<>();
-    protected ConcurrentMap<String, Meter> exceptionMeters = new ConcurrentHashMap<>();
-    protected ConcurrentMap<String, Timer> timers = new ConcurrentHashMap<>();
-    protected ConcurrentMap<String, Counter> counters = new ConcurrentHashMap<>();
-    @Autowired
-    MetricRegistry metricRegistry;
-    @Pointcut(value = "execution(public * *(..))")
-    public void publicMethods() {
+  protected ConcurrentMap<String, Meter> meters = new ConcurrentHashMap<>();
+  protected ConcurrentMap<String, Meter> exceptionMeters = new ConcurrentHashMap<>();
+  protected ConcurrentMap<String, Timer> timers = new ConcurrentHashMap<>();
+  protected ConcurrentMap<String, Counter> counters = new ConcurrentHashMap<>();
+  @Autowired
+  MetricRegistry metricRegistry;
+  @Pointcut(value = "execution(public * *(..))")
+  public void publicMethods() {
+  }
+  @Before("publicMethods() && @annotation(countedAnnotation)")
+  public void instrumentCounted(JoinPoint jp, Counted countedAnnotation) {
+      String name = name(jp.getTarget().getClass(), StringUtils.hasLength(countedAnnotation.name()) ? countedAnnotation.name() : jp.getSignature().getName(), "counter");
+      Counter counter = counters.computeIfAbsent(name, key -> metricRegistry.counter(key));
+      counter.inc();
+  }   
+  
+  @Before("publicMethods() && @annotation(meteredAnnotation)")
+  public void instrumentMetered(JoinPoint jp, Metered meteredAnnotation) {
+      String name = name(jp.getTarget().getClass(), StringUtils.hasLength(meteredAnnotation.name()) ? meteredAnnotation.name() : jp.getSignature().getName(), "meter");
+      Meter meter = meters.computeIfAbsent(name, key -> metricRegistry.meter(key));
+      meter.mark();
+  }   
+  @AfterThrowing(pointcut = "publicMethods() && @annotation(exMe-teredAnnotation)", throwing = "ex")
+  public void instrumentExceptionMetered(JoinPoint jp, Throwable ex, ExceptionMetered exMeteredAnnotation) {
+      String name = name(jp.getTarget().getClass(), StringUtils.hasLength(exMeteredAnnotation.name()) ? exMeteredAnnotation.name() : jp.getSignature().getName(), "meter", "exception");
+      Meter meter = exceptionMeters.computeIfAbsent(name, meterName -> metricRegistry.meter(meterName));
+      meter.mark();
+  }   
+  @Around("publicMethods() && @annotation(timedAnnotation)")
+  public Object instrumentTimed(ProceedingJoinPoint pjp, Timed timedAnnotation) throws Throwable {
+    String name = name(pjp.getTarget().getClass(), StringUtils.hasLength(timedAnnotation.name()) ? timedAnnotation.name() : pjp.getSignature().getName(), "timer");
+    Timer timer = timers.computeIfAbsent(name, inputName -> metricRegistry.timer(inputName));
+    Timer.Context tc = timer.time();
+    try {
+      return pjp.proceed();
+    } finally {
+      tc.stop();
     }
-    @Before("publicMethods() && @annotation(countedAnnotation)")
-    public void instrumentCounted(JoinPoint jp, Counted countedAnnotation) {
-        String name = name(jp.getTarget().getClass(), StringUtils.hasLength(countedAnnotation.name()) ? countedAnnotation.name() : jp.getSignature().getName(), "counter");
-        Counter counter = counters.computeIfAbsent(name, key -> metricRegistry.counter(key));
-        counter.inc();
-    }   
-   
-    @Before("publicMethods() && @annotation(meteredAnnotation)")
-    public void instrumentMetered(JoinPoint jp, Metered meteredAnnotation) {
-        String name = name(jp.getTarget().getClass(), StringUtils.hasLength(meteredAnnotation.name()) ? meteredAnnotation.name() : jp.getSignature().getName(), "meter");
-        Meter meter = meters.computeIfAbsent(name, key -> metricRegistry.meter(key));
-        meter.mark();
-    }   
-    @AfterThrowing(pointcut = "publicMethods() && @annotation(exMe-teredAnnotation)", throwing = "ex")
-    public void instrumentExceptionMetered(JoinPoint jp, Throwable ex, ExceptionMetered exMeteredAnnotation) {
-        String name = name(jp.getTarget().getClass(), StringUtils.hasLength(exMeteredAnnotation.name()) ? exMeteredAnnotation.name() : jp.getSignature().getName(), "meter", "exception");
-        Meter meter = exceptionMeters.computeIfAbsent(name, meterName -> metricRegistry.meter(meterName));
-        meter.mark();
-    }   
-    @Around("publicMethods() && @annotation(timedAnnotation)")
-    public Object instrumentTimed(ProceedingJoinPoint pjp, Timed timedAnnotation) throws Throwable {
-        String name = name(pjp.getTarget().getClass(), StringUtils.hasLength(timedAnnotation.name()) ? timedAnnotation.name() : pjp.getSignature().getName(), "timer");
-        Timer timer = timers.computeIfAbsent(name, inputName -> metricRegistry.timer(inputName));
-        Timer.Context tc = timer.time();
-        try {
-            return pjp.proceed();
-        } finally {
-            tc.stop();
-        }
-    }
+  }
 }
 ```
 @Aspect+@Component 的目的在于告诉 Spring 框架：“我是一个 AOP 的 Aspect 实现类并且你可以通过 @ComponentScan 把我加入 IoC 容器之中。”当然，这不是重点。

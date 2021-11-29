@@ -1,6 +1,6 @@
 ---
 title: SpringMVC 类型转换器
-date: 2021-07-14 17:36:55
+date: 2021-07-18 17:36:55
 tags: [SpringMVC]
 categories: [SpringMVC]
 ---
@@ -182,6 +182,7 @@ public class UserConverter implements Converter<String, User> {
 </body>
 </html>
 ```
+
 # 数据格式化
 Spring MVC 框架的`Formatter<T>`与`Converter<S, T>`一样，也是一个可以将一种数据类型转换成另一种数据类型的接口。不同的是，`Formatter`的源类型必须是`String`类型，而`Converter`的源类型可以是任意数据类型。`Formatter`更适合 Web 层，而`Converter`可以在任意层中。所以对于需要转换表单中的用户输入的情况，应该选择`Formatter`，而不是`Converter`。
 

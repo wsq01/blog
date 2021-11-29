@@ -6,7 +6,7 @@ categories: [Spring]
 ---
 
 # IoC容器
-IoC 容器是 Spring 的核心，也可以称为 Spring 容器。Spring 通过 IoC 容器来管理对象的实例化和初始化，以及对象从创建到销毁的整个生命周期。
+IoC 容器（也叫 Spring 容器）是 Spring 的核心。Spring 通过 IoC 容器来管理对象的实例化和初始化，以及对象从创建到销毁的整个生命周期。
 
 Spring 中使用的对象都由 IoC 容器管理，不需要手动使用`new`运算符创建对象。由 IoC 容器管理的对象称为`Spring Bean`，`Spring Bean`就是 Java 对象，和使用`new`运算符创建的对象没有区别。
 
@@ -14,9 +14,7 @@ Spring 通过读取 XML 或 Java 注解中的信息来获取哪些对象需要�
 
 Spring 提供 2 种不同类型的 IoC 容器，即`BeanFactory`和`ApplicationContext`容器。
 ## BeanFactory容器
-`BeanFactory`是最简单的容器，由`org.springframework.beans.facytory.BeanFactory`接口定义，采用懒加载，所以容器启动比较快。
-
-为了兼容 Spring 集成的第三方框架（如`BeanFactoryAware`、`InitializingBean`），所以目前仍然保留了该接口。
+`BeanFactory`由`org.springframework.beans.facytory.BeanFactory`接口定义，采用懒加载，所以容器启动比较快。
 
 简单来说，`BeanFactory`就是一个管理`Bean`的工厂，它主要负责初始化各种`Bean`，并调用它们的生命周期方法。
 
@@ -46,28 +44,9 @@ ApplicationContext applicationContext = new FileSystemXmlApplicationContext(Stri
 ```
 它与`ClassPathXmlApplicationContext`的区别是：在读取 Spring 的配置文件时，`FileSystemXmlApplicationContext`不再从类路径中读取配置文件，而是通过参数指定配置文件的位置，它可以获取类路径之外的资源，如`F:/workspaces/applicationContext.xml`。
 
-在使用 Spring 框架时，可以通过实例化其中任何一个类创建 Spring 的`ApplicationContext`容器。
+在使用 Spring 框架时，可以通过实例化其中任何一个类创建 Spring 的`ApplicationContext`容器。通常会采用通过`ClassPathXmlApplicationContext`类实例化`ApplicationContext`容器的方式。
 
-通常在 Java 项目中，会采用通过`ClassPathXmlApplicationContext`类实例化`ApplicationContext`容器的方式，而在 Web 项目中，`ApplicationContext`容器的实例化工作会交由 Web 服务器完成。Web 服务器实例化`ApplicationContext`容器通常使用基于`ContextLoaderListener`实现的方式，它只需要在`web.xml`中添加如下代码：
-```xml
-<!--指定Spring配置文件的位置，有多个配置文件时，以逗号分隔-->
-<context-param>
-  <param-name>contextConfigLocation</param-name>
-  <!--spring将加载spring目录下的applicationContext.xml文件-->
-  <param-value>
-    classpath:spring/applicationContext.xml
-  </param-value>
-</context-param>
-<!--指定以ContextLoaderListener方式启动Spring容器-->
-<listener>
-  <listener-class>
-    org.springframework.web.context.ContextLoaderListener
-  </listener-class>
-</listener>
-```
-需要注意的是，`BeanFactory`和`ApplicationContext`都是通过 XML 配置文件加载`Bean`的。
-
-二者的主要区别在于，如果`Bean`的某一个属性没有注入，则使用`BeanFacotry`加载后，在第一次调用`getBean()`方法时会抛出异常，而`ApplicationContext`则在初始化时自检，这样有利于检查所依赖的属性是否注入。
+需要注意的是，`BeanFactory`和`ApplicationContext`都是通过 XML 配置文件加载`Bean`的。二者的主要区别在于，如果`Bean`的某一个属性没有注入，则使用`BeanFacotry`加载后，在第一次调用`getBean()`方法时会抛出异常，而`ApplicationContext`则在初始化时自检，这样有利于检查所依赖的属性是否注入。
 
 因此，在实际开发中，通常都选择使用`ApplicationContext`，而只有在系统资源较少时，才考虑使用`BeanFactory`。
 # Bean定义
@@ -130,9 +109,7 @@ Spring 容器在初始化一个`Bean`的实例时，同时会指定该实例的�
 6. `websocket`
 `websocket`的作用域是`WebSocket`，即在整个`WebSocket`中有效。
 
-Spring 5 版本之前还支持`global Session`，该值表示在一个全局的 HTTP `Session`中，容器会返回该`Bean`的同一个实例。一般用于 Portlet 应用环境。Spring 5.2.0 版本中已经将该值移除了。
-
-`request、session、application、websocket`和`global Session`作用域只能在 Web 环境下使用，如果使用`ClassPathXmlApplicationContext`加载这些作用域中的任意一个的`Bean`，就会抛出以下异常。
+`request、session、application、websocket`作用域只能在 Web 环境下使用，如果使用`ClassPathXmlApplicationContext`加载这些作用域中的任意一个的`Bean`，就会抛出以下异常。
 ```
 java.lang.IllegalStateException: No Scope registered for scope name 'xxx'
 ```
@@ -155,7 +132,7 @@ java.lang.IllegalStateException: No Scope registered for scope name 'xxx'
 # Bean生命周期
 Spring 根据`Bean`的作用域来选择管理方式。对于`singleton`作用域的`Bean`，Spring 能够精确地知道该`Bean`何时被创建，何时初始化完成，以及何时被销毁；而对于`prototype`作用域的`Bean`，Spring 只负责创建，当容器创建了`Bean`的实例后，`Bean`的实例就交给客户端代码管理，Spring 容器将不再跟踪其生命周期。
 ## Bean生命周期执行流程
-Spring 容器在确保一个`Bean`能够使用之前，会进行很多工作。Spring 容器中 Bean 的生命周期流程：
+Spring 容器在确保一个`Bean`能够使用之前，会进行很多工作。`Bean`的生命周期流程：
 
 {% asset_img 1.png  Bean 的生命周期 %}
 
@@ -516,19 +493,16 @@ public class MainApp {
   </bean>
 </beans>
 ```
-# Spring实例化Bean的三种方法
+# Spring实例化Bean
 在 Spring 中，实例化`Bean`有三种方式，分别是构造器实例化、静态工厂方式实例化和实例工厂方式实例化。
 ## 构造器实例化
 构造器实例化是指 Spring 容器通过`Bean`对应的类中默认的构造函数实例化`Bean`。
-### 1. 创建项目并导入 JAR 包
-创建一个名称为`springDemo02`的 Web 项目，然后将 Spring 支持和依赖的 JAR 包复制到项目的`lib`目录中，并发布到类路径下。
-### 2. 创建实体类
+
 在项目的`src`目录下创建一个名为`com.mengma.instance.constructor`的包，在该包下创建一个实体类`Person1`。
 ```java
 package com.mengma.instance.constructor;
 public class Person1 {}
 ```
-### 3. 创建 Spring 配置文件
 在`com.mengma.instance.constructor`包下创建 Spring 的配置文件`applicationContext.xml`。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -540,7 +514,7 @@ public class Person1 {}
 </beans>
 ```
 在上述配置中，定义了一个`id`为`person1`的`Bean`，其中`class`属性指定了其对应的类为`Person1`。
-### 4. 创建测试类
+
 在`com.mengma.instance.constructor`包下创建一个名为`InstanceTest1`的测试类。
 ```java
 package com.mengma.instance.constructor;
@@ -629,7 +603,6 @@ public class MyBeanFactory {
 ```
 上述代码中，使用默认无参的构造方法输出`person3`工厂实例化中语句，使用`createBean`成员方法创建`Bean`的实例。
 ### 3. 创建 Spring 配置文件
-在`com.mengma.instance.factory`包下创建 Spring 的配置文件`applicationContext.xml`。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -644,7 +617,6 @@ public class MyBeanFactory {
 ```
 上述代码中，首先配置了一个实例工厂`Bean`，然后配置了需要实例化的`Bean`。在`id`为`person3`的`Bean`中，使用`factory-bean`属性指定一个实例工厂，该属性值就是实例工厂的`id`属性值。使用`factory-method`属性确定使用工厂中的`createBean()`方法。
 ### 4. 创建测试类
-在`com.mengma.instance.factory`包下创建一个名为`InstanceTest3`的测试类。
 ```java
 package com.mengma.instance.factory;
 import org.junit.Test;

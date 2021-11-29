@@ -1,6 +1,6 @@
 ---
 title: YAML教程
-date: 2021-08-04 10:59:43
+date: 2021-09-04 10:59:43
 tags: [Spring Boot]
 categories: [Spring Boot]
 ---

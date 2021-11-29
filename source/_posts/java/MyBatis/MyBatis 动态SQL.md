@@ -1,6 +1,6 @@
 ---
-title: Spring AOP
-date: 2021-04-09 16:24:15
+title: MyBatis 动态SQL
+date: 2021-04-012 16:24:15
 tags: [MyBatis]
 categories: [MyBatis]
 ---
@@ -8,7 +8,6 @@ categories: [MyBatis]
 开发人员通常根据需求手动拼接 SQL 语句，这是一个极其麻烦的工作，而 MyBatis 提供了对 SQL 语句动态组装的功能，恰能解决这一问题。
 
 MyBatis 的动态 SQL 元素与 JSTL 或 XML 文本处理器相似，常用`<if>、<choose>、<when>、<otherwise>、<trim>、<where>、<set>、<foreach>`和`<bind>`等元素。
-
 # if
 使用动态 SQL 最常见情景是根据条件包含`where`子句的一部分。
 ```xml
@@ -23,10 +22,9 @@ MyBatis 的动态 SQL 元素与 JSTL 或 XML 文本处理器相似，常用`<if>
 ```
 这条语句提供了可选的查找文本功能。如果不传入`title`，那么所有处于`ACTIVE`状态的`BLOG`都会返回；如果传入了`title`参数，那么就会对`title`一列进行模糊查找并返回对应的`BLOG`结果。
 
-如果希望通过 “title” 和 “author” 两个参数进行可选搜索该怎么办呢？首先，我想先将语句名称修改成更名副其实的名称；接下来，只需要加入另一个条件即可。
+如果希望通过`title`和`author`两个参数进行可选搜索该怎么办呢？首先，我想先将语句名称修改成更名副其实的名称；接下来，只需要加入另一个条件即可。
 ```xml
-<select id="findActiveBlogLike"
-     resultType="Blog">
+<select id="findActiveBlogLike" resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <if test="title != null">
     AND title like #{title}
@@ -37,12 +35,11 @@ MyBatis 的动态 SQL 元素与 JSTL 或 XML 文本处理器相似，常用`<if>
 </select>
 ```
 # choose、when、otherwise
-有时候，我们不想使用所有的条件，而只是想从多个条件中选择一个使用。针对这种情况，MyBatis 提供了 choose 元素。
+有时候，我们不想使用所有的条件，而只是想从多个条件中选择一个使用。针对这种情况，MyBatis 提供了`choose`元素。
 
-还是上面的例子，但是策略变为：传入了 “title” 就按 “title” 查找，传入了 “author” 就按 “author” 查找的情形。若两者都没有传入，就返回标记为 featured 的 BLOG（这可能是管理员认为，与其返回大量的无意义随机 Blog，还不如返回一些由管理员精选的 Blog）。
+还是上面的例子，但是策略变为：传入了`title`就按`title`查找，传入了`author`就按`author`查找的情形。若两者都没有传入，就返回标记为`featured`的 BLOG（这可能是管理员认为，与其返回大量的无意义随机 Blog，还不如返回一些由管理员精选的 Blog）。
 ```xml
-<select id="findActiveBlogLike"
-     resultType="Blog">
+<select id="findActiveBlogLike" resultType="Blog">
   SELECT * FROM BLOG WHERE state = ‘ACTIVE’
   <choose>
     <when test="title != null">
@@ -58,10 +55,9 @@ MyBatis 的动态 SQL 元素与 JSTL 或 XML 文本处理器相似，常用`<if>
 </select>
 ```
 # trim、where、set
-现在回到之前的 “if” 示例，这次我们将 “state = ‘ACTIVE’” 设置成动态条件，看看会发生什么。
+现在回到之前的`if`示例，这次我们将`state = ‘ACTIVE’`设置成动态条件，看看会发生什么。
 ```xml
-<select id="findActiveBlogLike"
-     resultType="Blog">
+<select id="findActiveBlogLike" resultType="Blog">
   SELECT * FROM BLOG
   WHERE
   <if test="state != null">
@@ -91,13 +87,13 @@ MyBatis 有一个简单且适合大多数场景的解决办法。而在其他场
   SELECT * FROM BLOG
   <where>
     <if test="state != null">
-         state = #{state}
+      state = #{state}
     </if>
     <if test="title != null">
-        AND title like #{title}
+      AND title like #{title}
     </if>
     <if test="author != null and author.name != null">
-        AND author_name like #{author.name}
+      AND author_name like #{author.name}
     </if>
   </where>
 </select>
@@ -135,7 +131,7 @@ MyBatis 有一个简单且适合大多数场景的解决办法。而在其他场
 ```
 注意，我们覆盖了后缀值设置，并且自定义了前缀值。
 # foreach
-动态 SQL 的另一个常见使用场景是对集合进行遍历（尤其是在构建 IN 条件语句的时候）。
+动态 SQL 的另一个常见使用场景是对集合进行遍历（尤其是在构建`IN`条件语句的时候）。
 ```xml
 <select id="selectPostIn" resultType="domain.blog.Post">
   SELECT * FROM POST P

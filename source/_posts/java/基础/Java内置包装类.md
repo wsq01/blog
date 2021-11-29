@@ -1,9 +1,14 @@
-
+---
+title: Java 内置包装类
+date: 2020-09-09 17:51:12
+tags: [java]
+categories: java
+---
 
 # 包装类、装箱和拆箱
-在 Java 的设计中提倡一种思想，即一切皆对象。但是从数据类型的划分中，我们知道 Java 中的数据类型分为基本数据类型和引用数据类型，但是基本数据类型怎么能够称为对象呢？于是 Java 为每种基本数据类型分别设计了对应的类，称之为包装类，也有地方称为外覆类或数据类型类。
+在 Java 的设计中提倡一种思想，即一切皆对象。但是从数据类型的划分中，我们知道 Java 中的数据类型分为基本数据类型和引用数据类型，但是基本数据类型怎么能够称为对象呢？于是 Java 为每种基本数据类型分别设计了对应的类，称之为包装类。
 
-包装类和基本数据类型的关系如下表所示。
+包装类和基本数据类型的关系：
 
 |	基本数据类型 | 包装类 |
 | :--: | :--: |
@@ -20,7 +25,7 @@
 基本数据类型转换为包装类的过程称为装箱，例如把`int`包装成`Integer`类的对象；包装类变为基本数据类型的过程称为拆箱，例如把`Integer`类的对象重新简化为`int`。
 
 在进行基本数据类型和对应的包装类转换时，系统将自动进行装箱及拆箱操作。
-```JAVA
+```java
 public class Demo {
   public static void main(String[] args) {
     int m = 500;
@@ -39,415 +44,402 @@ n = 500
 obj等价于obj1返回结果为true
 ```
 ## 包装类的应用
-下面我们讲解 8 个包装类的使用，下面是常见的应用场景。
-1) 实现 int 和 Integer 的相互转换
-可以通过 Integer 类的构造方法将 int 装箱，通过 Integer 类的 intValue 方法将 Integer 拆箱。例如：
+### 实现 int 和 Integer 的相互转换
+可以通过`Integer`类的构造方法将`int`装箱，通过`Integer`类的`intValue`方法将`Integer`拆箱。
+```java
 public class Demo {
-    public static void main(String[] args) {
-        int m = 500;
-        Integer obj = new Integer(m);  // 手动装箱
-        int n = obj.intValue();  // 手动拆箱
-        System.out.println("n = " + n);
-       
-        Integer obj1 = new Integer(500);
-        System.out.println("obj等价于obj1的返回结果为" + obj.equals(obj1));
-    }
+  public static void main(String[] args) {
+    int m = 500;
+    Integer obj = new Integer(m);  // 手动装箱
+    int n = obj.intValue();  // 手动拆箱
+    System.out.println("n = " + n);
+    
+    Integer obj1 = new Integer(500);
+    System.out.println("obj等价于obj1的返回结果为" + obj.equals(obj1));
+  }
 }
+```
 运行结果：
+```
 n = 500
 obj等价于obj1的返回结果为true
-
-2) 将字符串转换为数值类型
-在 Integer 和 Float 类中分别提供了以下两种方法：
-
-① Integer 类（String 转 int 型）
+```
+### 将字符串转换为数值类型
+在`Integer`和`Float`类中分别提供了以下两种方法：
+1. `Integer`类（`String`转`int`型）
+```
 int parseInt(String s);
-s 为要转换的字符串。
-
-② Float 类（String 转 float 型）
+```
+`s`为要转换的字符串。
+2. `Float`类（`String`转`float`型）
+```
 float parseFloat(String s)
+```
 注意：使用以上两种方法时，字符串中的数据必须由数字组成，否则转换时会出现程序错误。
-
-下面为字符串转换为数值类型的例子：
+```java
 public class Demo {
-    public static void main(String[] args) {
-        String str1 = "30";
-        String str2 = "30.3";
-        // 将字符串变为int型
-        int x = Integer.parseInt(str1);
-        // 将字符串变为float型
-        float f = Float.parseFloat(str2);
-        System.out.println("x = " + x + "；f = " + f);
-    }
+  public static void main(String[] args) {
+    String str1 = "30";
+    String str2 = "30.3";
+    // 将字符串变为int型
+    int x = Integer.parseInt(str1);
+    // 将字符串变为float型
+    float f = Float.parseFloat(str2);
+    System.out.println("x = " + x + "；f = " + f);
+  }
 }
+```
 运行结果：
+```
 x = 30；f = 30.3
-
-3) 将整数转换为字符串
-Integer 类有一个静态的 toString() 方法，可以将整数转换为字符串。例如：
+```
+### 将整数转换为字符串
+`Integer`类有一个静态的`toString()`方法，可以将整数转换为字符串。
+```java
 public class Demo {
-    public static void main(String[] args) {
-        int m = 500;
-        String s = Integer.toString(m);
-        System.out.println("s = " + s);
-    }
+  public static void main(String[] args) {
+    int m = 500;
+    String s = Integer.toString(m);
+    System.out.println("s = " + s);
+  }
 }
+```
 运行结果：
+```
 s = 500
+```
 # Object类
-Object 是 Java 类库中的一个特殊类，也是所有类的父类。也就是说，Java 允许把任何类型的对象赋给 Object 类型的变量。当一个类被定义后，如果没有指定继承的父类，那么默认父类就是 Object 类。因此，以下两个类表示的含义是一样的。
+`Object`是 Java 类库中的一个特殊类，也是所有类的父类。也就是说，Java 允许把任何类型的对象赋给`Object`类型的变量。当一个类被定义后，如果没有指定继承的父类，那么默认父类就是`Object`类。因此，以下两个类表示的含义是一样的。
+```java
 public class MyClass{…}
-等价于
+// 等价于
 public class MyClass extends Object {…}
+```
+由于 Java 所有的类都是`Object`类的子类，所以任何 Java 对象都可以调用`Object`类的方法。
 
-由于 Java 所有的类都是 Object 类的子类，所以任何 Java 对象都可以调用 Object 类的方法。常见的方法如表 1 所示。
+`Object`类的常用方法：
 
-表 1 Object 类的常用方法
-方法	说明
-Object clone()	创建与该对象的类相同的新对象
-boolean equals(Object)	比较两对象是否相等
-void finalize()	当垃圾回收器确定不存在对该对象的更多引用时，对象垃圾回收器调用该方法
-Class getClass()	返回一个对象运行时的实例类
-int hashCode()	返回该对象的散列码值
-void notify()	激活等待在该对象的监视器上的一个线程
-void notifyAll()	激活等待在该对象的监视器上的全部线程
-String toString()	返回该对象的字符串表示
-void wait()	在其他线程调用此对象的 notify() 方法或 notifyAll() 方法前，导致当前线程等待
-其中，toString()、equals() 方法和 getClass() 方法在 Java 程序中比较常用。
-toString() 方法
-toString() 方法返回该对象的字符串，当程序输出一个对象或者把某个对象和字符串进行连接运算时，系统会自动调用该对象的 toString() 方法返回该对象的字符串表示。
+| 方法 | 说明 |
+| :--: | :--: |
+| Object clone()    | 创建与该对象的类相同的新对象 |
+| boolean equals(Object) | 比较两对象是否相等 |
+| void finalize()   | 当垃圾回收器确定不存在对该对象的更多引用时，对象垃圾回收器调用该方法 |
+| Class getClass()	| 返回一个对象运行时的实例类 |
+| int hashCode()    | 返回该对象的散列码值 |
+| void notify()     | 激活等待在该对象的监视器上的一个线程 |
+| void notifyAll()	| 激活等待在该对象的监视器上的全部线程 |
+| String toString()	| 返回该对象的字符串表示 |
+| void wait()       | 在其他线程调用此对象的 notify() 方法或 notifyAll() 方法前，导致当前线程等待 |
 
-Object 类的 toString() 方法返回“运行时类名@十六进制哈希码”格式的字符串，但很多类都重写了 Object 类的 toString() 方法，用于返回可以表述该对象信息的字符串。
-哈希码（hashCode），每个 Java 对象都有哈希码属性，哈希码可以用来标识对象，提高对象在集合操作中的执行效率。
+## toString() 方法
+`toString()`方法返回该对象的字符串，当程序输出一个对象或者把某个对象和字符串进行连接运算时，系统会自动调用该对象的`toString()`方法返回该对象的字符串表示。
 
-先看以下代码：
+`Object`类的`toString()`方法返回“运行时类名@十六进制哈希码”格式的字符串，但很多类都重写了`Object`类的`toString()`方法，用于返回可以表述该对象信息的字符串。
+
+> 哈希码（`hashCode`），每个 Java 对象都有哈希码属性，哈希码可以用来标识对象，提高对象在集合操作中的执行效率。
+
+```java
 // 定义Demo类，实际上继承Object类
-class Demo {
-}
+class Demo {}
 public class ObjectDemo01 {
-    public static void main(String[] args) {
-        Demo d = new Demo(); // 实例化Demo对象
-        System.out.println("不加toString()输出：" + d);
-        System.out.println("加上toString()输出：" + d.toString());
-    }
+  public static void main(String[] args) {
+    Demo d = new Demo(); // 实例化Demo对象
+    System.out.println("不加toString()输出：" + d);
+    System.out.println("加上toString()输出：" + d.toString());
+  }
 }
+```
 输出结果为：
+```
 不加toString()输出：Demo@15db9742
 加上toString()输出：Demo@15db9742
-
-以上的程序是随机输出了一些地址信息，从程序的运行结果可以清楚的发现，加和不加 toString() 的最终输出结果是一样的，也就是说对象输出时一定会调用 Object 类中的 toString() 方法打印内容。所以利用此特性就可以通过 toString() 取得一些对象的信息，如下面代码。
+```
+以上的程序是随机输出了一些地址信息，从程序的运行结果可以清楚的发现，加和不加`toString()`的最终输出结果是一样的，也就是说对象输出时一定会调用`Object`类中的`toString()`方法打印内容。所以利用此特性就可以通过`toString()`取得一些对象的信息，如下面代码。
+```java
 public class Person {
-    private String name;
-    private int age;
-    public Person(String name, int age) {
-        this.name = name;
-        this.age = age;
-    }
-    public String toString() {
-        return "姓名：" + this.name + "：年龄" + this.age;
-    }
-    public static void main(String[] args) {
-        Person per = new Person("C语言中文网", 30);// 实例化Person对象
-        System.out.println("对象信息：" + per);// 打印对象调用toString()方法
-    }
+  private String name;
+  private int age;
+  public Person(String name, int age) {
+    this.name = name;
+    this.age = age;
+  }
+  public String toString() {
+    return "姓名：" + this.name + "：年龄" + this.age;
+  }
+  public static void main(String[] args) {
+    Person per = new Person("张三", 30);// 实例化Person对象
+    System.out.println("对象信息：" + per);// 打印对象调用toString()方法
+  }
 }
+```
 输出结果为：
-对象信息：姓名：C语言中文网：年龄30
-
-程序中的 Person 类中重写了 Object 类中的 toString() 方法，这样直接输出对象时调用的是被子类重写过的 toString() 方法。
-equals() 方法
-在前面学习字符串比较时，曾经介绍过两种比较方法，分别是==运算符和 equals() 方法，==运算符是比较两个引用变量是否指向同一个实例，equals() 方法是比较两个对象的内容是否相等，通常字符串的比较只是关心内容是否相等。
+```
+对象信息：姓名：张三：年龄30
+```
+## equals() 方法
+`==`运算符是比较两个引用变量是否指向同一个实例，`equals()`方法是比较两个对象的内容是否相等，通常字符串的比较只是关心内容是否相等。
 
 其使用格式如下：
+```java
 boolean result = obj.equals(Object o);
-其中，obj 表示要进行比较的一个对象，o 表示另一个对象。
-例 1
-编写一个 Java 程序，实现用户登录的验证功能。要求用户从键盘输入登录用户名和密码，当用户输入的用户名等于 admin 并且密码也等于 admin 时，则表示该用户为合法用户，提示登录成功，否则提示用户名或者密码错误信息。
-
-在这里使用 equals() 方法将用户输入的字符串与保存 admin 的字符串对象进行比较，具体的代码如下：
-import java.util.Scanner;
-public class Test01 {
-    // 验证用户名和密码
-    public static boolean validateLogin(String uname, String upwd) {
-        boolean con = false;
-        if (uname.equals("admin") && upwd.equals("admin")) { // 比较两个 String 对象
-            con = true;
-        } else {
-            con = false;
-        }
-        return con;
-    }
-    public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        System.out.println("------欢迎使用大数据管理平台------");
-        System.out.println("用户名：");
-        String username = input.next(); // 获取用户输入的用户名
-        System.out.println("密码：");
-        String pwd = input.next(); // 获取用户输入的密码
-        boolean con = validateLogin(username, pwd);
-        if (con) {
-            System.out.println("登录成功！");
-        } else {
-            System.out.println("用户名或密码有误！");
-        }
-    }
-}
-上述代码在 validateLogin() 方法中又使用 equals() 方法将两个 String 类型的对象进行了比较，当 uname 对象与保存 admin 的 String 对象相同时，uname.equals("admin") 为 true；与此相同，当 upwd 对象与保存 admin 的 String 对象相同时，upwd.equals("admin") 为 true。当用户输入的用户名和密码都为 admin 时，表示该用户为合法用户，提示登录成功信息，否则提示用户名或密码有误的错误信息。
-
-该程序的运行结果下所示：
-------欢迎使用大数据管理平台------
-用户名：
-adinm
-密码：
-admin
-用户名或密码有误！
-------欢迎使用大数据管理平台------
-用户名：
-admin
-密码：
-admin
-登录成功！
-getClass() 方法
-getClass() 方法返回对象所属的类，是一个 Class 对象。通过 Class 对象可以获取该类的各种信息，包括类名、父类以及它所实现接口的名字等。
-例 2
-编写一个实例，演示如何对 String 类型调用 getClass() 方法，然后输出其父类及实现的接口信息。具体实现代码如下：
+```
+其中，`obj`表示要进行比较的一个对象，`o`表示另一个对象。
+## getClass() 方法
+`getClass()`方法返回对象所属的类，是一个`Class`对象。通过`Class`对象可以获取该类的各种信息，包括类名、父类以及它所实现接口的名字等。
+```java
 public class Test02 {
-    public static void printClassInfo(Object obj) {
-        // 获取类名
-        System.out.println("类名：" + obj.getClass().getName());
-        // 获取父类名
-        System.out.println("父类：" + obj.getClass().getSuperclass().getName());
-        System.out.println("实现的接口有：");
-        // 获取实现的接口并输出
-        for (int i = 0; i < obj.getClass().getInterfaces().length; i++) {
-            System.out.println(obj.getClass().getInterfaces()[i]);
-        }
+  public static void printClassInfo(Object obj) {
+    // 获取类名
+    System.out.println("类名：" + obj.getClass().getName());
+    // 获取父类名
+    System.out.println("父类：" + obj.getClass().getSuperclass().getName());
+    System.out.println("实现的接口有：");
+    // 获取实现的接口并输出
+    for (int i = 0; i < obj.getClass().getInterfaces().length; i++) {
+      System.out.println(obj.getClass().getInterfaces()[i]);
     }
-    public static void main(String[] args) {
-        String strObj = new String();
-        printClassInfo(strObj);
-    }
+  }
+  public static void main(String[] args) {
+    String strObj = new String();
+    printClassInfo(strObj);
+  }
 }
+```
 该程序的运行结果如下：
+```
 类名：java.lang.String
 父类：java.lang.Object
 实现的接口有：
 interface java.io.Serializable
 interface java.lang.Comparable
 interface java.lang.CharSequence
-接收任意引用类型的对象
-既然 Object 类是所有对象的父类，则所有的对象都可以向 Object 进行转换，在这其中也包含了数组和接口类型，即一切的引用数据类型都可以使用 Object 进行接收。
+```
+## 接收任意引用类型的对象
+既然`Object`类是所有对象的父类，则所有的对象都可以向`Object`进行转换，在这其中也包含了数组和接口类型，即一切的引用数据类型都可以使用`Object`进行接收。
+```java
 interface A {
-    public String getInfo();
+  public String getInfo();
 }
 class B implements A {
-    public String getInfo() {
-        return "Hello World!!!";
-    }
+  public String getInfo() {
+    return "Hello World!!!";
+  }
 }
 public class ObjectDemo04 {
-    public static void main(String[] args) {
-        // 为接口实例化
-        A a = new B();
-        // 对象向上转型
-        Object obj = a;
-        // 对象向下转型
-        A x = (A) obj;
-        System.out.println(x.getInfo());
-    }
+  public static void main(String[] args) {
+    // 为接口实例化
+    A a = new B();
+    // 对象向上转型
+    Object obj = a;
+    // 对象向下转型
+    A x = (A) obj;
+    System.out.println(x.getInfo());
+  }
 }
+```
 输出结果为：
+```
 Hello World!!!
+```
+通过以上代码可以发现，虽然接口不能继承一个类，但是依然是`Object`类的子类，因为接口本身是引用数据类型，所以可以进行向上转型操作。
 
-通过以上代码可以发现，虽然接口不能继承一个类，但是依然是 Object 类的子类，因为接口本身是引用数据类型，所以可以进行向上转型操作。
-
-同理，也可以使用 Object 接收一个数组，因为数组本身也是引用数据类型。
+同理，也可以使用`Object`接收一个数组，因为数组本身也是引用数据类型。
+```java
 public class ObjectDemo05 {
-    public static void main(String[] args) {
-        int temp[] = { 1, 3, 5, 7, 9 };
-        // 使用object接收数组
-        Object obj = temp;
-        // 传递数组引用
-        print(obj);
+  public static void main(String[] args) {
+    int temp[] = { 1, 3, 5, 7, 9 };
+    // 使用object接收数组
+    Object obj = temp;
+    // 传递数组引用
+    print(obj);
+  }
+  public static void print(Object o) {
+    // 判断对象的类型
+    if (o instanceof int[]) {
+      // 向下转型
+      int x[] = (int[]) o;
+      // 循环输出
+      for (int i = 0; i < x.length; i++) {
+        System.out.print(x[i] + "\t");
+      }
     }
-    public static void print(Object o) {
-        // 判断对象的类型
-        if (o instanceof int[]) {
-            // 向下转型
-            int x[] = (int[]) o;
-            // 循环输出
-            for (int i = 0; i < x.length; i++) {
-                System.out.print(x[i] + "\t");
-            }
-        }
-    }
+  }
 }
+```
 输出结果为：
+```
 1 3 5 7 9
+```
+以上程序使用`Object`接收一个整型数组，因为数组本身属于引用数据类型，所以可以使用`Object`接收数组内容，在输出时通过`instanceof`判断类型是否是一个整型数组，然后进行输出操作。
 
-以上程序使用 Object 接收一个整型数组，因为数组本身属于引用数据类型，所以可以使用 Object 接收数组内容，在输出时通过 instanceof 判断类型是否是一个整型数组，然后进行输出操作。
-
-提示：因为 Object 类可以接收任意的引用数据类型，所以在很多的类库设计上都采用 Object 作为方法的参数，这样操作起来会比较方便。
+提示：因为`Object`类可以接收任意的引用数据类型，所以在很多的类库设计上都采用`Object`作为方法的参数，这样操作起来会比较方便。
 # Integer类
-Integer 类在对象中包装了一个基本类型 int 的值。Integer 类对象包含一个 int 类型的字段。此外，该类提供了多个方法，能在 int 类型和 String 类型之间互相转换，还提供了处理 int 类型时非常有用的其他一些常量和方法。
-Integer 类的构造方法
-Integer 类中的构造方法有以下两个：
-Integer(int value)：构造一个新分配的 Integer 对象，它表示指定的 int 值。
-Integer(String s)：构造一个新分配的 Integer 对象，它表示 String 参数所指示的 int 值。
+`Integer`类在对象中包装了一个基本类型`int`的值。`Integer`类对象包含一个`int`类型的字段。此外，该类提供了多个方法，能在`int`类型和`String`类型之间互相转换，还提供了处理`int`类型时非常有用的其他一些常量和方法。
+## Integer 类的构造方法
+`Integer`类中的构造方法有以下两个：
+* `Integer(int value)`：构造一个新分配的`Integer`对象，它表示指定的`int`值。
+* `Integer(String s)`：构造一个新分配的`Integer`对象，它表示`String`参数所指示的`int`值。
 
-例如，以下代码分别使用以上两个构造方法来获取 Integer 对象：
+```java
 Integer integer1 = new Integer(100);    // 以 int 型变量作为参数创建 Integer 对象
 Integer integer2 = new Integer("100");    // 以 String 型变量作为参数创建 Integer 对象
-Integer 类的常用方法
-在 Integer 类内部包含一些和 int 类型操作有关的方法，表 1 列出了这些常用的方法。
+```
+## Integer 类的常用方法
+`Integer`类中的常用方法：
 
-表 1 Integer类中的常用方法
-方法	返回值	功能
-byteValue()	byte	以 byte 类型返回该 Integer 的值
-shortValue()	short	以 short 类型返回该 Integer 的值
-intValue()	int	以 int 类型返回该 Integer 的值
-toString()	String	返回一个表示该 Integer 值的 String 对象
-equals(Object obj)	boolean	比较此对象与指定对象是否相等
-compareTo(Integer
-anotherlnteger)	int	在数字上比较两个 Integer 对象，如相等，则返回 0；
-如调用对象的数值小于 anotherlnteger 的数值，则返回负值；
-如调用对象的数值大于 anotherlnteger 的数值，则返回正值
-valueOf(String s)	Integer	返回保存指定的 String 值的 Integer 对象
-parseInt(String s)	int	将数字字符串转换为 int 数值
-在实际的编程过程中，经常将字符串转换为 int 类型的数值，或者将 int 类型的数值转换为对应的字符串。以下代码演示如何实现这两种功能：
+| 方法	返回值	功能
+| :--: | :--: | :--: |
+| byteValue()                       | byte    | 以 byte 类型返回该 Integer 的值 |
+| shortValue()                      | short   | 以 short 类型返回该 Integer 的值 |
+| intValue()                        | int     | 以 int 类型返回该 Integer 的值 |
+| toString()                        | String	| 返回一个表示该 Integer 值的 String 对象 |
+| equals(Object obj)                | boolean	| 比较此对象与指定对象是否相等 |
+| compareTo(Integeranotherlnteger)  | int     | 在数字上比较两个 Integer 对象，如相等，则返回 0；<br>如调用对象的数值小于 anotherlnteger 的数值，则返回负值；<br>如调用对象的数值大于 anotherlnteger 的数值，则返回正值 |
+| valueOf(String s)                 | Integer	| 返回保存指定的 String 值的 Integer 对象 |
+| parseInt(String s)                | int     | 将数字字符串转换为 int 数值 |
+
+```java
 String str = "456";
 int num = Integer.parseInt(str);    // 将字符串转换为int类型的数值
 int i = 789;
 String s = Integer.toString(i);    // 将int类型的数值转换为字符串
-
+```
 注意：在实现将字符串转换为 int 类型数值的过程中，如果字符串中包含非数值类型的字符，则程序执行将出现异常。
 例 1
 编写一个程序，在程序中创建一个 String 类型变量，然后将它转换为二进制、八进制、十进制和十六进制输出。
+```java
 public class Test03 {
-    public static void main(String[] args) {
-        int num = 40;
-        String str = Integer.toString(num); // 将数字转换成字符串
-        String str1 = Integer.toBinaryString(num); // 将数字转换成二进制
-        String str2 = Integer.toHexString(num); // 将数字转换成八进制
-        String str3 = Integer.toOctalString(num); // 将数字转换成十六进制
-        System.out.println(str + "的二进制数是：" + str1);
-        System.out.println(str + "的八进制数是：" + str3);
-        System.out.println(str + "的十进制数是：" + str);
-        System.out.println(str + "的十六进制数是：" + str2);
-    }
+  public static void main(String[] args) {
+    int num = 40;
+    String str = Integer.toString(num); // 将数字转换成字符串
+    String str1 = Integer.toBinaryString(num); // 将数字转换成二进制
+    String str2 = Integer.toHexString(num); // 将数字转换成八进制
+    String str3 = Integer.toOctalString(num); // 将数字转换成十六进制
+    System.out.println(str + "的二进制数是：" + str1);
+    System.out.println(str + "的八进制数是：" + str3);
+    System.out.println(str + "的十进制数是：" + str);
+    System.out.println(str + "的十六进制数是：" + str2);
+  }
 }
+```
 运行后的输出结果如下：
+```
 40的二进制数是：101000
 40的八进制数是：50
 40的十进制数是：40
 40的十六进制数是：28
-Integer 类的常量
-Integer 类包含以下 4 个常量。
-MAX_VALUE：值为 231-1 的常量，它表示 int 类型能够表示的最大值。
-MIN_VALUE：值为 -231 的常量，它表示 int 类型能够表示的最小值。
-SIZE：用来以二进制补码形式表示 int 值的比特位数。
-TYPE：表示基本类型 int 的 Class 实例。
+```
+## Integer 类的常量
+`Integer`类包含以下 4 个常量。
+* `MAX_VALUE`：值为 231-1 的常量，它表示`int`类型能够表示的最大值。
+* `MIN_VALUE`：值为 -231 的常量，它表示`int`类型能够表示的最小值。
+* `SIZE`：用来以二进制补码形式表示`int`值的比特位数。
+* `TYPE`：表示基本类型`int`的`Class`实例。
 
-下面的代码演示了 Integer 类中常量的使用。
-纯文本复制
+```java
 int max_value = Integer.MAX_VALUE;    // 获取 int 类型可取的最大值
 int min_value = Integer.MIN_VALUE;    // 获取 int 类型可取的最小值
 int size = Integer.SIZE;    // 获取 int 类型的二进制位
 Class c = Integer.TYPE;    // 获取基本类型 int 的 Class 实例
+```
 # Float类
-Float 类在对象中包装了一个基本类型 float 的值。Float 类对象包含一个 float 类型的字段。此外，该类提供了多个方法，能在 float 类型与 String 类型之间互相转换，同时还提供了处理 float 类型时比较常用的常量和方法。
-Float 类的构造方法
-Float 类中的构造方法有以下 3 个。
-Float(double value)：构造一个新分配的 Float 对象，它表示转换为 float 类型的参数。
-Float(float value)：构造一个新分配的 Float 对象，它表示基本的 float 参数。
-Float(String s)：构造一个新分配的 Float 对象，它表示 String 参数所指示的 float 值。
+`Float`类在对象中包装了一个基本类型`float`的值。`Float`类对象包含一个`float`类型的字段。此外，该类提供了多个方法，能在`float`类型与`String`类型之间互相转换，同时还提供了处理`float`类型时比较常用的常量和方法。
+## Float 类的构造方法
+`Float`类中的构造方法有以下 3 个。
+* `Float(double value)`：构造一个新分配的`Float`对象，它表示转换为`float`类型的参数。
+* `Float(float value)`：构造一个新分配的`Float`对象，它表示基本的`float`参数。
+* `Float(String s)`：构造一个新分配的`Float`对象，它表示`String`参数所指示的`float`值。
 
-例如，以下代码分别使用以上 3 个构造方法获取 Float 对象：
+```java
 Float float1 = new Float(3.14145);    // 以 double 类型的变量作为参数创建 Float 对象
 Float float2 = new Float(6.5);    // 以 float 类型的变量作为参数创建 Float 对象
 Float float3 = new Float("3.1415");    // 以 String 类型的变量作为参数创建 Float 对象
+```
+`Float`类中的常用方法：
 
-在 Float 类内部包含了一些和 float 操作有关的方法，见表 1。
+| 方法 | 返回值 | 功能 |
+| :--: | :--: | :--: |
+| byteValue()           | byte    | 以 byte 类型返回该 Float 的值 |
+| doubleValue()         | double	| 以 double 类型返回该 Float 的值 |
+| floatValue()          | float   | 以 float 类型返回该 Float 的值 |
+| intValue()            | int     | 以 int 类型返回该 Float 的值（强制转换为 int 类型） |
+| longValue()           | long    | 以 long 类型返回该 Float 的值（强制转换为 long 类型） |
+| shortValue()          | short   | 以 short 类型返回该 Float 的值（强制转换为 short 类型） |
+| isNaN()               | boolean | 如果此 Float 值是一个非数字值，则返回 true，否则返回 false |
+| isNaN(float v)        | boolean | 如果指定的参数是一个非数字值，则返回 true，否则返回 false |
+| toString()            | String  | 返回一个表示该 Float 值的 String 对象 |
+| valueOf(String s)     | Float   | 返回保存指定的 String 值的 Float 对象 |
+| parseFloat(String s)  | float   | 将数字字符串转换为 float 数值 |
 
-表 1 Float类中的常用方法
-方法	返回值	功能
-byteValue()	byte	以 byte 类型返回该 Float 的值
-doubleValue()	double	以 double 类型返回该 Float 的值
-floatValue()	float	以 float 类型返回该 Float 的值
-intValue()	int	以 int 类型返回该 Float 的值（强制转换为 int 类型）
-longValue()	long	以 long 类型返回该 Float 的值（强制转换为 long 类型）
-shortValue()	short	以 short 类型返回该 Float 的值（强制转换为 short 类型）
-isNaN()	boolean	如果此 Float 值是一个非数字值，则返回 true，否则返回 false
-isNaN(float v)	boolean	如果指定的参数是一个非数字值，则返回 true，否则返回 false
-toString()	String	返回一个表示该 Float 值的 String 对象
-valueOf(String s)	Float	返回保存指定的 String 值的 Float 对象
-parseFloat(String s)	float	将数字字符串转换为 float 数值
-例如，将字符串 456.7 转换为 float 类型的数值，或者将 float 类型的数值 123.4 转换为对应的字符串，以下代码演示如何实现这两种功能：
+```java
 String str = "456.7";
 float num = Float.parseFloat(str);    // 将字符串转换为 float 类型的数值
 float f = 123.4f;
 String s = Float.toString(f);    // 将 float 类型的数值转换为字符串
+```
+注意：在实现将字符串转换为`float`类型数值的过程中，如果字符串中包含非数值类型的字符，则程序执行将出现异常。
+## Float 类的常用常量
+在`Float`类中包含了很多常量，其中较为常用的常量如下。
+* `MAX_VALUE`：值为`1.4E38`的常量，它表示`float`类型能够表示的最大值。
+* `MIN_VALUE`：值为`3.4E-45`的常量，它表示`float`类型能够表示的最小值。
+* `MAX_EXPONENT`：有限`float`变量可能具有的最大指数。
+* `MIN_EXPONENT`：标准化`float`变量可能具有的最小指数。
+* `MIN_NORMAL`：保存`float`类型数值的最小标准值的常量，即 2-126。
+* `NaN`：保存`float`类型的非数字值的常量。
+* `SIZE`：用来以二进制补码形式表示`float`值的比特位数。
+* `TYPE`：表示基本类型`float`的`Class`实例。
 
-注意：在实现将字符串转换为 float 类型数值的过程中，如果字符串中包含非数值类型的字符，则程序执行将出现异常。
-Float 类的常用常量
-在 Float 类中包含了很多常量，其中较为常用的常量如下。
-MAX_VALUE：值为 1.4E38 的常量，它表示 float 类型能够表示的最大值。
-MIN_VALUE：值为 3.4E-45 的常量，它表示 float 类型能够表示的最小值。
-MAX_EXPONENT:有限 float 变量可能具有的最大指数。
-MIN_EXPONENT：标准化 float 变量可能具有的最小指数。
-MIN_NORMAL：保存 float 类型数值的最小标准值的常量，即 2-126。
-NaN：保存 float 类型的非数字值的常量。
-SIZE：用来以二进制补码形式表示 float 值的比特位数。
-TYPE：表示基本类型 float 的 Class 实例。
-
-下面的代码演示了 Float 类中常量的使用。
-纯文本复制
+```java
 float max_value = Float.MAX_VALUE;    // 获取 float 类型可取的最大值
 float min_value = Float.MIN_VALUE;    // 获取 float 类型可取的最小值
 float min_normal = Float.MIN_NORMAL;    // 获取 float 类型可取的最小标准值
 float size = Float.SIZE;    // 获取 float 类型的二进制位
+```
 # Double类
-Double 类在对象中包装了一个基本类型 double 的值。Double 类对象包含一个 double 类型的字段。此外，该类还提供了多个方法，可以将 double 类型与 String 类型相互转换，同时 还提供了处理 double 类型时比较常用的常量和方法。
-Double 类的构造方法
-Double 类中的构造方法有如下两个。
-Double(double value)：构造一个新分配的 Double 对象，它表示转换为 double 类型的参数。
-Double(String s)：构造一个新分配的 Double 对象，它表示 String 参数所指示的 double 值。
+`Double`类在对象中包装了一个基本类型`double`的值。`Double`类对象包含一个`double`类型的字段。此外，该类还提供了多个方法，可以将`double`类型与`String`类型相互转换，同时 还提供了处理`double`类型时比较常用的常量和方法。
+## Double 类的构造方法
+`Double`类中的构造方法有如下两个。
+* `Double(double value)`：构造一个新分配的`Double`对象，它表示转换为`double`类型的参数。
+* `Double(String s)`：构造一个新分配的`Double`对象，它表示`String`参数所指示的`double`值。
 
-例如，以下代码分别使用以上两个构造方法获取 Double 对象：
+```java
 Double double1 = new Double(5.456);    // 以 double 类型的变量作为参数创建 Double 对象
 Double double2 = new Double("5.456");       // 以 String 类型的变量作为参数创建 Double 对象
-Double 类的常用方法
-在 Double 类内部包含一些和 double 操作有关的方法，见表 1。
+```
+## Double 类的常用方法
+`Double`类中的常用方法：
 
-表 1 Double类中的常用方法
-方法	返回值	功能
-byteValue()	byte	以 byte 类型返回该 Double 的值
-doubleValue()	double	以 double 类型返回该 Double 的值
-fioatValue()	float	以 float 类型返回该 Double 的值
-intValue()	int	以 int 类型返回该 Double 的值（强制转换为 int 类型）
-longValue()	long	以 long 类型返回该 Double 的值（强制转换为 long 类型）
-shortValue()	short	以 short 类型返回该 Double 的值（强制转换为 short 类型）
-isNaN()	boolean	如果此 Double 值是一个非数字值，则返回 true，否则返回 false
-isNaN(double v)	boolean	如果指定的参数是一个非数字值，则返回 true，否则返回 false
-toString()	String	返回一个表示该 Double 值的 String 对象
-valueOf(String s)	Double	返回保存指定的 String 值的 Double 对象
-parseDouble(String s)	double	将数字字符串转换为 Double 数值
-例如，将字符串 56.7809 转换为 double 类型的数值，或者将 double 类型的数值 56.7809 转换为对应的字符串，以下代码演示如何实现这两种功能：
+| 方法 | 返回值 | 功能 |
+| :--: | :--: | :--: |
+| byteValue()           | byte	  | 以 byte 类型返回该 Double 的值 |
+| doubleValue()         | double	| 以 double 类型返回该 Double 的值 |
+| fioatValue()          | float	  | 以 float 类型返回该 Double 的值 |
+| intValue()            | int	    | 以 int 类型返回该 Double 的值（强制转换为 int 类型） |
+| longValue()           | long	  | 以 long 类型返回该 Double 的值（强制转换为 long 类型） |
+| shortValue()          | short	  | 以 short 类型返回该 Double 的值（强制转换为 short 类型） |
+| isNaN()               | boolean	| 如果此 Double 值是一个非数字值，则返回 true，否则返回 false |
+| isNaN(double v)       | boolean	| 如果指定的参数是一个非数字值，则返回 true，否则返回 false |
+| toString()            | String	| 返回一个表示该 Double 值的 String 对象 |
+| valueOf(String s)     | Double	| 返回保存指定的 String 值的 Double 对象 |
+| parseDouble(String s) | double	| 将数字字符串转换为 Double 数值 |
+
+```java
 String str = "56.7809";
 double num = Double.parseDouble(str);    // 将字符串转换为 double 类型的数值
 double d = 56.7809;
 String s = Double.toString(d);    // 将double类型的数值转换为字符串
+```
+在将字符串转换为`double`类型的数值的过程中，如果字符串中包含非数值类型的字符，则程序执行将出现异常。
+## Double 类的常用常量
+在`Double`类中包含了很多常量，其中较为常用的常量如下。
+* `MAX_VALUE`：值为`1.8E308`的常量，它表示`double`类型的最大正有限值的常量。
+* `MIN_VALUE`：值为`4.9E-324`的常量，它表示`double`类型数据能够保持的最小正非零值的常量。
+* `NaN`：保存`double`类型的非数字值的常量。
+* `NEGATIVE_INFINITY`：保持`double`类型的负无穷大的常量。
+* `POSITIVE_INFINITY`：保持`double`类型的正无穷大的常量。
+* `SIZE`：用秦以二进制补码形式表示`double`值的比特位数。
+* `TYPE`：表示基本类型`double`的`Class`实例。
 
-在将字符串转换为 double 类型的数值的过程中，如果字符串中包含非数值类型的字符，则程序执行将出现异常。
-Double 类的常用常量
-在 Double 类中包含了很多常量，其中较为常用的常量如下。
-MAX_VALUE:值为 1.8E308 的常量，它表示 double 类型的最大正有限值的常量。
-MIN_VALUE：值为 4.9E-324 的常量，它表示 double 类型数据能够保持的最小正非零值的常量。
-NaN：保存 double 类型的非数字值的常量。
-NEGATIVE_INFINITY：保持 double 类型的负无穷大的常量。
-POSITIVE_INFINITY：保持 double 类型的正无穷大的常量。
-SIZE：用秦以二进制补码形式表示 double 值的比特位数。
-TYPE：表示基本类型 double 的 Class 实例。
 # Number类
 `Number`是一个抽象类，也是一个超类（即父类）。`Number`类属于`java.lang`包，所有的包装类（如`Double、Float、Byte、Short、Integer`以及`Long`）都是抽象类`Number`的子类。
 

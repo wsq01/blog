@@ -1,21 +1,19 @@
 ---
 title: JDBC Statements
 date: 2021-03-06 17:24:42
-tags: [java]
-categories: java
+tags: [JDBC]
+categories: JDBC
 ---
 
 
 
-当获得了与数据库的连接后，就可以与数据库进行交互了。JDBC `Statement`，`CallableStatement`和`PreparedStatement`接口定义了可用于发送 SQL 或 PL/SQL 命令，并从数据库接收数据的方法和属性。
-
-它们还定义了有助于在 Java 和 SQL 数据类型的数据类型差异转换的方法。
+当获得了与数据库的连接后，就可以与数据库进行交互了。JDBC `Statement`，`CallableStatement`和`PreparedStatement`接口定义了可用于发送 SQL 的命令，并从数据库接收数据的方法和属性。还定义了有助于在 Java 和 SQL 数据类型的数据类型差异转换的方法。
 
 | 接口 | 推荐使用 |
 | :--: | :--: |
 | Statement | 用于对数据库进行通用访问，在运行时使用静态SQL语句时很有用。Statement接口不能接受参数 |
-| PreparedStatement | 当计划要多次使用SQL语句时使用。PreparedStatement接口在运行时接受输入参数 |
-| CallableStatement | 当想要访问数据库存储过程时使用。CallableStatement接口也可以接受运行时输入参数 |
+| PreparedStatement | 当计划要多次使用SQL语句时使用。<br>PreparedStatement接口在运行时接受输入参数 |
+| CallableStatement | 当想要访问数据库存储过程时使用。<br>CallableStatement接口也可以接受运行时输入参数 |
 
 # Statement对象
 ## 1. 创建Statement对象
@@ -42,7 +40,7 @@ catch (SQLException e) {
 ```java
 Statement stmt = null;
 try {
-  stmt = conn.createStatement( );
+  stmt = conn.createStatement();
   . . .
 }
 catch (SQLException e) {
@@ -59,6 +57,9 @@ PreparedStatement pstmt = null;
 try {
   String SQL = "Update Employees SET age = ? WHERE id = ?";
   pstmt = conn.prepareStatement(SQL);
+  pstmt.setInt(1, 16);
+  pstmt.setInt(2, 3);
+  int rows = stmt.executeUpdate();
   . . .
 } catch (SQLException e) {
   . . .
@@ -72,7 +73,7 @@ JDBC 中的所有参数都由`?`符号作为占位符，这被称为参数标记
 
 所有`Statement`对象与数据库交互的方法`execute()`，`executeQuery()`和`executeUpdate()`也可以用于`PreparedStatement`对象。 但是，这些方法被修改为可以使用输入参数的 SQL 语句。
 ## 2. 关闭PreparedStatement对象
-就像关闭`Statement`对象一样，由于同样的原因(节省数据库系统资源)，也应该关闭`PreparedStatement`对象。
+就像关闭`Statement`对象一样，由于同样的原因，也应该关闭`PreparedStatement`对象。
 
 简单的调用`close()`方法将执行关闭。如果先关闭`Connection`对象，它也会关闭`PreparedStatement`对象。但是，应该始终显式关闭`PreparedStatement`对象，以确保以正确顺序清理资源。
 ```java
@@ -106,13 +107,12 @@ END $$
 DELIMITER ;
 ```
 存在三种类型的参数：`IN，OUT`和`INOUT`。`PreparedStatement`对象只使用`IN`参数。`CallableStatement`对象可以使用上面三个参数类型。
-以下是上面三种类型参数的定义
 
 | 参数 | 描述 |
 | :--: | :--: |
-| IN | 创建SQL语句时其参数值是未知的。 使用setXXX()方法将值绑定到IN参数 |
-| OUT | 由SQL语句返回的参数值。可以使用getXXX()方法从OUT参数中检索值 |
-| INOUT | 提供输入和输出值的参数。使用setXXX()方法绑定变量并使用getXXX()方法检索值 |
+| IN | 创建SQL语句时其参数值是未知的。 使用 setXXX() 方法将值绑定到IN参数 |
+| OUT | 由SQL语句返回的参数值。可以使用 getXXX() 方法从OUT参数中检索值 |
+| INOUT | 提供输入和输出值的参数。使用 setXXX() 方法绑定变量并使用 getXXX() 方法检索值 |
 
 以下代码片段显示了如何使用`Connection.prepareCall()`方法根据上述存储过程来实例化一个`CallableStatement`对象。
 ```java
@@ -135,7 +135,8 @@ try {
 
 当调用存储过程，可以使用适当的`getXXX()`方法从`OUT`参数中检索该值。此方法将检索到的 SQL 类型的值转换为对应的 Java 数据类型。
 ## 2. 关闭CallableStatement对象
-就像关闭其他`Statement`对象一样，由于同样的原因(节省数据库系统资源)，还应该关闭`CallableStatement`对象。
+就像关闭其他`Statement`对象一样，由于同样的原因，还应该关闭`CallableStatement`对象。
+
 简单的调用`close()`方法将执行关闭`CallableStatement`对象。 如果先关闭`Connection`对象，它也会关闭`CallableStatement`对象。但是，应该始终显式关闭`CallableStatement`对象，以确保按正确顺序的清理资源。
 ```java
 CallableStatement cstmt = null;

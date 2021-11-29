@@ -18,20 +18,21 @@ MyBatis 配置文件的所有元素：
   <objectFactory /><!-- 对象工厂 -->
   <plugins /><!-- 插件 -->
   <environments><!-- 配置环境 -->
-      <environment><!-- 环境变量 -->
-          <transactionManager /><!-- 事务管理器 -->
-          <dataSource /><!-- 数据源 -->
-      </environment>
+    <environment><!-- 环境变量 -->
+      <transactionManager /><!-- 事务管理器 -->
+      <dataSource /><!-- 数据源 -->
+    </environment>
   </environments>
   <databaseIdProvider /><!-- 数据库厂商标识 -->
   <mappers /><!-- 映射器 -->
 </configuration>
 ```
-需要注意的是，MyBatis 配置项的顺序不能颠倒。如果颠倒了它们的顺序，那么在 MyBatis 启动阶段就会发生异常，导致程序无法运行。
+> MyBatis 配置项的顺序不能颠倒。如果颠倒了它们的顺序，那么在 MyBatis 启动阶段就会发生异常，导致程序无法运行。
+
 # properties元素
 `properties`属性可以给系统配置一些运行参数，可以放在 XML 文件或者 properties 文件中。一般而言，MyBatis 提供了 3 种方式让我们使用`properties`：`property`子元素、`properties`文件、程序代码传递。
 ## property 子元素
-以下面代码为基础，使用`property`子元素将数据库连接的相关配置进行改写。
+通过`properties`子元素`property`配置变量，然后在`environments`节点中引用这些变量。
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
@@ -64,16 +65,16 @@ MyBatis 配置文件的所有元素：
   </mappers>
 </configuration>
 ```
-这里使用了元素`<properties>`下的子元素 <property> 定义，用字符串`username`定义数据库用户名，然后就可以在数据库定义中引入这个已经定义好的属性参数，如`${username}`，这样定义一次就可以到处引用了。但是如果属性参数有成百上千个，显然使用这样的方式不是一个很好的选择，这个时候可以使用`properties`文件。
+这里使用了元素`<properties>`下的子元素`<property>`定义，用字符串`username`定义数据库用户名，然后就可以在数据库定义中引入这个已经定义好的属性参数，如`${username}`，这样定义一次就可以到处引用了。但是如果属性参数有成百上千个，显然使用这样的方式不是一个很好的选择，这个时候可以使用`properties`文件。
 ## 使用 properties 文件
-我们创建一个文件`jdbc.properties`放到`classpath`的路径下。
+创建一个文件`jdbc.properties`放到`classpath`的路径下。
 ```js
 database.driver=com.mysql.jdbc.Driver
 database.url=jdbc:mysql://localhost:3306/mybatis
 database.username=root
 database.password=1128
 ```
-在 MyBatis 中通过`<properties>`的属性`resource`来引入`properties`文件。
+通过`<properties>`的属性`resource`来引入`properties`文件。
 ```xml
 <properties resource="jdbc.properties"/>
 ```
@@ -103,7 +104,7 @@ SqlSessionFactory = new SqlSessionFactoryBuilder().build(inputstream, props);
 
 这将覆盖之前配置的密文，这样就能连接数据库了，同时也满足了运维人员对数据库用户和密码安全的要求。
 # settings
-在 MyBatis 中`settings`是最复杂的配置，它能深刻影响 MyBatis 底层的运行，但是在大部分情况下使用默认值便可以运行，所以在大部分情况下不需要大量配置它，只需要修改一些常用的规则即可，比如自动映射、驼峰命名映射、级联规则、是否启动缓存、执行器（`Executor`）类型等。
+`settings`是最复杂的配置，它能深刻影响 MyBatis 底层的运行，但是在大部分情况下使用默认值便可以运行，所以在大部分情况下不需要大量配置它，只需要修改一些常用的规则即可，比如自动映射、驼峰命名映射、级联规则、是否启动缓存、执行器（`Executor`）类型等。
 
 | 配置项 | 作用 | 配置选项 | 默认值 |
 | :--: | :--: | :--: | :--: |
@@ -113,7 +114,7 @@ SqlSessionFactory = new SqlSessionFactoryBuilder().build(inputstream, props);
 | useColumnLabel | 使用列标签代替列名。不同的驱动会有不同的表现 | true/false | true |
 | useGeneratedKeys | 允许 JDBC 支持自动生成主键，需要数据库驱动支持。如果设置为 true，将强制使用自动生成主键。尽管一些数据库驱动不支持此特性，但仍可正常工作 | true/false | false |
 | autoMappingBehavior | 指定 MyBatis 应如何自动映射列到字段或属性。 NONE 表示关闭自动映射；PARTIAL 只会自动映射没有定义嵌套结果映射的字段。 FULL 会自动映射任何复杂的结果集（无论是否嵌套）。 | NONE<br>PARTIAL<br>FULL | PARTIAL |
-| autoMappingUnkno wnColumnBehavior | 指定自动映射当中未知列（或未知属性类型）时的行为。 默认是不处理，只有当日志级别达到 WARN 级别或者以下，才会显示相关日志，如果处理失败会抛出 SqlSessionException 异常 | NONE<br>WARNING<br>FAILING | NONE |
+| autoMappingUnknownColumnBehavior | 指定自动映射当中未知列（或未知属性类型）时的行为。 默认是不处理，只有当日志级别达到 WARN 级别或者以下，才会显示相关日志，如果处理失败会抛出 SqlSessionException 异常 | NONE<br>WARNING<br>FAILING | NONE |
 | defaultExecutorType | 配置默认的执行器。SIMPLE 是普通的执行器；REUSE 会重用预处理语句（prepared statements）；BATCH 执行器将重用语句并执行批量更新 | SIMPLE<br>REUSE<br>BATCH | SIMPLE |
 | defaultStatementTimeout | 设置超时时间，它决定驱动等待数据库响应的秒数 | 任何正整数 | 未设置 (null) |
 | defaultFetchSize | 为驱动的结果集获取数量（fetchSize）设置一个建议值。此参数只可以在查询设置中被覆盖。 | 任意正整数 | 未设置 (null) |
@@ -147,9 +148,9 @@ SqlSessionFactory = new SqlSessionFactoryBuilder().build(inputstream, props);
 </settings>
 ```
 # typeAliases
-由于类的全限定名称很长，需要大量使用的时候，总写那么长的名称不方便。在 MyBatis 中允许定义一个简写来代表这个类，这就是别名，别名分为系统定义别名和自定义别名。
+类型别名可为 Java 类型设置一个缩写名字。它仅用于 XML 配置，意在降低冗余的全限定类名书写。别名分为系统定义别名和自定义别名。
 
-在 MyBatis 中别名由类`TypeAliasRegistry（org.apache.ibatis.type.TypeAliasRegistry）`去定义。注意，在 MyBatis 中别名不区分大小写。
+在 MyBatis 中别名由类`TypeAliasRegistry(org.apache.ibatis.type.TypeAliasRegistry)`去定义。注意，在 MyBatis 中别名不区分大小写。
 ## 系统定义别名
 在 MyBatis 的初始化过程中，系统自动初始化了一些别名。
 
@@ -164,59 +165,6 @@ SqlSessionFactory = new SqlSessionFactoryBuilder().build(inputstream, props);
 | iterator | Iterator | 否 |
 
 如果需要使用对应类型的数组型，要看其是否能支持数据，如果支持只需要使用别名加`[]`即可，比如`_int`数组的别名就是`_int[]`。而类似`list`这样不支持数组的别名，则不能那么写。
-
-有时候要通过代码来实现注册别名，让我们看看 MyBatis 是如何初始化这些别名的。
-```java
-public TypeAliasRegistry() {
-  registerAlias("string", String.class);
-  registerAlias("byte", Byte.class);
-  registerAlias("long", Long.class);
-  ......
-  registerAlias("byte[]",Byte[].class); registerAlias("long[]",Long[].class);
-  ......
-  registerAlias("map", Map.class);
-  registerAlias("hashmap", HashMap.class);
-  registerAlias("list", List.class); registerAlias("arraylist", ArrayList.class);
-  registerAlias("collection", Collection.class);
-  registerAlias("iterator", Iterator.class);
-  registerAlias("ResultSet", ResultSet.class);
-}
-```
-所以使用`TypeAliasRegistry`的`registerAlias`方法就可以注册别名了。一般是通过`Configuration`获取`TypeAliasRegistry`类对象，其中有一个`getTypeAliasRegistry`方法可以获得别名，如`configuration.getTypeAliasRegistry()`。
-
-然后就可以通过`registerAlias`方法对别名注册了。而事实上`Configuration`对象也对一些常用的配置项配置了别名。
-```java
-//事务方式别名
-typeAliasRegistry.registerAlias("JDBC",JdbcTransactionFactory.class);
-typeAliasRegistry.registerAlias("MANAGED",ManagedTransactionFactory.class);
-//数据源类型别名
-typeAliasRegistry.registerAlias("JNDI",JndiDataSourceFactory.class);
-typeAliasRegistry.registerAlias("POOLED",
-PooledDataSourceFactory.class);
-typeAliasRegistry.registerAlias("UNPOOLED",UnpooledDataSourceFactory.class);
-//缓存策略别名
-typeAliasRegistry.registerAlias("PERPETUAL",PerpetualCache.class);
-typeAliasRegistry.registerAlias("FIFO",FifoCache.class);
-typeAliasRegistry.registerAlias("LRU",LruCache.class); typeAliasRegistry.registerAlias("SOFT", SoftCache.class); typeAliasRegistry.registerAlias("WEAK", WeakCache.class);
-//数据库标识别名
-typeAliasRegistry.registerAlias("DB_VENDOR",
-VendorDatabaseIdProvider.class);
-//语言驱动类别名
-typeAliasRegistry.registerAlias("XML",XMLLanguageDriver.class);
-typeAliasRegistry.registerAlias("RAW",RawLanguageDriver.class);
-//日志类别名
-typeAliasRegistry.registerAlias("SLF4J", Slf4jImpl.class);
-typeAliasRegistry.registerAlias("COMMONS_LOGGTNG",JakartmCommonsLogginglmpl.class);
-typeAliasRegistry.registerAlias("LOG4J", Log4jImpl.class);
-typeAliasRegistry.registerAlias("LOG4J2", Log4j2Impl.class);
-typeAliasRegistry.registerAlias("JDK_LOGGING", Jdk14LoggingImpl.class);
-typeAliasRegistry.registerAlias("STDOUT_LOGGING", StdOutImpl.class);
-typeAliasRegistry.registerAlias("NO_LOGGING",NoLoggingImpl.class);
-//动态代理别名
-typeAliasRegistry.registerAlias("CGLIB",CglibProxyFactory.class);
-typeAliasRegistry.registerAlias("JAVASSIST",JavassistProxyFactory.class);
-```
-这些配置为的是让我们更容易配置 MyBatis 的相关信息。以上就是 MyBatis 系统定义的别名，我们在使用的时候，不要重复命名，导致出现其他问题。
 ## 自定义别名
 MyBatis 也提供了用户自定义别名的规则。我们可以通过`TypeAliasRegistry`类的`registerAlias`方法注册，也可以采用配置文件或者扫描方式来自定义它。
 
@@ -244,14 +192,18 @@ public Class User {
 }
 ```
 这样就能够避免因为别名重名导致的扫描失败的问题。
+# typeHandlers标签
+MyBatis 在设置预处理语句（`PreparedStatement`）中的参数或从结果集中取出一个值时， 都会用类型处理器将获取到的值以合适的方式转换成 Java 类型。在`typeHandler`中，分为`jdbcType`和`javaType`，其中`jdbcType`用于定义数据库类型，而`javaType`用于定义 Java 类型，`typeHandler`的作用就是承担`jdbcType`和`javaType`之间的相互转换。
+
+MyBatis 支持自定义处理类型，在自定义处理类型时，需要实现`org.apache.ibatis.type.TypeHandler`接口或继承`org.apache.ibatis.type.BaseTypeHandle`类。
 # environments
-在 MyBatis 中，运行环境主要的作用是配置数据库信息，它可以配置多个数据库，一般而言只需要配置其中的一个就可以了。
+在`environments`标签中，可以配置 MyBatis 的多套运行环境，将 SQL 映射到多个不同的数据库上。
 
-它下面又分为两个可配置的元素：事务管理器（`transactionManager`）、数据源（`dataSource`）。
+`environment`是`environments` 的子标签，用来配置 MyBatis 的一套运行环境，需指定运行环境 ID、事务管理、数据源配置等相关信息。
 
-在实际的工作中，大部分情况下会采用 Spring 对数据源和数据库的事务进行管理。
+我们可以通过配置多个`environment`标签来连接多个数据库，需要注意的是必须指定其中一个为默认运行环境（通过`default`指定）。
 
-运行环境配置：
+`environment`标签提供了两个子标签，即`transactionManager`和`dataSource`。
 ```xml
 <environments default="development">
   <environment id="development">
@@ -286,60 +238,15 @@ public interface Transaction {
 JDBC 使用`JdbcTransactionFactory`生成的`JdbcTransaction`对象实现。它是以 JDBC 的方式对数据库的提交和回滚进行操作。
 
 `MANAGED`使用`ManagedTransactionFactory`生成的`ManagedTransaction`对象实现。它的提交和回滚方法不用任何操作，而是把事务交给容器处理。在默认情况下，它会关闭连接，然而一些容器并不希望这样，因此需要将`closeConnection`属性设置为`false`来阻止它默认的关闭行为。
-
-不想采用 MyBatis 的规则时，我们可以这样配置：
 ```xml
-<transactionManager type="com.mybatis.transaction.MyTransactionFactory"/>
+<transactionManager type="MANAGED">
+  <property name="closeConnection" value="false"/>
+</transactionManager>
 ```
-实现一个自定义事务工厂，代码如下所示。
-```java
-public class MyTransactionFactory implements TransactionFactory {
-  @Override
-  public void setProperties(Properties props) {
-  }
-  @Override
-  public Transaction newTransaction(Connection conn) {
-    return new MyTransaction(conn);
-  }
-  @Override
-  public Transaction newTransaction(DataSource dataSource, TransactionlsolationLevel level, boolean autoCommit) {
-    return new MyTransaction(dataSource, level, autoCommit);
-  }
-}
-```
-这里就实现了`TransactionFactory`所定义的工厂方法，这个时候还需要事务实现类`MyTransaction`，它用于实现`Transaction`接口。
-```java
-public class MyTransaction extends JdbcTransaction implements Transaction {
-  public MyTransaction(DataSource ds, TransactionIsolationLevel desiredLevel, boolean desiredAutoCommit) {
-    super(ds, desiredLevel, desiredAutoCommit);
-  }
-  public MyTransaction(Connection connection) {
-    super(connection);
-  }
-  public Connection getConnection() throws SQLException {
-    return super.getConnection();
-  }
-  public void commit() throws SQLException {
-    super.commit();
-  }
-  public void rollback() throws SQLException {
-    super.rollback();
-  }
-  public void close() throws SQLException {
-    super.close();
-  }
-  public Integer getTimeout() throws SQLException {
-    return super.getTimeout();
-  }
-}
-```
-这样就能够通过自定义事务规则，满足特殊的需要了。
-## environment 数据源环境
-`environment`的主要作用是配置数据库，在 MyBatis 中，数据库通过`PooledDataSource Factory、UnpooledDataSourceFactory`和`JndiDataSourceFactory`三个工厂类来提供，前两者对应产生`PooledDataSource、UnpooledDataSource`类对象，而`JndiDataSourceFactory`则会根据`JNDI`的信息拿到外部容器实现的数据库连接对象。
+## dataSource
+用于配置数据库的连接属性，例如要连接的数据库的驱动程序名称、URL、用户名和密码等。
 
-无论如何这三个工厂类，最后生成的产品都会是一个实现了`DataSource`接口的数据库连接对象。
-
-由于存在三种数据源，所以可以按照下面的形式配置它们。
+`dataSource`中的`type`属性用于指定数据源类型，有以下 3 种类型。
 ```xml
 <dataSource type="UNPOOLED">
 <dataSource type="POOLED">
@@ -404,7 +311,9 @@ public class DbcpDataSourceFactory implements DataSourceFactory {
 ```
 这样 MyBatis 就会采用配置的数据源工厂来生成数据源了。
 # 映射器（mappers）
-既然 MyBatis 的行为已经由上述元素配置完了，我们现在就要来定义 SQL 映射语句了。但首先，我们需要告诉 MyBatis 到哪里去找到这些语句。 在自动查找资源方面，Java 并没有提供一个很好的解决方案，所以最好的办法是直接告诉 MyBatis 到哪里去找映射文件。 你可以使用相对于类路径的资源引用，或完全限定资源定位符（包括`file:///`形式的 URL），或类名和包名等。
+`mappers`标签用于指定 MyBatis SQL 映射文件的路径。
+
+`mapper`是`mappers`的子标签，`mapper`中的`resource`属性用于指定 SQL 映射文件的路径（类资源路径）
 ```xml
 <!-- 使用相对于类路径的资源引用 -->
 <mappers>

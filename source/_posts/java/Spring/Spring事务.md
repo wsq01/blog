@@ -2,32 +2,29 @@
 
 
 
-事务（Transaction）是面向关系型数据库（RDBMS）企业应用程序的重要组成部分，用来确保数据的完整性和一致性。
+事务（`Transaction`）是面向关系型数据库（RDBMS）企业应用程序的重要组成部分，用来确保数据的完整性和一致性。
 
 事务具有以下 4 个特性，即原子性、一致性、隔离性和持久性，这 4 个属性称为 ACID 特性。
-原子性（Atomicity）：一个事务是一个不可分割的工作单位，事务中包括的动作要么都做要么都不做。
-一致性（Consistency）：事务必须保证数据库从一个一致性状态变到另一个一致性状态，一致性和原子性是密切相关的。
-隔离性（Isolation）：一个事务的执行不能被其它事务干扰，即一个事务内部的操作及使用的数据对并发的其它事务是隔离的，并发执行的各个事务之间不能互相打扰。
-持久性（Durability）：持久性也称为永久性，指一个事务一旦提交，它对数据库中数据的改变就是永久性的，后面的其它操作和故障都不应该对其有任何影响。
-编程式和声明式
+* 原子性（`Atomicity`）：一个事务是一个不可分割的工作单位，事务中包括的动作要么都做要么都不做。
+* 一致性（`Consistency`）：事务必须保证数据库从一个一致性状态变到另一个一致性状态，一致性和原子性是密切相关的。
+* 隔离性（`Isolation`）：一个事务的执行不能被其它事务干扰，即一个事务内部的操作及使用的数据对并发的其它事务是隔离的，并发执行的各个事务之间不能互相打扰。
+* 持久性（`Durability`）：持久性也称为永久性，指一个事务一旦提交，它对数据库中数据的改变就是永久性的，后面的其它操作和故障都不应该对其有任何影响。
+
+# 编程式和声明式
 Spring 的事务管理有 2 种方式：
-传统的编程式事务管理，即通过编写代码实现的事务管理；
-基于 AOP 技术实现的声明式事务管理。
-1. 编程式事务管理
-编程式事务管理是通过编写代码实现的事务管理，灵活性高，但难以维护。
-2. 声明式事务管理
-Spring 声明式事务管理在底层采用了 AOP 技术，其最大的优点在于无须通过编程的方式管理事务，只需要在配置文件中进行相关的规则声明，就可以将事务规则应用到业务逻辑中。
+* 传统的编程式事务管理，即通过编写代码实现的事务管理；
+* 基于 AOP 技术实现的声明式事务管理。
 
 Spring 实现声明式事务管理主要有 2 种方式：
-基于 XML 方式的声明式事务管理。
-通过 Annotation 注解方式的事务管理。
+* 基于 XML 方式的声明式事务管理。
+* 通过`Annotation`注解方式的事务管理。
 
 显然声明式事务管理要优于编程式事务管理。
-事务管理接口
-PlatformTransactionManager、TransactionDefinition 和 TransactionStatus 是事务的 3 个核心接口。
-PlatformTransactionManager接口
-PlatformTransactionManager 接口用于管理事务，接口定义如下：
-```
+# 事务管理接口
+`PlatformTransactionManager、TransactionDefinition`和`TransactionStatus`是事务的 3 个核心接口。
+## PlatformTransactionManager接口
+`PlatformTransactionManager`接口用于管理事务，接口定义如下：
+```java
 public interface PlatformTransactionManager {
     TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException;
     void commit(TransactionStatus status) throws TransactionException;
@@ -36,50 +33,55 @@ public interface PlatformTransactionManager {
 ```
 该接口中方法说明如下：
 
-名称	说明
-TransactionStatus getTransaction(TransactionDefinition definition)	用于获取事务的状态信息
-void commit(TransactionStatus status)	用于提交事务
- void rollback(TransactionStatus status)	用于回滚事务
+| 名称 | 说明 |
+| :--: | :--: |
+| TransactionStatus getTransaction(TransactionDefinition definition) | 用于获取事务的状态信息 |
+| void commit(TransactionStatus status) | 用于提交事务 |
+| void rollback(TransactionStatus status) | 用于回滚事务 |
+
 在项目中，Spring 将 xml 中配置的事务信息封装到对象 TransactionDefinition 中，然后通过事务管理器的 getTransaction() 方法获得事务的状态（TransactionStatus），并对事务进行下一步的操作。
-TransactionDefinition接口
+## TransactionDefinition接口
 TransactionDefinition 接口提供了获取事务相关信息的方法，接口定义如下。
-```
+```java
 public interface TransactionDefinition {
-    int getPropagationBehavior();
-    int getIsolationLevel();
-    String getName();
-    int getTimeout();
-    boolean isReadOnly();
+  int getPropagationBehavior();
+  int getIsolationLevel();
+  String getName();
+  int getTimeout();
+  boolean isReadOnly();
 }
 ```
 该接口中方法说明如下。
 
-方法	说明
-String getName()	获取事务的名称
-int getIsolationLevel()	获取事务的隔离级别
-int getPropagationBehavior()	获取事务的传播行为
-int getTimeout()	获取事务的超时时间
-boolean isReadOnly()	获取事务是否只读以下是隔离级别的值。
+| 方法 | 说明 |
+| :--: | :--: |
+| String getName()              | 获取事务的名称 |
+| int getIsolationLevel()       | 获取事务的隔离级别 |
+| int getPropagationBehavior()	| 获取事务的传播行为 |
+| int getTimeout()              | 获取事务的超时时间 |
+| boolean isReadOnly()          | 获取事务是否只读以下是隔离级别的值。 |
 
-方法	说明
-ISOLATION_DEFAULT	使用后端数据库默认的隔离级别
-ISOLATION_READ_UNCOMMITTED	允许读取尚未提交的更改，可能导致脏读、幻读和不可重复读
-ISOLATION_READ_COMMITTED	（Oracle 默认级别）允许读取已提交的并发事务，防止脏读，可能出现幻读和不可重复读
-ISOLATION_REPEATABLE_READ	（MySQL 默认级别），多次读取相同字段的结果是一致的，防止脏读和不可重复读，可能出现幻读
-ISOLATION_SERIALIZABLE	完全服从 ACID 的隔离级别，防止脏读、不可重复读和幻读
-关于事务隔离级别，详细介绍推荐阅读《数据库事务隔离级别》一节。
+| 方法                      | 说明 |
+| :--: | :--: |
+| ISOLATION_DEFAULT         | 使用后端数据库默认的隔离级别 |
+| ISOLATION_READ_UNCOMMITTED| 允许读取尚未提交的更改，可能导致脏读、幻读和不可重复读 |
+| ISOLATION_READ_COMMITTED  | （Oracle 默认级别）允许读取已提交的并发事务，防止脏读，可能出现幻读和不可重复读 |
+| ISOLATION_REPEATABLE_READ | （MySQL 默认级别），多次读取相同字段的结果是一致的，防止脏读和不可重复读，可能出现幻读 |
+| ISOLATION_SERIALIZABLE    | 完全服从 ACID 的隔离级别，防止脏读、不可重复读和幻读 |
 
 以下是传播行为的可能值，传播行为用来控制是否需要创建事务以及如何创建事务。
 
-名称	说明
-PROPAGATION_MANDATORY	支持当前事务，如果不存在当前事务，则引发异常
-PROPAGATION_NESTED	如果当前事务存在，则在嵌套事务中执行
-PROPAGATION_NEVER	不支持当前事务，如果当前事务存在，则引发异常
-PROPAGATION_NOT_SUPPORTED	不支持当前事务，始终以非事务方式执行
-PROPAGATION_REQUIRED	默认传播行为，支持当前事务，如果不存在，则创建一个新的
-PROPAGATION_REQUIRES_NEW	创建新事务，如果已经存在事务则暂停当前事务
-PROPAGATION_SUPPORTS	支持当前事务，如果不存在事务，则以非事务方式执行
-TransactionStatus接口
+| 名称	说明 |
+| :--: | :--: |
+| PROPAGATION_MANDATORY     | 支持当前事务，如果不存在当前事务，则引发异常 |
+| PROPAGATION_NESTED        | 如果当前事务存在，则在嵌套事务中执行 |
+| PROPAGATION_NEVER         | 不支持当前事务，如果当前事务存在，则引发异常 |
+| PROPAGATION_NOT_SUPPORTED	| 不支持当前事务，始终以非事务方式执行 |
+| PROPAGATION_REQUIRED      | 默认传播行为，支持当前事务，如果不存在，则创建一个新的 |
+| PROPAGATION_REQUIRES_NEW	| 创建新事务，如果已经存在事务则暂停当前事务 |
+| PROPAGATION_SUPPORTS      | 支持当前事务，如果不存在事务，则以非事务方式执行 |
+
+## TransactionStatus接口
 TransactionStatus 接口提供了一些简单的方法来控制事务的执行和查询事务的状态，接口定义如下。
 ```java
 public interface TransactionStatus extends SavepointManager {
@@ -92,20 +94,20 @@ public interface TransactionStatus extends SavepointManager {
 ```
 该接口中方法说明如下。
 
-名称	说明
-boolean hasSavepoint()	获取是否存在保存点
-boolean isCompleted()	获取事务是否完成
-boolean isNewTransaction()	获取是否是新事务
-boolean isRollbackOnly()	获取事务是否回滚
-void setRollbackOnly()	设置事务回滚
+| 名称 | 说明 |
+| :--: | :--: |
+| boolean hasSavepoint()	    | 获取是否存在保存点 |
+| boolean isCompleted()	        | 获取事务是否完成 |
+| boolean isNewTransaction()	| 获取是否是新事务 |
+| boolean isRollbackOnly()	    | 获取事务是否回滚 |
+| void setRollbackOnly()	    | 设置事务回滚 |
 # 编程式事务管理
 编程式事务管理是通过编写代码实现的事务管理，包括定义事务的开始、正常执行后的事务提交和异常时的事务回滚。
 
 Spring 出现以前，编程式事务管理是基于 POJO 应用的唯一选择。在 Hibernate 中，我们需要在代码中显式调用 beginTransaction()、commit()、rollback() 等事务管理相关的方法，这就是编程式事务管理。而通过 Spring 提供的事务管理 API，我们可以在代码中灵活控制事务的执行。
 
-下面根据在《Spring事务》一节讲解的 PlatformTransactionManager、TransactionDefinition 和 TransactionStatus 三个核心接口，通过编程的方式实现事务管理。
-示例
-下面使用 Eclipse IDE 演示 Spring 中编程式事务管理，步骤如下：
+## 示例
+步骤如下：
 创建 SpringDemo 项目，并在 src 目录下创建 net.biancheng 包。
 导入 Spring 相关 JAR 包及 mysql-connector-java.x.x.x.jar 包。
 在 net.biancheng 包下创建 User、UserDao、UserDaoImpl、Beans.xml 和 MainApp。

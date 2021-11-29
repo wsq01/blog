@@ -1,4 +1,9 @@
-
+---
+title: SpringMVC 数据校验
+date: 2021-07-18 17:36:55
+tags: [SpringMVC]
+categories: [SpringMVC]
+---
 
 
 # 数据校验
@@ -12,7 +17,7 @@ Spring MVC 有以下两种方法可以验证输入：
 
 JSR 303 是 Java 为`Bean`数据合法性校验所提供的标准框架。JSR 303 通过在`Bean`属性上标注类似于`@NotNull、@Max`等标准的注解指定校验规则，并通过标准的验证接口对`Bean`进行验证。
 
-JSR 303 不需要编写验证器，它定义了一套可标注在成员变量、属性方法上的校验注解，如下表所示。
+JSR 303 不需要编写验证器，它定义了一套可标注在成员变量、属性方法上的校验注解。
 
 | 名称 | 说明 |
 | :--: | :--: |
@@ -60,7 +65,6 @@ validation-api-1.0.0.GA.jar
 </dependency>
 ```
 2. 创建实体类
-创建 User 实体类，代码如下。
 ```java
 package net.biancheng.po;
 import javax.validation.constraints.NotNull;
@@ -78,7 +82,6 @@ public class User {
 }
 ```
 3. 创建JSP页面
-创建 addUser.jsp，代码如下。
 ```html
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
@@ -102,7 +105,6 @@ public class User {
 </html>
 ```
 4. 创建控制器
-创建 UserController 控制器类，代码如下。
 ```java
 package net.biancheng.controller;
 import java.util.List;
