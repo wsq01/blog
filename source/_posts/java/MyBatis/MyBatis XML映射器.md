@@ -386,7 +386,7 @@ System.out.println("添加记录的主键是:" + addsite.getId());
 ```
 `<selectKey>`标签中属性说明如下：
 * `keyProperty`：用于指定主键值对应的`PO`类的属性。
-* `order`：该属性取值可以为`BEFORE`或`AFTER`。BEFORE 表示先执行`<selectKey>`标签内的语句，再执行插入语句；`AFTER`表示先执行插入语句再执行`<selectKey>`标签内的语句。
+* `order`：该属性取值可以为`BEFORE`或`AFTER`。`BEFORE`表示先执行`<selectKey>`标签内的语句，再执行插入语句；`AFTER`表示先执行插入语句再执行`<selectKey>`标签内的语句。
 
 ## update标签
 `update`标签用于定义更新语句，执行更新操作。当 MyBatis 执行完一条更新语句后，会返回一个整数，表示受影响的数据库记录的行数。

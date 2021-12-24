@@ -50,15 +50,15 @@ ApplicationContext applicationContext = new FileSystemXmlApplicationContext(Stri
 
 因此，在实际开发中，通常都选择使用`ApplicationContext`，而只有在系统资源较少时，才考虑使用`BeanFactory`。
 # Bean定义
-由 Spring IoC 容器管理的对象称为`Bean`，`Bean`根据 Spring 配置文件中的信息创建。
+由 IoC 容器管理的对象称为`Bean`，`Bean`根据 Spring 配置文件中的信息创建。
 
-Spring 容器可以被看作一个大工厂，而 Spring 容器中的`Bean`就相当于该工厂的产品。如果希望这个大工厂能够生产和管理`Bean`，则需要告诉容器需要哪些`Bean`，以及需要以何种方式将这些`Bean`装配到一起。
+Spring 容器可以被看作一个大工厂，而容器中的`Bean`就相当于该工厂的产品。如果希望这个大工厂能够生产和管理`Bean`，则需要告诉容器需要哪些`Bean`，以及需要以何种方式将这些`Bean`装配到一起。
 
 Spring 配置文件支持两种格式，分别是`XML`文件格式和`Properties`文件格式。
 * `Properties`配置文件主要以`key-value`键值对的形式存在，只能赋值，不能进行其他操作，适用于简单的属性配置。
 * `XML`配置文件是树形结构，相对于`Properties`文件来说更加灵活。`XML`配置文件结构清晰，但是内容比较繁琐，适用于大型复杂的项目。
 
-通常情况下，Spring 的配置文件使用`XML`格式，`XML`配置文件的根元素是`<beans>`，该元素包含了多个`<bean>`子元素，每一个`<bean>`子元素定义了一个`Bean`，并描述了该`Bean`如何被装配到 Spring 容器中。
+通常情况下，Spring 的配置文件使用`XML`格式，`XML`配置文件的根元素是`<beans>`，该元素包含了多个`<bean>`子元素，每一个`<bean>`子元素定义了一个`Bean`，并描述了该`Bean`如何被装配到容器中。
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -96,9 +96,9 @@ Spring 配置文件支持两种格式，分别是`XML`文件格式和`Properties
 ## 作用域的种类
 Spring 容器在初始化一个`Bean`的实例时，同时会指定该实例的作用域。Spring 支持以下 6 种作用域。
 1. `singleton`
-默认值，单例模式，表示在 Spring 容器中只有一个`Bean`实例，`Bean`以单例的方式存在。
+默认值，单例模式，表示在容器中只有一个`Bean`实例，`Bean`以单例的方式存在。
 2. `prototype`
-原型模式，表示每次通过 Spring 容器获取`Bean`时，容器都会创建一个`Bean`实例。
+原型模式，表示每次通过容器获取`Bean`时，容器都会创建一个`Bean`实例。
 3. `request`
 每次 HTTP 请求，容器都会创建一个`Bean`实例。该作用域只在当前 HTTP `Request`内有效。
 4. `session`

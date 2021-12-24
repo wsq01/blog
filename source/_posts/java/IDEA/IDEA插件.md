@@ -7,3 +7,5 @@
 {% asset_img findbugs.jpg %}
 3. Pokemon Progress
 4. Xcode-Dark Theme
+5. Codota 代码智能提示插件
+6. CodeGlance 显示代码缩略图插件
