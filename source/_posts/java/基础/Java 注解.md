@@ -4,8 +4,7 @@ date: 2020-11-15 11:31:41
 tags: [java]
 categories: java
 ---
-
-从 Java 5 之后可以在源代码中嵌入一些补充信息，这种补充信息称为注解（`Annotation`）。注解都是`@`符号开头的。
+注解（`Annotation`）都是`@`符号开头的。
 
 注解并不能改变程序的运行结果，也不会影响程序运行的性能。有些注解可以在编译时给用户提示或警告，有的注解可以在运行时读写字节码文件信息。
 
@@ -58,7 +57,7 @@ class Test {
   // since属性指定从哪个版本开始被标记成过时，forRemoval指定该API将来会被删除
   @Deprecated(since = "9", forRemoval = true)
   public void print() {
-    System.out.println("这里是C语言中文网Java教程！");
+    System.out.println("hello！");
   }
 }
 public class DeprecatedTest {

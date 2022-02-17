@@ -34,6 +34,15 @@ categories: 工具
 | Polacode | 把代码保存成美观的图片 |
 | Markdown All in One | markdown插件 |
 | Chinese(Simplified) Language Pack for Visual Studio Code | 中文简体包 |
+| vscode-plugin-swimming | 模拟写代码 |
+| AZ AL Dev Tools/AL Code Outline | 用来梳理代码结构的插件，安装完后在文件图标里就会多出一个 AL OUTLINE 的选项。 |
+| Postcode | 在 vscode 里面使用 postman。 |
+| Project Manager | 项目管理器 |
+| javascript console utils | 快速生成 console.log 的插件。选中变量，然后按 ctrl + shift + L 就可以生成了。需要删除的时候按 ctrl + shift + D 即可删除。 |
+| 小霸王 | 小霸王 |
+| Emoji | 在代码中添加 emoji 表情 |
+| Vscode-element-helper | 使用element-ui库的可以安装这个插件，编写标签时自动提示element标签名称。 |
+| Version Lens  | 在package.json中显示你下载安装的npm工具包的版本信息，同时会告诉你当前包的最新版本。 |
 
 # 快捷键
 
@@ -54,8 +63,10 @@ Mac: command + \`
 ```
 Windows: Ctrl + Backspace
 Mac: option + delete
+```
 这在你打错字的时候非常有用。
 4. 重复的行
+```
 Windows: Shift + Alt + 向下箭头
 Mac: command + Shift + 向下箭头
 ```
@@ -79,3 +90,28 @@ Windows: Ctrl + X(Ctrl + Shift + K)
 Mac: command + X( command + Shift + K)
 ```
 使用Ctrl + X剪切命令来删除一行。或者使用 Ctrl + Shift + K 命令。
+
+8. 文件操作
+Ctrl+N：新建文件
+
+Ctrl+W：关闭文件
+
+Ctrl+Tab：文件切换
+9. 格式调整
+Ctrl+C/Ctrl+V：复制或剪切当前行/当前选中内容
+
+Alt+Up/Down：向上/下移动一行
+
+Shift+Alt+Up//Down：向上/下复制一行
+
+Ctrl+Delete：删除当前行
+
+Shift+Alt+Left/Right：从光标开始向左/右选择内容
+10. 代码编辑
+Ctrl+D：选中下一个相同内容
+
+Ctrl+Shift+L：选中所有相同内容
+
+Ctrl+F：查找内容
+
+Ctrl+Shit+F：在整个文件夹中查找内容
