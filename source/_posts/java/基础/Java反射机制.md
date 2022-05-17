@@ -49,7 +49,7 @@ Class labelCls = label1.getClass();    // label1为 JLabel 类的对象
 
 在调用`getFields()`和`getMethods()`方法时将会依次获取权限为`public`的字段和变量，然后将包含从超类中继承到的成员变量和方法。而通过`getDeclareFields()`和`getDeclareMethod()`只是获取在本类中定义的成员变量和方法。
 
-## Java 反射机制的优缺点
+## 反射机制的优缺点
 优点：
 * 能够运行时动态获取类的实例，大大提高系统的灵活性和扩展性。
 * 与 Java 动态编译相结合，可以实现无比强大的功能。
@@ -59,7 +59,6 @@ Class labelCls = label1.getClass();    // label1为 JLabel 类的对象
 * 反射会消耗一定的系统资源，因此，如果不需要动态地创建一个对象，那么就不需要用反射；
 * 反射调用方法时可以忽略权限检查，获取这个类的私有方法和属性，因此可能会破坏类的封装性而导致安全问题。
 
-Java 反射机制在一般的 Java 应用开发中很少使用，即便是 Java EE 阶段也很少使用。
 # 反射机制API
 实现反射机制的类都位于`java.lang.reflect`包中，`java.lang.Class`类是反射机制 API 中的核心类。
 ## java.lang.Class 类

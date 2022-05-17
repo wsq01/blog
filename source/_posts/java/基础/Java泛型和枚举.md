@@ -231,10 +231,10 @@ Interface1<T2>{}
 # 枚举
 枚举是一个被命名的整型常数的集合，用于声明一组带标识符的常数。枚举在曰常生活中很常见，例如一个人的性别只能是“男”或者“女”，一周的星期只能是 7 天中的一个等。类似这种当一个变量有几种固定可能的取值时，就可以将它定义为枚举类型。
 ## 声明枚举
-声明枚举时必须使用`enum`关键字，然后定义枚举的名称、可访问性、基础类型和成员等。枚举声明的语法如下：
+声明枚举时必须使用`enum`关键字，然后定义枚举的名称、可访问性、基础类型和成员等。
 ```java
 enum-modifiers enum enumname:enum-base {
-    enum-body,
+  enum-body,
 }
 ```
 其中，`enum-modifiers`表示枚举的修饰符主要包括`public、private`和`internal`；`enumname`表示声明的枚举名称；`enum-base`表示基础类型；`enum-body`表示枚举的成员，它是枚举类型的命名常数。
@@ -244,10 +244,10 @@ enum-modifiers enum enumname:enum-base {
 提示：如果没有显式地声明基础类型的枚举，那么意味着它所对应的基础类型是`int`。
 ```java
 public enum SexEnum {
-    male,female;
+  male,female;
 }
 public enum Color {
-    RED,BLUE,GREEN,BLACK;
+  RED,BLUE,GREEN,BLACK;
 }
 ```
 之后便可以通过枚举类型名直接引用常量，如`SexEnum.male、Color.RED`。
