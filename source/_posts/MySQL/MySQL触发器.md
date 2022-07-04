@@ -97,6 +97,7 @@ BEFORE 和 AFTER，触发器被触发的时刻，表示触发器是在激活它�
 另外，在 MySQL 中，若需要查看数据库中已有的触发器，则可以使用 SHOW TRIGGERS 语句。
 创建 BEFORE 类型触发器
 在 test_db 数据库中，数据表 tb_emp8 为员工信息表，包含 id、name、deptId 和 salary 字段，数据表 tb_emp8 的表结构如下所示。
+```
 mysql> SELECT * FROM tb_emp8;
 Empty set (0.07 sec)
 mysql> DESC tb_emp8;
@@ -109,13 +110,17 @@ mysql> DESC tb_emp8;
 | salary | float       | YES  |     | 0       |       |
 +--------+-------------+------+-----+---------+-------+
 4 rows in set (0.05 sec)
+```
 【实例 1】创建一个名为 SumOfSalary 的触发器，触发的条件是向数据表 tb_emp8 中插入数据之前，对新插入的 salary 字段值进行求和计算。输入的 SQL 语句和执行过程如下所示。
+```
 mysql> CREATE TRIGGER SumOfSalary
     -> BEFORE INSERT ON tb_emp8
     -> FOR EACH ROW
     -> SET @sum=@sum+NEW.salary;
 Query OK, 0 rows affected (0.35 sec)
+```
 触发器 SumOfSalary 创建完成之后，向表 tb_emp8 中插入记录时，定义的 sum 值由 0 变成了 1500，即插入值 1000 和 500 的和，如下所示。
+```
 SET @sum=0;
 Query OK, 0 rows affected (0.05 sec)
 mysql> INSERT INTO tb_emp8
@@ -129,8 +134,10 @@ mysql> SELECT @sum;
 | 1500 |
 +------+
 1 row in set (0.03 sec)
+```
 创建 AFTER 类型触发器
 在 test_db 数据库中，数据表 tb_emp6 和 tb_emp7 都为员工信息表，包含 id、name、deptId 和 salary 字段，数据表 tb_emp6 和 tb_emp7 的表结构如下所示。
+```
 mysql> SELECT * FROM tb_emp6;
 Empty set (0.07 sec)
 mysql> SELECT * FROM tb_emp7;
@@ -155,14 +162,18 @@ mysql> DESC tb_emp7;
 | salary | float       | YES  |     | 0       |       |
 +--------+-------------+------+-----+---------+-------+
 4 rows in set (0.04 sec)
+```
 【实例 2】创建一个名为 double_salary 的触发器，触发的条件是向数据表 tb_emp6 中插入数据之后，再向数据表 tb_emp7 中插入相同的数据，并且 salary 为 tb_emp6 中新插入的 salary 字段值的 2 倍。输入的 SQL 语句和执行过程如下所示。
+```
 mysql> CREATE TRIGGER double_salary
     -> AFTER INSERT ON tb_emp6
     -> FOR EACH ROW
     -> INSERT INTO tb_emp7
     -> VALUES (NEW.id,NEW.name,deptId,2*NEW.salary);
 Query OK, 0 rows affected (0.25 sec)
+```
 触发器 double_salary 创建完成之后，向表 tb_emp6 中插入记录时，同时向表 tb_emp7 中插入相同的记录，并且 salary 字段为 tb_emp6 中 salary 字段值的 2 倍，如下所示。
+```
 mysql> INSERT INTO tb_emp6
     -> VALUES (1,'A',1,1000),(2,'B',1,500);
 Query OK, 2 rows affected (0.09 sec)
@@ -183,6 +194,7 @@ mysql> SELECT * FROM tb_emp7;
 |  2 | B    |      1 |   1000 |
 +----+------+--------+--------+
 2 rows in set (0.06 sec)
+```
 # 查看触发器
 查看触发器是指查看数据库中已经存在的触发器的定义、状态和语法信息等。MySQL 中查看触发器的方法包括 SHOW TRIGGERS 语句和查询 information_schema 数据库下的 triggers 数据表等。本节将详细介绍这两种查看触发器的方法。
 SHOW TRIGGERS语句查看触发器信息
@@ -191,23 +203,27 @@ SHOW TRIGGERS;
 
 示例 1
 首先创建一个数据表 account，表中有两个字段，分别是 INT 类型的 accnum 和 DECIMAL 类型的 amount。SQL 语句和运行结果如下：
+```
 mysql> CREATE TABLE account(
     -> accnum INT(4),
     -> amount DECIMAL(10,2));
 Query OK, 0 rows affected (0.49 sec)
-
+```
 创建一个名为 trigupdate 的触发器，每次 account 表更新数据之后都向 myevent 数据表中插入一条数据。创建数据表 myevent 的 SQL 语句和运行结果如下：
+```
 mysql> CREATE TABLE myevent(
     -> id INT(11) DEFAULT NULL,
     -> evtname CHAR(20) DEFAULT NULL);
 Query OK, 0 rows affected (0.26 sec)
-
+```
 创建 trigupdate 触发器的 SQL 代码如下：
+```sql
 mysql> CREATE TRIGGER trigupdate AFTER UPDATE ON account
     -> FOR EACH ROW INSERT INTO myevent VALUES(1,'after update');
 Query OK, 0 rows affected (0.15 sec)
-
+```
 使用 SHOW TRIGGERS 语句查看触发器（在 SHOW TRIGGERS 命令后添加\G，这样显示信息会比较有条理），SQL 语句和运行结果如下：
+```
 mysql> SHOW TRIGGERS \G
 *************************** 1. row ***************************
              Trigger: trigupdate
@@ -222,6 +238,7 @@ character_set_client: gbk
 collation_connection: gbk_chinese_ci
   Database Collation: latin1_swedish_ci
 1 row in set (0.09 sec)
+```
 由运行结果可以看到触发器的基本信息。对以上显示信息的说明如下：
 Trigger 表示触发器的名称，在这里触发器的名称为 trigupdate；
 Event 表示激活触发器的事件，这里的触发事件为更新操作 UPDATE；
@@ -238,9 +255,11 @@ SELECT * FROM information_schema.triggers WHERE trigger_name= '触发器名';
 其中，'触发器名'用来指定要查看的触发器的名称，需要用单引号引起来。这种方式可以查询指定的触发器，使用起来更加方便、灵活。
 示例 2
 下面使用 SELECT 命令查看 trigupdate 触发器，SQL 语句如下：
+```sql
 SELECT * FROM information_schema.triggers WHERE TRIGGER_NAME= 'trigupdate'\G
-
+```
 上述命令通过 WHERE 来指定需要查看的触发器的名称，运行结果如下：
+```
 mysql> SELECT * FROM information_schema.triggers WHERE TRIGGER_NAME= 'trigupdate'\G
 *************************** 1. row ***************************
            TRIGGER_CATALOG: def
@@ -266,6 +285,7 @@ ACTION_REFERENCE_NEW_TABLE: NULL
       COLLATION_CONNECTION: gbk_chinese_ci
         DATABASE_COLLATION: latin1_swedish_ci
 1 row in set (0.22 sec)
+```
 由运行结果可以看到触发器的详细信息。对以上显示信息的说明如下：
 TRIGGER_SCHEMA 表示触发器所在的数据库；
 TRIGGER_NAME 表示触发器的名称；
@@ -305,6 +325,7 @@ DROP TRIGGER [ IF EXISTS ] [数据库名] <触发器名>
 mysql> DROP TRIGGER double_salary;
 Query OK, 0 rows affected (0.03 sec)
 删除 double_salary 触发器后，再次向数据表 tb_emp6 中插入记录时，数据表 tb_emp7 的数据不再发生变化，如下所示。
+```
 mysql> INSERT INTO tb_emp6
     -> VALUES (3,'C',1,200);
 Query OK, 1 row affected (0.09 sec)
@@ -325,3 +346,4 @@ mysql> SELECT * FROM tb_emp7;
 |  2 | B    |      1 |   1000 |
 +----+------+--------+--------+
 2 rows in set (0.00 sec)
+```

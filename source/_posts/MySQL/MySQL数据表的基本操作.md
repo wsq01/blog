@@ -11,15 +11,15 @@ categories: [MySQL]
 # 创建数据表
 所谓创建数据表，指的是在已经创建的数据库中建立新表。创建数据表的过程是规定数据列的属性的过程，同时也是实施数据完整性（包括实体完整性、引用完整性和域完整性）约束的过程。
 ## 基本语法
-在 MySQL 中，可以使用`CREATE TABLE`语句创建表。其语法格式为：
-```
+在 MySQL 中，可以使用`CREATE TABLE`语句创建表。
+```sql
 CREATE TABLE <表名> ([表定义选项])[表选项][分区选项];
 ```
 其中，[表定义选项]的格式为：
 ```
 <列名1> <类型1> [,…] <列名n> <类型n>
 ```
-`CREATE TABLE`语句的主要语法及使用说明如下：
+说明：
 * `CREATE TABLE`：用于创建给定名称的表，必须拥有表`CREATE`的权限。
 * <表名>：指定要创建表的名称，必须符合标识符命名规则。表名称被指定为`db_name.tbl_name`，以便在特定的数据库中创建表。无论是否有当前数据库，都可以通过这种方式创建。在当前数据库中创建表时，可以省略`db_name`。如果使用加引号的识别名，则应对数据库和表名称分别加引号。例如，`'mydb'.'mytbl'`是合法的，但`'mydb.mytbl'`不合法。
 * <表定义选项>：表创建定义，由列名（`col_name`）、列的定义（`column_definition`）以及可能的空值说明、完整性约束或表索引组成。
@@ -41,10 +41,10 @@ CREATE TABLE <表名> ([表定义选项])[表选项][分区选项];
 | deptld | INT(11) | 所在部门编号 |
 | salary | FLOAT | 工资 |
 
-选择创建表的数据库`test_db`，创建`tb_emp1`数据表。
-```
+```sql
 mysql> USE test_db;
 Database changed
+
 mysql> CREATE TABLE tb_emp1
     -> (
     -> id INT(11),
@@ -55,7 +55,7 @@ mysql> CREATE TABLE tb_emp1
 Query OK, 0 rows affected (0.37 sec)
 ```
 语句执行后，便创建了一个名称为`tb_emp1`的数据表，使用`SHOW TABLES;`语句查看数据表是否创建成功。
-```
+```sql
 mysql> SHOW TABLES;
 +--------------------+
 | Tables_in_test_db  |
@@ -68,13 +68,11 @@ mysql> SHOW TABLES;
 修改数据表的前提是数据库中已经存在该表。修改表指的是修改数据库中已经存在的数据表的结构。
 
 在 MySQL 中可以使用`ALTER TABLE`语句来改变原有表的结构，例如增加或删减列、更改原有列类型、重新命名列或表等。
-
-其语法格式如下：
-```
+```sql
 ALTER TABLE <表名> [修改选项]
 ```
 修改选项的语法格式如下：
-```
+```sql
 ADD COLUMN <列名> <类型>
 CHANGE COLUMN <旧列名> <新列名> <新列类型>
 ALTER COLUMN <列名> { SET DEFAULT <默认值> | DROP DEFAULT }
@@ -85,12 +83,12 @@ CHARACTER SET <字符集名>
 COLLATE <校对规则名>
 ```
 ## 修改表名
-MySQL 通过`ALTER TABLE`语句来实现表名的修改，语法规则如下：
-```
+MySQL 通过`ALTER TABLE`语句来实现表名的修改：
+```sql
 ALTER TABLE <旧表名> RENAME [TO] <新表名>；
 ```
 其中，`TO`为可选参数，使用与否均不影响结果。
-```
+```sql
 mysql> ALTER TABLE student RENAME TO tb_students_info;
 Query OK, 0 rows affected (0.01 sec)
 
@@ -105,12 +103,12 @@ mysql> SHOW TABLES;
 > 提示：修改表名并不修改表的结构，因此修改名称后的表和修改名称前的表的结构是相同的。可以使用`DESC`命令查看修改后的表结构。
 
 ## 修改表字符集
-MySQL 通过`ALTER TABLE`语句来实现表字符集的修改，语法规则如下：
-```
+MySQL 通过`ALTER TABLE`语句来实现表字符集的修改：
+```sql
 ALTER TABLE 表名 [DEFAULT] CHARACTER SET <字符集名> [DEFAULT] COLLATE <校对规则名>;
 ```
 其中，`DEFAULT`为可选参数，使用与否均不影响结果。
-```
+```sql
 mysql> ALTER TABLE tb_students_info CHARACTER SET gb2312  DEFAULT COLLATE gb2312_chinese_ci;
 Query OK, 0 rows affected (0.08 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -131,7 +129,7 @@ MySQL 数据表是由行和列构成的，通常把表的“列”称为字段�
 MySQL 允许在开头、中间和结尾处添加字段。
 ### 在末尾添加字段
 一个完整的字段包括字段名、数据类型和约束条件。MySQL 添加字段的语法格式如下：
-```
+```sql
 ALTER TABLE <表名> ADD <新字段名><数据类型>[约束条件];
 ```
 对语法格式的说明如下：                                       
@@ -141,7 +139,7 @@ ALTER TABLE <表名> ADD <新字段名><数据类型>[约束条件];
 * [约束条件] 是可选的，用来对添加的字段进行约束。
 
 这种语法格式默认在表的最后位置（最后一列的后面）添加新字段。
-```
+```sql
 mysql> USE test;
 Database changed
 mysql> CREATE TABLE student (
@@ -159,8 +157,8 @@ mysql> DESC student;
 | sex   | char(1)     | YES  |     | NULL    |       |
 +-------+-------------+------+-----+---------+-------+
 3 rows in set (0.01 sec)
- ```
 ```
+```sql
 mysql> ALTER TABLE student ADD age INT(4);
 Query OK, 0 rows affected (0.16 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -178,12 +176,12 @@ mysql> DESC student;
 ```
 由运行结果可以看到，`student`表已经添加了`age`字段，且该字段在表的最后一个位置，添加字段成功。
 ### 在开头添加字段
-MySQL 默认在表的最后位置添加新字段，如果希望在开头位置（第一列的前面）添加新字段，可以使用`FIRST`关键字，语法格式如下：
-```
+MySQL 默认在表的最后位置添加新字段，如果希望在开头位置（第一列的前面）添加新字段，可以使用`FIRST`关键字：
+```sql
 ALTER TABLE <表名> ADD <新字段名> <数据类型> [约束条件] FIRST;
 ```
 `FIRST`关键字一般放在语句的末尾。
-```
+```sql
 mysql> ALTER TABLE student ADD stuId INT(4) FIRST;
 Query OK, 0 rows affected (0.14 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -202,14 +200,14 @@ mysql> DESC student;
 ```
 由运行结果可以看到，`student`表中已经添加了`stuId`字段，且该字段在表中的第一个位置，添加字段成功。
 ### 在中间位置添加字段
-MySQL 除了允许在表的开头位置和末尾位置添加字段外，还允许在中间位置（指定的字段之后）添加字段，此时需要使用`AFTER`关键字，语法格式如下：
-```
+MySQL 除了允许在表的开头位置和末尾位置添加字段外，还允许在中间位置（指定的字段之后）添加字段，此时需要使用`AFTER`关键字：
+```sql
 ALTER TABLE <表名> ADD <新字段名> <数据类型> [约束条件] AFTER <已经存在的字段名>;
 ```
 `AFTER`的作用是将新字段添加到某个已有字段后面。
 
 注意，只能在某个已有字段的后面添加新字段，不能在它的前面添加新字段。
-```
+```sql
 mysql> ALTER TABLE student ADD stuno INT(11) AFTER name;
 Query OK, 0 rows affected (0.13 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -231,11 +229,11 @@ mysql> DESC student;
 ## 修改字段
 ### 修改字段名称
 MySQL 中修改表字段名的语法规则如下：
-```
+```sql
 ALTER TABLE <表名> CHANGE <旧字段名> <新字段名> <新数据类型>;
 ```
 新数据类型：指修改后的数据类型，如果不需要修改字段的数据类型，可以将新数据类型设置成与原来一样，但数据类型不能为空。
-```
+```sql
 mysql> ALTER TABLE tb_emp1 CHANGE col1 col3 CHAR(30);
 Query OK, 0 rows affected (0.76 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -256,10 +254,10 @@ mysql> DESC tb_emp1;
 提示：由于不同类型的数据在机器中的存储方式及长度并不相同，修改数据类型可能会影响数据表中已有的数据记录，因此，当数据表中已经有数据时，不要轻易修改数据类型。
 ### 修改字段数据类型
 修改字段的数据类型就是把字段的数据类型转换成另一种数据类型。在 MySQL 中修改字段数据类型的语法规则如下：
-```
+```sql
 ALTER TABLE <表名> MODIFY <字段名> <数据类型>
 ```
-```
+```sql
 mysql> ALTER TABLE tb_emp1 MODIFY name VARCHAR(30);
 Query OK, 0 rows affected (0.15 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -278,11 +276,11 @@ mysql> DESC tb_emp1;
 ```
 语句执行后，发现表`tb_emp1`中`name`字段的数据类型已经修改成`VARCHAR(30)`，修改成功。
 ## 删除字段
-删除字段是将数据表中的某个字段从表中移除，语法格式如下：
-```
+删除字段是将数据表中的某个字段从表中移除：
+```sql
 ALTER TABLE <表名> DROP <字段名>;
 ```
-```
+```sql
 mysql> ALTER TABLE tb_emp1 DROP col2;
 Query OK, 0 rows affected (0.53 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -302,8 +300,8 @@ mysql> DESC tb_emp1;
 # 删除数据表
 在删除表的同时，表的结构和表中所有的数据都会被删除，因此在删除数据表之前最好先备份，以免造成无法挽回的损失。
 
-使用`DROP TABLE`语句可以删除一个或多个数据表，语法格式如下：
-```
+使用`DROP TABLE`语句可以删除一个或多个数据表：
+```sql
 DROP TABLE [IF EXISTS] 表名1 [ ,表名2, 表名3 ...]
 ```
 对语法格式的说明如下：
@@ -315,7 +313,7 @@ DROP TABLE [IF EXISTS] 表名1 [ ,表名2, 表名3 ...]
 > * 表被删除时，用户在该表上的权限不会自动删除。
 
 ## 删除表的实例
-```
+```sql
 mysql> USE test_db;
 Database changed
 mysql> CREATE TABLE tb_emp3
@@ -353,7 +351,7 @@ mysql> SHOW TABLES;
 * 将关联表的外键约束取消，再删除父表；适用于需要保留子表的数据，只删除父表的情况。
 
 下面是上面所说的删除父表的第二种方法。
-```
+```sql
 CREATE TABLE tb_emp4
 (
 id INT(11) PRIMARY KEY,
@@ -387,14 +385,14 @@ Create Table: CREATE TABLE `tb_emp5` (
 由运行结果可以看出，`tb_emp5`表为子表，具有名称为`fk_emp4_emp5`的外键约束；`tb_emp4`为父表，其主键`id`被子表`tb_ emp5`所关联。
 
 删除被数据表`tb_emp5`关联的数据表`tb_emp4`，SQL 语句如下：
-```
+```sql
 mysql> DROP TABLE tb_emp4;
 ERROR 1217 (23000): Cannot delete or update a parent row: a foreign key constraint fails
 ```
 由运行结果可以看出，当主表在存在外键约束时，不能被直接删除。
  
 下面解除子表`tb_emp5`的外键约束，SQL语句和运行结果如下：
-```
+```sql
 mysql> ALTER TABLE tb_emp5 DROP FOREIGN KEY fk_emp4_emp5;
 Query OK, 0 rows affected (0.03 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -402,7 +400,7 @@ Records: 0  Duplicates: 0  Warnings: 0
 语句成功执行后，会取消表`tb_emp4`和表`tb_emp5`之间的关联关系。
 
 解除关联关系后，可以使用`DROP TABLE`语句直接删除父表`tb_emp4`，SQL 语句如下：
-```
+```sql
 DROP TABLE tb_emp4;
 
 mysql> show tables;
@@ -418,13 +416,13 @@ mysql> show tables;
 # 查看表结构命令
 创建完数据表之后，经常需要查看表结构（表信息）。在 MySQL 中，可以使用`DESCRIBE`和`SHOW CREATE TABLE`命令来查看数据表的结构。
 ## DESCRIBE：以表格的形式展示表结构
-`DESCRIBE/DESC`语句会以表格的形式来展示表的字段信息，包括字段名、字段数据类型、是否为主键、是否有默认值等，语法格式如下：
+`DESCRIBE/DESC`语句会以表格的形式来展示表的字段信息，包括字段名、字段数据类型、是否为主键、是否有默认值等：
 ```sql
 DESCRIBE <表名>;
-// 或简写成：
+# 或简写成：
 DESC <表名>;
 ```
-```
+```sql
 mysql> DESC tb_emp1;
 +--------+-------------+------+-----+---------+-------+
 | Field  | Type        | Null | Key | Default | Extra |
@@ -444,13 +442,11 @@ mysql> DESC tb_emp1;
 
 ## SHOW CREATE TABLE：以SQL语句的形式展示表结构
 `SHOW CREATE TABLE`命令会以 SQL 语句的形式来展示表信息。和`DESCRIBE`相比，`SHOW CREATE TABLE`展示的内容更加丰富，它可以查看表的存储引擎和字符编码；另外，还可以通过`\g`或者`\G`参数来控制展示格式。
-
-`SHOW CREATE TABLE`的语法格式如下：
-```
+```sql
 SHOW CREATE TABLE <表名>;
 ```
 在`SHOW CREATE TABLE`语句的结尾处（分号前面）添加`\g`或者`\G`参数可以改变展示形式。
-```
+```sql
 mysql> SHOW CREATE TABLE tb_emp1;
 +---------+------------------------------------------------+
 | Table   | Create Table                                   |

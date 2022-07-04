@@ -30,9 +30,10 @@ SELECT、INSERT、UPDATE 和 DELETE 语句及其子句（例如 WHERE、ORDER BY
 其他函数主要包括格式化函数和锁函数等。
 # 数值型函数
 ## ABS函数：求绝对值
-在 MySQL 中绝对值函数 ABS(x) 返回 x 的绝对值。正数的绝对值是其本身，负数的绝对值为其相反数，0 的绝对值是 0。
+在 MySQL 中绝对值函数`ABS(x)`返回`x`的绝对值。正数的绝对值是其本身，负数的绝对值为其相反数，0 的绝对值是 0。
 
-【实例】求 5、-2.4、-24 和 0 的绝对值，输入的 SQL 语句和执行结果如下所示。
+求 5、-2.4、-24 和 0 的绝对值。
+```sql
 mysql> SELECT ABS(5),ABS(-2.4),ABS(-24),ABS(0);
 +--------+-----------+----------+--------+
 | ABS(5) | ABS(-2.4) | ABS(-24) | ABS(0) |
@@ -40,11 +41,12 @@ mysql> SELECT ABS(5),ABS(-2.4),ABS(-24),ABS(0);
 |      5 |       2.4 |       24 |      0 |
 +--------+-----------+----------+--------+
 1 row in set (0.10 sec)
-由运行结果可知，5 的绝对值为 5，-2.4 的绝对值为 2.4，-24 的绝对值为 24，0 的绝对值是 0。
+```
 ## SQRT函数：求二次方根
-在 MySQL 中平方根函数 SQRT(x) 返回非负数 x 的二次方根。负数没有平方根，返回结果为 NULL。
+在 MySQL 中平方根函数`SQRT(x)`返回非负数`x`的二次方根。负数没有平方根，返回结果为`NULL`。
 
-【实例 1】求 25、120 和 -9 的二次平方根，输入的 SQL 语句和执行结果如下所示。
+求 25、120 和 -9 的二次平方根。
+```sql
 mysql> SELECT SQRT(25),SQRT(120),SQRT(-9);
 +----------+--------------------+----------+
 | SQRT(25) | SQRT(120)          | SQRT(-9) |
@@ -52,11 +54,11 @@ mysql> SELECT SQRT(25),SQRT(120),SQRT(-9);
 |        5 | 10.954451150103322 |     NULL |
 +----------+--------------------+----------+
 1 row in set (0.06 sec)
-由运行结果可知，5 的平方等于 25，因此 25 的平方根为 5；120 的平方根为 10.954451150103322；而负数没有平方根，因此 -9 返回的结果为 NULL。
-
+```
 也可以使用 SQRT 函数，计算出记录的平方根。
 
-【实例 2】 假设数据表 tb_people 有以下这些数据：
+假设数据表`tb_people`有以下这些数据：
+```sql
 mysql> SELECT * FROM tb_people;
 +------+------+------------+--------------------+
 | id   | name | work_date  | daily_typing_pages |
@@ -70,8 +72,9 @@ mysql> SELECT * FROM tb_people;
 |  5   | Zara | 2007-02-06 |        350         |
 +------+------+------------+--------------------+
 7 rows in set (0.00 sec)
-根据上面的表格，要计算所有的 dialy_typing_pages 的平方根，输入 SQL 语句执行结果如下：
 ```
+根据上面的表格，计算所有的`dialy_typing_pages`的平方根：
+```sql
 mysql> SELECT name, SQRT(daily_typing_pages)
   -> FROM tb_people;
 +------+--------------------------+
@@ -88,9 +91,10 @@ mysql> SELECT name, SQRT(daily_typing_pages)
 7 rows in set (0.00 sec)
 ```
 ## MOD函数：求余数
-在 MySQL 中求余函数 MOD(x,y) 返回 x 被 y 除后的余数，MOD() 对于带有小数部分的数值也起作用，它返回除法运算后的余数。
+在 MySQL 中求余函数`MOD(x,y)`返回`x`被`y`除后的余数，`MOD()`对于带有小数部分的数值也起作用，它返回除法运算后的余数。
 
-【实例】对 MOD(63,8)、MOD(120,10)、MOD(15.5,3) 进行求余运算，输入的 SQL 语句和执行结果如下所示。
+对 MOD(63,8)、MOD(120,10)、MOD(15.5,3) 进行求余运算。
+```sql
 mysql> SELECT MOD(63,8),MOD(120,10),MOD(15.5,3);
 +-----------+-------------+-------------+
 | MOD(63,8) | MOD(120,10) | MOD(15.5,3) |
@@ -98,11 +102,12 @@ mysql> SELECT MOD(63,8),MOD(120,10),MOD(15.5,3);
 |         7 |           0 |         0.5 |
 +-----------+-------------+-------------+
 1 row in set (0.03 sec)
-由运行结果可知，63 除以 8 余数是 7，120 除以 10 余数是 0，15.5 除以 3 余数是 0.5
+```
 ## CEIL和CELING函数：向上取整
-在 MySQL 中取整函数 CEIL(x) 和 CEILING(x) 的意义相同，返回不小于 x 的最小整数值，返回值转化为一个 BIGINT。
+在 MySQL 中取整函数`CEIL(x)`和`CEILING(x)`的意义相同，返回不小于`x`的最小整数值，返回值转化为一个`BIGINT`。
 
-【实例】使用 CEILING 函数返回最小整数，输入的 SQL 语句和执行结果如下所示。
+使用`CEILING`函数返回最小整数。
+```sql
 mysql> SELECT CEIL(-2.5),CEILING(2.5);
 +------------+--------------+
 | CEIL(-2.5) | CEILING(2.5) |
@@ -110,11 +115,12 @@ mysql> SELECT CEIL(-2.5),CEILING(2.5);
 |         -2 |            3 |
 +------------+--------------+
 1 row in set (0.00 sec)
-由执行结果可知，-2.5 为负数，不小于 -2.5 的最小整数为 -2，因此返回值为 -2；不小于 2.5 的最小整数为 3，因此返回值为 3。
+```
 ## FLOOR函数：向下取整
-MySQL FLOOR(x) 函数返回小于 x 的最大整数值。
+MySQL `FLOOR(x)`函数返回小于`x`的最大整数值。
 
-【实例】求 小于 5，5.66，-4，-4.66 的最大整数
+求小于 5，5.66，-4，-4.66 的最大整数。
+```sql
 mysql> SELECT FLOOR(5),FLOOR(5.66),FLOOR(-4),FLOOR(-4.66);
 +----------+-------------+-----------+--------------+
 | FLOOR(5) | FLOOR(5.66) | FLOOR(-4) | FLOOR(-4.66) |
@@ -122,9 +128,10 @@ mysql> SELECT FLOOR(5),FLOOR(5.66),FLOOR(-4),FLOOR(-4.66);
 |        5 |           5 |        -4 |           -5 |
 +----------+-------------+-----------+--------------+
 1 row in set (0.00 sec)
-由运行结果可知，小于 5，5.66，-4，-4.66 的最大整数依次是 5，5，-4，-5。
+```
 ## RAND函数：生成随机数
-MySQL RAND() 函数被调用时，可以产生一个在 0 和 1 之间的随机数。
+MySQL `RAND()`函数被调用时，可以产生一个在 0 和 1 之间的随机数。
+```sql
 mysql>  SELECT RAND(), RAND(), RAND();
 +------------------+-----------------+------------------+
 | RAND()           | RAND()          | RAND()           |
@@ -132,9 +139,9 @@ mysql>  SELECT RAND(), RAND(), RAND();
 | 0.45464584925645 | 0.1824410643265 | 0.54826780459682 |
 +------------------+-----------------+------------------+
 1 row in set (0.00 sec) 
-由运行结果可知，每次调用 RAND() 函数，都会随机生成一个 0~1 之间的随机数 。
-
-当使用整数作为参数调用时，RAND() 使用该值作为随机数的种子发生器。每次种子使用给定值生成，RAND() 将产生一个可重复的系列数字：
+```
+当使用整数作为参数调用时，`RAND()`使用该值作为随机数的种子发生器。每次种子使用给定值生成，`RAND()`将产生一个可重复的系列数字：
+```sql
 mysql> SELECT RAND(1),RAND(),RAND(1);
 +---------------------+--------------------+---------------------+
 | RAND(1)             | RAND()             | RAND(1)             |
@@ -142,11 +149,13 @@ mysql> SELECT RAND(1),RAND(),RAND(1);
 | 0.40540353712197724 | 0.7901452330780637 | 0.40540353712197724 |
 +---------------------+--------------------+---------------------+
 1 row in set (0.00 sec)
-由运行结果可知，当向 RAND() 函数中传入一个整数作为参数是，RAND() 函数产生的随机数可以重复。
+```
+由运行结果可知，当向`RAND()`函数中传入一个整数作为参数是，`RAND()`函数产生的随机数可以重复。
 ## SIGN函数：返回参数的符号
-在 MySQL 中符号函数 SIGN(x) 返回参数的符号，x 的值为负、零和正时返回结果依次为 -1、0 和 1。
+在 MySQL 中符号函数`SIGN(x)`返回参数的符号，`x`的值为负、零和正时返回结果依次为 -1、0 和 1。
 
-【实例】使用 SIGN 函数返回参数的符号，输入的 SQL 语句和执行结果如下所示。
+使用`SIGN`函数返回参数的符号。
+```sql
 mysql> SELECT SIGN(-6),SIGN(0),SIGN(34);
 +----------+---------+----------+
 | SIGN(-6) | SIGN(0) | SIGN(34) |
@@ -154,11 +163,12 @@ mysql> SELECT SIGN(-6),SIGN(0),SIGN(34);
 |       -1 |       0 |        1 |
 +----------+---------+----------+
 1 row in set (0.00 sec)
-由执行结果可知，SIGN(-6) 返回 -1，SIGN(0) 返回 0，SIGN(34) 返回 1。
+```
 ## POW和POWER函数：求次方
-MySQL POW(x,y) 函数和 POWER(x,y) 函数用于计算 x 的 y 次方。
+MySQL `POW(x,y)`函数和`POWER(x,y)`函数用于计算`x`的`y`次方。
 
-【实例】使用 POW(x,y) 和 POWER(x,y) 函数对参数 x 进行 y 次方的求值。输入 SQL 语句和执行结果如下。
+使用`POW(x,y)`和`POWER(x,y)`函数对参数`x`进行`y`次方的求值。
+```sql
 mysql> SELECT POW(5,-2),POW(10,3),POW(100,0),POWER(4,3),POWER(6,-3);
 +-----------+-----------+------------+------------+----------------------+
 | POW(5,-2) | POW(10,3) | POW(100,0) | POWER(4,3) | POWER(6,-3)          |
@@ -166,10 +176,10 @@ mysql> SELECT POW(5,-2),POW(10,3),POW(100,0),POWER(4,3),POWER(6,-3);
 |      0.04 |      1000 |          1 |         64 | 0.004629629629629629 |
 +-----------+-----------+------------+------------+----------------------+
 1 row in set (0.00 sec)
+```
 ## SIN函数：求正弦值
-MySQL 中正弦函数 SIN(x) 返回 x 的正弦值，其中 x 为弧度值。
-
-【实例】使用 SIN 函数计算正弦值，输入的 SQL 语句和执行结果如下所示。
+MySQL 中正弦函数`SIN(x)`返回`x`的正弦值，其中`x`为弧度值。
+```sql
 mysql> SELECT SIN(1),SIN(0.5*PI());
 +--------------------+---------------+
 | SIN(1)             | SIN(0.5*PI()) |
@@ -177,11 +187,11 @@ mysql> SELECT SIN(1),SIN(0.5*PI());
 | 0.8414709848078965 |             1 |
 +--------------------+---------------+
 1 row in set (0.15 sec)
-提示：PI() 函数返回圆周率（3.141593）
+```
+提示：`PI()`函数返回圆周率（3.141593）。
 ## ASIN函数：求反正弦值
-MySQL 中反正弦函数 ASIN(x) 返回 x 的反正弦值，若 x 不在 -1 到 1 的范围之内，则返回 NULL。
-
-【实例】使用 ASIN 函数计算反正弦值，输入的 SQL 语句和执行结果如下所示。
+MySQL 中反正弦函数`ASIN(x)`返回`x`的反正弦值，若`x`不在 -1 到 1 的范围之内，则返回`NULL`。
+```sql
 mysql> SELECT ASIN(0.8414709848078965),ASIN(2);
 +--------------------------+---------+
 | ASIN(0.8414709848078965) | ASIN(2) |
@@ -189,11 +199,10 @@ mysql> SELECT ASIN(0.8414709848078965),ASIN(2);
 |                        1 |    NULL |
 +--------------------------+---------+
 1 row in set (0.03 sec)
-由结果可以看到，函数 ASIN 和 SIN 互为反函数，ASIN(2) 中的参数 2 超出了正弦值的范围，因此返回 NULL。
+```
 ## COS函数：求余弦值
-MySQL 中余弦函数 COS(x) 返回 x 的余弦值，x 为弧度值。
-
-【实例】使用 COS 函数计算余弦值，输入的 SQL 语句和执行结果如下所示
+MySQL 中余弦函数`COS(x)`返回`x`的余弦值，`x`为弧度值。
+```sql
 mysql> SELECT COS(1),COS(0),COS(PI());
 +--------------------+--------+-----------+
 | COS(1)             | COS(0) | COS(PI()) |
@@ -201,11 +210,10 @@ mysql> SELECT COS(1),COS(0),COS(PI());
 | 0.5403023058681398 |      1 |        -1 |
 +--------------------+--------+-----------+
 1 row in set (0.03 sec)
-由结果可以看到，COS(0) 的值为 1，COS(PI()) 的值为 -1，COS(1) 的值为 0.5403023058681398。
+```
 ## ACOS函数：求反余弦值
-MySQL 中反余弦函数 ACOS(x) 。x 值的范围必须在 -1 和 1 之间，否则返回 NULL。
-
-【实例】使用 ACOS 函数计算反余弦值，输入的 SQL 语句和执行结果如下所示。
+MySQL 中反余弦函数`ACOS(x)`。`x`值的范围必须在 -1 和 1 之间，否则返回`NULL`。
+```sql
 mysql> SELECT ACOS(2),ACOS(1),ACOS(-1);
 +---------+---------+-------------------+
 | ACOS(2) | ACOS(1) | ACOS(-1)          |
@@ -213,11 +221,10 @@ mysql> SELECT ACOS(2),ACOS(1),ACOS(-1);
 |    NULL |       0 | 3.141592653589793 |
 +---------+---------+-------------------+
 1 row in set (0.01 sec)
-由结果可以看到，函数 ACOS 和 COS 互为反函数。
+```
 ## TAN函数：求正切值
-MySQL 中正切函数 TAN(x) 返回 x 的正切值，x 为给定的弧度值。
-
-【实例】使用 TAN 函数计算正切值，输入的 SQL 语句和执行结果如下所示。
+MySQL 中正切函数`TAN(x)`返回`x`的正切值，`x`为给定的弧度值。
+```sql
 mysql> SELECT TAN(1),TAN(0);
 +--------------------+--------+
 | TAN(1)             | TAN(0) |
@@ -225,11 +232,10 @@ mysql> SELECT TAN(1),TAN(0);
 | 1.5574077246549023 |      0 |
 +--------------------+--------+
 1 row in set (0.03 sec)
-由运行结果可知，TAN(1) 的值为 1.5574077246549023，TAN(0) 的值为 0。 
+```
 ## ATAN函数：求反正切值
-MySQL 中反正切 ATAN(x) 返回 x 的反正切值，正切为 x 的值。
-
-【实例】使用 ATAN 函数计算反正切值，输入的 SQL 语句和执行结果如下所示。
+MySQL 中反正切`ATAN(x)`返回`x`的反正切值，正切为`x`的值。
+```sql
 mysql> SELECT ATAN(1.5574077246549023),ATAN(0);
 +--------------------------+---------+
 | ATAN(1.5574077246549023) | ATAN(0) |
@@ -237,11 +243,10 @@ mysql> SELECT ATAN(1.5574077246549023),ATAN(0);
 |                        1 |       0 |
 +--------------------------+---------+
 1 row in set (0.05 sec)
-由结果可以看到，函数 ATAN 和 TAN 互为反函数。
+```
 ## COT函数：求余切值
-MySQL 余切函数 COT(x) 返回 x 的余切值，x 是给定的弧度值。
-
-【实例】使用 COT 函数计算余切值，输入的 SQL 语句和执行结果如下所示。
+MySQL 余切函数`COT(x)`返回`x`的余切值，`x`是给定的弧度值。
+```sql
 mysql> SELECT COT(1);
 +--------------------+
 | COT(1)             |
@@ -249,12 +254,13 @@ mysql> SELECT COT(1);
 | 0.6420926159343306 |
 +--------------------+
 1 row in set (0.00 sec)
-由运行结果可知，COT(1) 的值为 0.6420926159343306。 
+```
 # 字符串函数
 ## LENGTH函数：获取字符串长度
-MySQL LENGTH(str) 函数的返回值为字符串的字节长度，使用 uft8（UNICODE 的一种变长字符编码，又称万国码）编码字符集时，一个汉字是 3 个字节，一个数字或字母是一个字节。
+MySQL `LENGTH(str)`函数的返回值为字符串的字节长度，使用`uft8`（`UNICODE`的一种变长字符编码，又称万国码）编码字符集时，一个汉字是 3 个字节，一个数字或字母是一个字节。
 
-【实例】使用 LENGTH 函数计算字符串长度，输入的 SQL 语句和执行结果如下所示。
+使用`LENGTH`函数计算字符串长度。
+```sql
 mysql> SELECT LENGTH('name'),LENGTH('数据库');
 +----------------+---------------------+
 |LENGTH('name')  | LENGTH('数据库')    |
@@ -262,13 +268,13 @@ mysql> SELECT LENGTH('name'),LENGTH('数据库');
 |              4 |                   9 |
 +----------------+---------------------+
 1 row in set (0.04 sec)
+```
 由运行结果可以看到，一个汉字是 3 个字节，“数据库”字符串占 9 个字节。英文字符的个数和所占的字节相同，一个字符占 1 个字节。
 ## CONCAT函数：字符串拼接
-MySQL 中的 CONCAT(sl，s2，...) 函数返回结果为连接参数产生的字符串，或许有一个或多个参数。
+MySQL 中的`CONCAT(sl，s2，...)`函数返回结果为连接参数产生的字符串，或许有一个或多个参数。
 
-若有任何一个参数为 NULL，则返回值为 NULL。若所有参数均为非二进制字符串，则结果为非二进制字符串。若自变量中含有任一二进制字符串，则结果为一个二进制字符串。
-
-【实例】使用 CONCAT 函数连接字符串，输入的 SQL 语句和执行结果如下所示。
+若有任何一个参数为`NULL`，则返回值为`NULL`。若所有参数均为非二进制字符串，则结果为非二进制字符串。若自变量中含有任一二进制字符串，则结果为一个二进制字符串。
+```sql
 mysql> SELECT CONCAT('MySQL','5.7'),CONCAT('MySQL',NULL);
 +-----------------------+----------------------+
 | CONCAT('MySQL','5.7') | CONCAT('MySQL',NULL) |
@@ -276,13 +282,12 @@ mysql> SELECT CONCAT('MySQL','5.7'),CONCAT('MySQL',NULL);
 | MySQL5.7              | NULL                 |
 +-----------------------+----------------------+
 1 row in set (0.03 sec)
-由运行结果可知，CONCAT('MySQL'，'5.7') 返回两个字符串连接后的字符串；CONCAT(‘MySQL’，NULL) 中有一个参数为 NULL，因此返回结果为 NULL。
+```
 ## INSERT函数：替换字符串
-MySQL 中替换字符串函数 INSERT(s1，x，len，s2) 返回字符串 s1，子字符串起始于 x 位置，并且用 len 个字符长的字符串代替 s2。
+MySQL 中替换字符串函数`INSERT(s1，x，len，s2)`返回字符串`s1`，子字符串起始于`x`位置，并且用`len`个字符长的字符串代替`s2`。
 
-若 x 超过字符串长度，则返回值为原始字符串。假如 len 的长度大于其他字符串的长度，则从位置 x 开始替换。若任何一个参数为 NULL，则返回值为 NULL。
-
-【实例】使用 INSERT 函数进行字符串替换操作，输入的 SQL 语句和执行结果如下所示。
+若`x`超过字符串长度，则返回值为原始字符串。假如`len`的长度大于其他字符串的长度，则从位置`x`开始替换。若任何一个参数为`NULL`，则返回值为`NULL`。
+```sql
 mysql> SELECT INSERT('Football',2,4,'Play') AS col1,
     -> INSERT('Football',-1,4,'Play') AS col2,
     -> INSERT('Football',3,20,'Play') AS col3;
@@ -292,14 +297,14 @@ mysql> SELECT INSERT('Football',2,4,'Play') AS col1,
 | FPlayall | Football | FoPlay |
 +----------+----------+--------+
 1 row in set (0.04 sec)
+```
 由执行结果可知：
-第一个函数 INSERT('Football'，2，4，'Play') 将“Football”从第 2 个字符开始长度为 4 的字符串替换为 Play，结果为“FPlayall”；
-第二个函数 ('Football'，-1，4，'Play') 中的起始位置 -1 超出了字符串长度，直接返回原字符串；
-第三个函数 INSERT('Football'，3，20，'Play') 替换长度超出了原字符串长度，则从第 3 个字符开始，截取后面所有的字符，并替换为指定字符 Play，结果为“FoPlay”。
+* 第一个函数`INSERT('Football'，2，4，'Play')`将“Football”从第 2 个字符开始长度为 4 的字符串替换为`Play`，结果为`FPlayall`；
+* 第二个函数`('Football'，-1，4，'Play')`中的起始位置 -1 超出了字符串长度，直接返回原字符串；
+* 第三个函数`INSERT('Football'，3，20，'Play')`替换长度超出了原字符串长度，则从第 3 个字符开始，截取后面所有的字符，并替换为指定字符`Play`，结果为`FoPlay。
 ## LOWER函数：将字母转换成小写
-MySQL 中字母小写转换函数 LOWER(str) 可以将字符串 str 中的字母字符全部转换成小写。
-
-【实例】使用 LOWER 函数将字符串中所有的字母字符转换为小写，输入的 SQL 语句和执行结果如下所示。
+MySQL 中字母小写转换函数`LOWER(str)`可以将字符串`str`中的字母字符全部转换成小写。
+```sql
 mysql> SELECT LOWER('BLUE'),LOWER('Blue');
 +---------------+---------------+
 | LOWER('BLUE') | LOWER('Blue') |
@@ -307,11 +312,10 @@ mysql> SELECT LOWER('BLUE'),LOWER('Blue');
 | blue          | blue          |
 +---------------+---------------+
 1 row in set (0.03 sec)
-由结果可以看到，原来所有字母为大写的，全部转换为小写，如“BLUE”，转换之后为“blue”；大小写字母混合的字符串，小写不变，大写字母转换为小写字母，如“Blue”，转换之后为“bule”。
+```
 ## UPPER函数：将字母转换成大写
-MySQL 中字母大写转换函数 UPPER(str) 可以将字符串 str 中的字母字符全部转换成大写。
-
-【实例】使用 UPPER 函数将字符串中所有的字母字符转换为大写，输入的 SQL 语句和执行结果如下所示。
+MySQL 中字母大写转换函数`UPPER(str)`可以将字符串`str`中的字母字符全部转换成大写。
+```sql
 mysql> SELECT UPPER('green'),UPPER('Green');
 +----------------+----------------+
 | UPPER('green') | UPPER('Green') |
@@ -319,11 +323,10 @@ mysql> SELECT UPPER('green'),UPPER('Green');
 | GREEN          | GREEN          |
 +----------------+----------------+
 1 row in set (0.03 sec)
-由结果可以看到，原来所有字母字符为小写的，全部转换为大写，如“green”，转换之后为“GREEN”；大小写字母混合的字符串，大写不变，小写字母转换为大写字母，如“Green”，转换之后为“GREEN”。
+```
 ## LEFT函数：从左侧截取字符串
-MySQL 中的 LEFT(s，n) 函数返回字符串 s 最左边的 n 个字符。
-
-【实例】使用 LEFT 函数返回字符串中左边的字符，输入的 SQL 语句和执行结果如下所示。
+MySQL 中的`LEFT(s，n)`函数返回字符串`s`最左边的`n`个字符。
+```sql
 mysql> SELECT LEFT('MySQL',2);
 +-----------------+
 | LEFT('MySQL',2) |
@@ -331,11 +334,11 @@ mysql> SELECT LEFT('MySQL',2);
 | My              |
 +-----------------+
 1 row in set (0.04 sec)
+```
 由运行结果可知，返回字符串“MySQL”左边开始的长度为 2 的子字符串，结果为“My”。
 ## RIGHT函数：从右侧截取字符串
-MySQL 中的 RIGHT(s，n) 函数返回字符串 s 最右边的 n 个字符。
-
-【实例】使用 RIGHT 函数返回字符串中右边的字符，输入的 SQL 语句和执行结果如下所示。
+MySQL 中的`RIGHT(s，n)`函数返回字符串`s`最右边的`n`个字符。
+```sql
 mysql> SELECT RIGHT('MySQL',3);
 +------------------+
 | RIGHT('MySQL',3) |
@@ -343,11 +346,10 @@ mysql> SELECT RIGHT('MySQL',3);
 | SQL              |
 +------------------+
 1 row in set (0.00 sec)
-由执行结果可知，函数返回字符串“MySQL”右边开始的长度为3的子字符串，结果为“SQL”。
+```
 ## TRIM函数：删除空格
-MySQL 中删除空格函数 TRIM(s) 删除字符串 s 两侧的空格。
-
-【实例】SELECT CONCAT('['，TRIM('mobile')，']')；输入的 SQL 语句和执行结果如下所示。
+MySQL 中删除空格函数`TRIM(s)`删除字符串`s`两侧的空格。
+```sql
 mysql> SELECT '[   mobile   ]',CONCAT('[',TRIM('   mobile   '),']');
 +----------------+--------------------------------------+
 | [   mobile   ] | CONCAT('[',TRIM('   mobile   '),']') |
@@ -355,11 +357,10 @@ mysql> SELECT '[   mobile   ]',CONCAT('[',TRIM('   mobile   '),']');
 | [   mobile   ] | [mobile]                             |
 +----------------+--------------------------------------+
 1 row in set (0.07 sec)
-由执行结果可知，函数执行之后字符串“mobile”两边的空格被删除，结果为“mobile”。
+```
 ## REPLACE函数：字符串替换
-MySQL 中替换函数 REPLACE(s，s1，s2) 使用字符串 s2 替换字符串 s 中所有的字符串 s1。
-
-【实例】使用 REPLACE 函数进行字符串替换操作，输入的 SQL 语句和执行过程如下所示。
+MySQL 中替换函数`REPLACE(s，s1，s2)`使用字符串`s2`替换字符串`s`中所有的字符串`s1`。
+```sql
 mysql> SELECT REPLACE('aaa.mysql.com','a','w');
 +----------------------------------+
 | REPLACE('aaa.mysql.com','a','w') |
@@ -367,13 +368,12 @@ mysql> SELECT REPLACE('aaa.mysql.com','a','w');
 | www.mysql.com                    |
 +----------------------------------+
 1 row in set (0.00 sec)
-由运行结果可以看出，使用 REPLACE('aaa.mysql.com'，'a'，'w') 将“aaa.mysql.com”字符串的“a”字符替换为“w”字符，结果为“www.mysql.com”。
+```
 ## SUBSTRING函数：截取字符串
-MySQL 中获取子串函数 SUBSTRING(s，n，len) 带有 len 参数的格式，从字符串 s 返回一个长度同 len 字符相同的子字符串，起始于位置 n。
+MySQL 中获取子串函数`SUBSTRING(s，n，len)`带有`len`参数的格式，从字符串`s`返回一个长度同`len`字符相同的子字符串，起始于位置`n`。
 
-也可能对 n 使用一个负值。假若这样，则子字符串的位置起始于字符串结尾的第 n 个字符，即倒数第 n 个字符，而不是字符串的开头位置。
-
-【实例】使用 SUBSTRING 函数获取指定位置处的子字符串，输入的 SQL 语句和执行结果如下所示。
+也可能对`n`使用一个负值。假若这样，则子字符串的位置起始于字符串结尾的第`n`个字符，即倒数第`n`个字符，而不是字符串的开头位置。
+```sql
 mysql> SELECT SUBSTRING('computer',3) AS col1,
     -> SUBSTRING('computer',3,4) AS col2,
     -> SUBSTRING('computer',-3) AS col3,
@@ -384,13 +384,10 @@ mysql> SELECT SUBSTRING('computer',3) AS col1,
 | mputer | mput | ter  | put  |
 +--------+------+------+------+
 1 row in set (0.00 sec)
-SUBSTRING('computer'，3) 返回从第 3 个位置开始到字符串结尾的子字符串，结果为“mputer”；SUBSTRING('computer'，3，4) 返回从第 3 个位置开始长度为 4 的子字符串，结果为“mput”；
-
-SUBSTRING(computer，-3) 返回从倒数第 3 个位置到字符串结尾的子字符串，结果为“ter”；SUBSTRING(computer，-5，3) 返回从倒数第 5 个位置开始长度为 3 的子字符串，结果为“put”。
+```
 ## REVERSE函数：反转字符串
-MySQL 中字符串逆序函数 REVERSE(s) 可以将字符串 s 反转，返回的字符串的顺序和 s 字符串的顺序相反。
-
-【实例】使用 REVERSE 函数反转字符串，输入的 SQL 语句和执行过程如下所示。
+MySQL 中字符串逆序函数`REVERSE(s)`可以将字符串`s`反转，返回的字符串的顺序和`s`字符串的顺序相反。
+```sql
 mysql> SELECT REVERSE('hello');
 +------------------+
 | REVERSE('hello') |
@@ -398,12 +395,13 @@ mysql> SELECT REVERSE('hello');
 | olleh            |
 +------------------+
 1 row in set (0.00 sec)
-由运行结果可以看出，字符串“hello”经过 REVERSE 函数处理之后所有字符顺序被反转，结果为“olleh”。
+```
 # 聚合函数
 ## MAX函数：查询指定列的最大值
-MySQL MAX() 函数是用来返回指定列中的最大值。
+MySQL `MAX()`函数是用来返回指定列中的最大值。
 
-为了方便理解，首先创建一个学生成绩表 tb_students_score，学生成绩表的数据内容如下所示。
+为了方便理解，首先创建一个学生成绩表`tb_students_score`，学生成绩表的数据内容如下所示。
+```sql
 mysql> use test_db;
 Database changed
 mysql> SELECT * FROM tb_students_score;
@@ -422,7 +420,9 @@ mysql> SELECT * FROM tb_students_score;
 | Tom          |            89 |
 +--------------+---------------+
 10 rows in set (0.13 sec)
-【实例 1】在 tb_students_score 表中查找最高的成绩，输入的 SQL 语句和执行结果如下所示。
+```
+在`tb_students_score`表中查找最高的成绩=。
+```sql
 mysql> SELECT MAX(student_score)
     -> AS max_score
     -> FROM tb_students_score;
@@ -432,11 +432,11 @@ mysql> SELECT MAX(student_score)
 |       100 |
 +-----------+
 1 row in set (0.06 sec)
-由运行结果可以看到，MAX() 函数查询出 student_score 字段的最大值为 100。
+```
+`MAX()`函数不仅适用于查找数值类型，也可应用于字符类型。
 
-MAX() 函数不仅适用于查找数值类型，也可应用于字符类型。
-
-【实例 2】在 tb_students_score 表中查找 student_name 的最大值，输入的 SQL 语句和执行结果如下所示。
+在`tb_students_score`表中查找`student_name`的最大值。
+```sql
 mysql> SELECT MAX(student_name)
     -> AS max_name
     -> FROM tb_students_score;
@@ -446,14 +446,16 @@ mysql> SELECT MAX(student_name)
 | Tom      |
 +----------+
 1 row in set (0.03 sec)
+```
 由运行结果可以看到，MAX() 函数可以对字母进行大小判断，并返回最大的字符或者字符串值。
-注意：MAX() 函数还可以返回任意列中的最大值，包括返回字符类型的最大值。在对字符类型的数据进行比较时，按照字符的 ASCII 码值大小进行比较，从 a～z，a 的 ASCII 码最小，z 的最大。在比较时，先比较第一个字符，如果相等，继续比较下一个字符，一直到两个字符不相等或者字符结束为止。例如，b 与 t 比较时，t 为最大值；bcd 与 bca 比较时，bcd 为最大值。
+
+> 注意：MAX() 函数还可以返回任意列中的最大值，包括返回字符类型的最大值。在对字符类型的数据进行比较时，按照字符的 ASCII 码值大小进行比较，从 a～z，a 的 ASCII 码最小，z 的最大。在比较时，先比较第一个字符，如果相等，继续比较下一个字符，一直到两个字符不相等或者字符结束为止。例如，b 与 t 比较时，t 为最大值；bcd 与 bca 比较时，bcd 为最大值。
+
 ## MIN函数：查询指定列的最小值
-MySQL MIN() 函数是用来返回查询列中的最小值。
+MySQL `MIN()`函数是用来返回查询列中的最小值。
 
-为了便于理解，需要用到在上一节讲 MAX() 函数时创建的数据表 tb_students_score。
-
-【实例】在 tb_students_score 表中查找最低的成绩，输入的 SQL 语句和执行结果如下所示。
+在`tb_students_score`表中查找最低的成绩。
+```sql
 mysql> SELECT MIN(student_score)
     -> AS min_score
     -> FROM tb_students_score;
@@ -463,16 +465,16 @@ mysql> SELECT MIN(student_score)
 |        88 |
 +-----------+
 1 row in set (0.00 sec)
-由结果可以看到，MIN() 函数查询出 student_score 字段的最小值为 88。
-提示：MIN() 函数与 MAX() 函数类似，不仅适用于查找数值类型，也可应用于字符类型。
+```
+> 提示：`MIN()`函数与`MAX()`函数类似，不仅适用于查找数值类型，也可应用于字符类型。
+
 ## COUNT函数：统计查询结果的行数
-MySQL COUNT() 函数统计数据表中包含的记录行的总数，或者根据查询结果返回列中包含的数据行数，使用方法有以下两种：
-COUNT(*) 计算表中总的行数，无论某列有数值或者为空值。
-COUNT（字段名）计算指定列下总的行数，计算时将忽略空值的行。
+MySQL `COUNT()`函数统计数据表中包含的记录行的总数，或者根据查询结果返回列中包含的数据行数，使用方法有以下两种：
+* `COUNT(*)`计算表中总的行数，无论某列有数值或者为空值。
+* `COUNT（字段名）`计算指定列下总的行数，计算时将忽略空值的行。
 
-这里需要用到以下在介绍 MAX() 函数时创建的表 tb_students_score 。
-
-【实例】查询 tb_students_score 表中总的行数，输入的 SQL 语句和执行结果如下所示。
+查询`tb_students_score`表中总的行数。
+```sql
 mysql> SELECT COUNT(student_name)
     -> AS students_number
     -> FROM tb_students_score;
@@ -482,19 +484,21 @@ mysql> SELECT COUNT(student_name)
 |              10 |
 +-----------------+
 1 row in set (0.03 sec)
-由查询结果可以看到，COUNT(*) 返回 tb_students_score 表中记录的总行数，无论值是什么。返回的总数的名称为 students_number。
-提示：在计算总数的时候对待 NULL 值的方式是，指定列的值为空的行被 COUNT() 函数忽略，但若不指定列，而在 COUNT() 函数中使用星号“*”，则所有记录都不忽略。
+```
+提示：在计算总数的时候对待`NULL`值的方式是，指定列的值为空的行被`COUNT()`函数忽略，但若不指定列，而在`COUNT()`函数中使用星号`*`，则所有记录都不忽略。
 ## SUM函数：求和
-MySQL SUM() 是一个求总和的函数，返回指定列值的总和。
+MySQL `SUM()`是一个求总和的函数，返回指定列值的总和。
 
-SUM() 函数是如何工作的？
-如果在没有返回匹配行 SELECT 语句中使用 SUM 函数，则 SUM 函数返回 NULL，而不是 0。
-DISTINCT 运算符允许计算集合中的不同值。
-SUM 函数忽略计算中的 NULL 值。
+`SUM()`函数是如何工作的？
 
-这里需要用到以下在介绍 MAX() 函数时创建的表 tb_students_score 。
+如果在没有返回匹配行`SELECT`语句中使用`SUM`函数，则`SUM`函数返回`NULL`，而不是 0。
 
-【实例】在 tb_students_score 表中计算学生成绩的总分，输入的 SQL 语句和执行结果如下所示。
+`DISTINCT`运算符允许计算集合中的不同值。
+
+`SUM`函数忽略计算中的`NULL`值。
+
+在`tb_students_score`表中计算学生成绩的总分。
+```sql
 mysql> SELECT SUM(student_score)
     -> AS score_sum
     -> FROM tb_students_score;
@@ -504,14 +508,14 @@ mysql> SELECT SUM(student_score)
 |       942 |
 +-----------+
 1 row in set (0.00 sec)
-由查询结果可以看到，SUM() 函数返回学生的所有成绩之和为 942。
-提示：SUM() 函数在计算时，忽略列值为 NULL 的行。
+```
+> 提示：`SUM()`函数在计算时，忽略列值为`NULL`的行。
+
 ## AVG函数：求平均值
-MySQL AVG() 函数通过计算返回的行数和每一行数据的和，求得指定列数据的平均值。
+MySQL `AVG()`函数通过计算返回的行数和每一行数据的和，求得指定列数据的平均值。
 
-这里需要用到以下在介绍 MAX() 函数时创建的表 tb_students_score 。
-
-【实例】在 tb_students_score 表中，查询所有学生成绩的平均值，输入的 SQL 语句和执行结果如下所示。
+在`tb_students_score`表中，查询所有学生成绩的平均值。
+```sql
 mysql> SELECT AVG(student_score)
     -> AS score_avg
     -> FROM tb_students_score;
@@ -521,19 +525,21 @@ mysql> SELECT AVG(student_score)
 |   94.2000 |
 +-----------+
 1 row in set (0.03 sec)
-提示：使用 AVG() 函数时，参数为要计算的列名称，若要得到多个列的平均值，则需要在每一列都使用 AVG() 函数。
+```
+> 提示：使用`AVG()`函数时，参数为要计算的列名称，若要得到多个列的平均值，则需要在每一列都使用`AVG()`函数。
+
 # 流程控制函数
 ## IF函数：判断
-MySQL IF 语句允许您根据表达式的某个条件或值结果来执行一组 SQL 语句。
+MySQL `IF`语句允许您根据表达式的某个条件或值结果来执行一组 SQL 语句。
 
-要在 MySQL 中形成一个表达式，可以结合文字，变量，运算符，甚至函数来组合。表达式可以返回 TRUE,FALSE 或 NULL，这三个值之一。
-
-语法结构如下：
+要在 MySQL 中形成一个表达式，可以结合文字，变量，运算符，甚至函数来组合。表达式可以返回`TRUE,FALSE`或`NULL`，这三个值之一。
+```sql
 IF(expr,v1,v2)
+```
+其中：表达式`expr`得到不同的结果，当`expr`为真是返回`v1`的值，否则返回`v2`。
 
-其中：表达式 expr 得到不同的结果，当 expr 为真是返回 v1 的值，否则返回 v2.
-
-【实例】使用 IF(expr,v1,v2) 函数根据 expr 表达式结果返回相应值，输入 SQL 语句和执行结果如下。
+使用`IF(expr,v1,v2)`函数根据`expr`表达式结果返回相应值。
+```sql
 mysql> SELECT IF(1<2,1,0) c1,IF(1>5,'√','×') c2,IF(STRCMP('abc','ab'),'yes','no') c3;
 +----+----+-----+
 | c1 | c2 | c3  |
@@ -541,16 +547,17 @@ mysql> SELECT IF(1<2,1,0) c1,IF(1>5,'√','×') c2,IF(STRCMP('abc','ab'),'yes','
 |  1 | × | yes |
 +----+----+-----+
 1 row in set, 2 warnings (0.00 sec)
-由执行结果可以看出，在 c1 中，表达式 1<2 所得的结果是 TRUE，则返回结果为 v1，即数值 1；在 c2 中，表达式 1>5 所得的结果是 FALSE，则返回结果为 v2，即字符串 '×'；在 c3 中，先用 STRCMP(s1,s2) 函数比较两个字符串的大小，字符串 'abc' 和 'ab' 比较结果的返回值为 1，也就是表达式 expr 的返回结果不等于 0 且不等于 NULL，则返回值为 v1，即字符串 'yes'。
+```
+由执行结果可以看出，在`c1`中，表达式 1<2 所得的结果是`TRUE`，则返回结果为`v1`，即数值 1；在`c2`中，表达式 1>5 所得的结果是`FALSE`，则返回结果为`v2`，即字符串`'×'`；在`c3`中，先用`STRCMP(s1,s2)`函数比较两个字符串的大小，字符串`'abc'`和`'ab'`比较结果的返回值为 1，也就是表达式`expr`的返回结果不等于 0 且不等于`NULL`，则返回值为`v1`，即字符串`'yes'`。
 ## IFNULL函数：判断是否为空
-MySQL IFNULL 函数是 MySQL 控制流函数之一，它接受两个参数，如果不是 NULL，则返回第一个参数。 否则，IFNULL 函数返回第二个参数。两个参数可以是文字值或表达式。
-
-函数的语法：
+MySQL `IFNULL`函数是 MySQL 控制流函数之一，它接受两个参数，如果不是`NULL`，则返回第一个参数。 否则，`IFNULL`函数返回第二个参数。两个参数可以是文字值或表达式。
+```sql
 IFNULL(v1,v2);
+```
+其中：如果`v1`不为`NULL`，则`IFNULL`函数返回`v1`; 否则返回`v2`的结果。
 
-其中：如果 v1 不为 NULL，则 IFNULL 函数返回 v1; 否则返回 v2 的结果。
-
-【实例】使用 IFNULL(v1,v2) 函数根据 v1 的取值返回相应值。输入 SQL 语句和执行结果如下。
+使用`IFNULL(v1,v2)`函数根据`v1`的取值返回相应值。
+```sql
 mysql> SELECT IFNULL(5,8),IFNULL(NULL,'OK'),IFNULL(SQRT(-8),'FALSE'),SQRT(-8);
 +-------------+-------------------+--------------------------+----------+
 | IFNULL(5,8) | IFNULL(NULL,'OK') | IFNULL(SQRT(-8),'FALSE') | SQRT(-8) |
@@ -558,23 +565,26 @@ mysql> SELECT IFNULL(5,8),IFNULL(NULL,'OK'),IFNULL(SQRT(-8),'FALSE'),SQRT(-8);
 |           5 | OK                | FALSE                    |     NULL |
 +-------------+-------------------+--------------------------+----------+
 1 row in set (0.00 sec)
-由执行结果可以看出，IFNULL(v1,v2) 函数中的参数 v1=5、v2=8，都不为空，即 v1=5 不为空，返回 v1 的值为 5；当 v1=NULL 时，返回 v2 的值，即字符串 'OK'；当 v1=SQRT(-8) 时，SQRT(-8) 函数的返回值为NULL，即 v1=NULL，所以返回 v2 为字符串 'false'。
+```
+由执行结果可以看出，`IFNULL(v1,v2)`函数中的参数`v1=5、v2=8`，都不为空，即`v1=5`不为空，返回`v1`的值为 5；当`v1=NULL`时，返回`v2`的值，即字符串`'OK'`；当`v1=SQRT(-8)`时，`SQRT(-8)`函数的返回值为`NULL`，即`v1=NULL`，所以返回 v2 为字符串`'false'`。
 ## CASE函数：搜索语句
-除了 IF 函数，MySQL 还提供了一个替代的条件语句 CASE。 MySQL CASE 语句使代码更加可读和高效。
+除了`IF`函数，MySQL 还提供了一个替代的条件语句`CASE`。 MySQL `CASE`语句使代码更加可读和高效。
 
-CASE 语句有两种形式：简单的和可搜索 CASE 语句。
-简单的 CASE 语句
-简单的 CASE 语句就是指使用简单 CASE 语句来检查表达式的值与一组唯一值的匹配。
-
-简单的 CASE 语句的语法：
+`CASE`语句有两种形式：简单的和可搜索`CASE`语句。
+## 简单的 CASE 语句
+简单的`CASE`语句就是指使用简单`CASE`语句来检查表达式的值与一组唯一值的匹配。
+```sql
 CASE  <表达式>
    WHEN <值1> THEN <操作>
    WHEN <值2> THEN <操作>
    ...
    ELSE <操作>
 END CASE;
-其中：<表达式> 可以是任何有效的表达式。我们将 <表达式> 的值与每个 WHEN 子句中的值进行比较，例如 <值1>，<值2> 等。如果 <表达式> 和 <值n> 的值相等，则执行相应的 WHEN 分支中的命令 <操作>。如果 WHEN 子句中的 <值n> 没有与 <表达式> 的值匹配，则 ELSE 子句中的命令将被执行。ELSE 子句是可选的。 如果省略 ELSE 子句，并且找不到匹配项，MySQL 将引发错误。
-【实例 1】使用 CASE 函数根据表达式的取值返回相应值，输入SQL 语句和执行结果如下
+```
+其中：<表达式> 可以是任何有效的表达式。我们将 <表达式> 的值与每个 WHEN 子句中的值进行比较，例如 <值1>，<值2> 等。如果 <表达式> 和 <值n> 的值相等，则执行相应的`WHEN`分支中的命令 <操作>。如果`WHEN`子句中的 <值n> 没有与 <表达式> 的值匹配，则`ELSE`子句中的命令将被执行。`ELSE`子句是可选的。 如果省略`ELSE`子句，并且找不到匹配项，MySQL 将引发错误。
+
+使用`CASE`函数根据表达式的取值返回相应值。
+```sql
 mysql> SELECT CASE WEEKDAY(NOW()) WHEN 0 THEN '星期一' WHEN 1 THEN '星期二' WHEN
 2 THEN '星期三' WHEN 3 THEN '星期四' WHEN 4 THEN '星期五' WHEN 5 THEN '星期六'
 ELSE '星期天' END AS COLUMN1,NOW(),WEEKDAY(NOW()),DAYNAME(NOW());
@@ -584,19 +594,22 @@ ELSE '星期天' END AS COLUMN1,NOW(),WEEKDAY(NOW()),DAYNAME(NOW());
 | 星期四  | 2019-02-28 13:45:43 |              3 | Thursday       |
 +---------+---------------------+----------------+----------------+
 1 row in set, 7 warnings (0.00 sec)
-由执行结果可以看出，NOW() 函数得到当前系统时间是 2019 年 2 月 28 日，DAYNAME(NOW()) 得到当天是 'Thursday '，WEEKDAY(NOW()) 函数返回当前时间的工作日索引是 3，即对应的是星期四。
-可搜索的 CASE 语句
-简单 CASE 语句仅允许将表达式的值与一组不同的值进行匹配。 为了执行更复杂的匹配，如范围，则可以使用可搜索 CASE 语句。 可搜索 CASE 语句等同于 IF 语句，但是它的构造更加可读。
-可搜索CASE语句的语法：
+```
+由执行结果可以看出，`NOW()`函数得到当前系统时间是 2019 年 2 月 28 日，`DAYNAME(NOW())`得到当天是`'Thursday'`，`WEEKDAY(NOW())`函数返回当前时间的工作日索引是 3，即对应的是星期四。
+## 可搜索的 CASE 语句
+简单`CASE`语句仅允许将表达式的值与一组不同的值进行匹配。 为了执行更复杂的匹配，如范围，则可以使用可搜索`CASE`语句。 可搜索`CASE`语句等同于`IF`语句，但是它的构造更加可读。
+```sql
 CASE
     WHEN <条件1> THEN <命令>
     WHEN <条件2> THEN <命令>
     ...
     ELSE commands
 END CASE;
-MySQL 分别计算 WHEN 子句中的每个条件，直到找到一个值为 TRUE 的条件，然后执行 THEN 子句中的相应 <命令>。如果没有一个条件为 TRUE，则执行 ELSE 子句中的 <命令>。如果不指定 ELSE 子句，并且没有一个条件为 TRUE，MySQL 将发出错误消息。MySQL 不允许在 THEN 或 ELSE 子句中使用空的命令。 如果您不想处理 ELSE 子句中的逻辑，同时又要防止 MySQL 引发错误，则可以在 ELSE 子句中放置一个空的 BEGIN END 块。
+```
+MySQL 分别计算`WHEN`子句中的每个条件，直到找到一个值为`TRUE`的条件，然后执行`THEN`子句中的相应 <命令>。如果没有一个条件为`TRUE`，则执行`ELSE`子句中的 <命令>。如果不指定`ELSE`子句，并且没有一个条件为`TRUE`，MySQL 将发出错误消息。MySQL 不允许在`THEN`或`ELSE`子句中使用空的命令。 如果您不想处理`ELSE`子句中的逻辑，同时又要防止 MySQL 引发错误，则可以在`ELSE`子句中放置一个空的`BEGIN END`块。
 
-【实例 2】使用 CASE 函数根据表达式的取值返回相应值，输入SQL 语句和执行结果如下
+使用`CASE`函数根据表达式的取值返回相应值。
+```sql
 mysql> SELECT CASE WHEN WEEKDAY(NOW())=0 THEN '星期一' WHEN WEEKDAY(NOW())=1 THE
 N '星期二'  WHEN WEEKDAY(NOW())=2 THEN '星期三' WHEN WEEKDAY(NOW())=3 THEN '星期
 四' WHEN WEEKDAY(NOW())=4 THEN '星期五' WHEN WEEKDAY(NOW())=5 THEN '星期六' WHEN
@@ -608,4 +621,5 @@ WEEKDAY(NOW())=6 THEN '星期天' END AS COLUMN1,NOW(),WEEKDAY(NOW()),DAYNAME(NO
 | 星期四  | 2019-02-28 14:08:00 |              3 | Thursday       |
 +---------+---------------------+----------------+----------------+
 1 row in set, 7 warnings (0.00 sec)
-此例跟上例的返回结果一样，只是使用了 CASE 函数的不同写法，WHEN 后面为表达式，当表达式的返回结果为 TRUE 时取 THEN 后面的值，如果都不是，则返回 ELSE 后面的值。
+```
+此例跟上例的返回结果一样，只是使用了`CASE`函数的不同写法，`WHEN`后面为表达式，当表达式的返回结果为`TRUE`时取`THEN`后面的值，如果都不是，则返回`ELSE`后面的值。

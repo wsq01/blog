@@ -83,45 +83,29 @@ a instanceof Array // true
 typeof null // "object"
 ```
 `null`的类型是`object`，这是由于历史原因造成的。1995年的JavaScript语言第一版，只设计了五种数据类型（对象、整数、浮点数、字符串和布尔值），没考虑`null`，只把它当作`object`的一种特殊值。后来`null`独立出来，作为一种单独的数据类型，为了兼容以前的代码，`typeof null`返回`object`就没法改变了。
-# null, undefined 和布尔值
-## null 和 undefined
-#### 概述
+# null, undefined
+## 概述
 `null`与`undefined`都可以表示“没有”，含义非常相似。将一个变量赋值为`undefined`或`null`，语法效果几乎没区别。
 
-在`if`语句中，它们都会被自动转为`false`，相等运算符（`==`）甚至直接报告两者相等。
-```javascript
-if (!undefined) {
-  console.log('undefined is false');
-}
-// undefined is false
-
-if (!null) {
-  console.log('null is false');
-}
-// null is false
-
-undefined == null // true
-```
 既然含义与用法都差不多，为什么要同时设置两个这样的值，这不是无端增加复杂度吗？这与历史原因有关。
 
-1995年JavaScript诞生时，最初像Java一样，只设置了`null`表示"无"。根据C语言的传统，`null`可以自动转为`0`。
+1995 年 JavaScript 诞生时，最初像 Java 一样，只设置了`null`表示"无"。根据 C 语言的传统，`null`可以自动转为`0`。
 ```javascript
 Number(null) // 0
 5 + null // 5
 ```
-但是，JavaScript 的设计者Brendan Eich，觉得这样做还不够。首先，第一版的JavaScript里面，`null`就像在Java里一样，被当成一个对象，Brendan Eich觉得表示“无”的值最好不是对象。其次，那时的JavaScript不包括错误处理机制，Brendan Eich觉得，如果`null`自动转为0，很不容易发现错误。
+但是，JavaScript 的设计者 Brendan Eich，觉得这样做还不够。首先，第一版的JavaScript里面，`null`就像在Java里一样，被当成一个对象，Brendan Eich 觉得表示“无”的值最好不是对象。其次，那时的JavaScript 不包括错误处理机制，Brendan Eich 觉得，如果`null`自动转为 0，很不容易发现错误。
 
 因此，他又设计了一个`undefined`。区别是这样的：`null`是一个表示“空”的对象，转为数值时为`0`；`undefined`是一个表示"此处无定义"的原始值，转为数值时为`NaN`。
 ```javascript
 Number(undefined) // NaN
 5 + undefined // NaN
 ```
-#### 用法和含义
-对于`null`和`undefined`，大致可以像下面这样理解。
+## 用法和含义
 
-`null`表示空值，即该处的值现在为空。调用函数时，某个参数未设置任何值，这时就可以传入`null`，表示该参数为空。比如，某个函数接受引擎抛出的错误作为参数，如果运行过程中未出错，那么这个参数就会传入`null`，表示未发生错误。
+`null`表示该变量有意缺少对象指向，即该处的值现在为空。`null`常在返回类型应是一个对象，但没有关联的值的地方使用。
 
-`undefined`表示“未定义”，下面是返回`undefined`的典型场景。
+`undefined`表示尚未初始化的变量的值。`undefined`是全局对象的一个属性。也就是说，它是全局作用域的一个变量。
 ```javascript
 // 变量声明了，但没有赋值
 var i;
@@ -141,7 +125,87 @@ o.p // undefined
 function f() {}
 f() // undefined
 ```
-## 布尔值
+
+`undefined`
+* 这个变量从根本上就没有定义
+* 隐藏式 空值
+
+`null`
+* 这个值虽然定义了，但它并未指向任何内存中的对象
+* 声明式 空值
+
+## 表现形式
+```js
+typeof null  // 'object'
+typeof undefined  // 'undefined'
+
+null == undefined  // true
+null === undefined  // false
+!!null === !!undefined  // true
+
+let a = undefined + 1  // NaN
+let b = null + 1  // 1
+Number(undefined)  // NaN
+Number(null)  // 0
+
+JSON.stringify({a: undefined})  // '{}'
+JSON.stringify({b: null})  // '{b: null}'
+JSON.stringify({a: undefined, b: null})  // '{b: null}'
+
+function test(n) {
+    let undefined = 'test'
+    return n === undefined
+}
+
+test()           // false
+test(undefined)  // false
+test('test')     // ture
+
+let undefined = 'test'  // Uncaught SyntaxError: Identifier 'undefined' has already been declared
+```
+在`if`语句中，它们都会被自动转为`false`。
+```javascript
+if (!undefined) {
+  console.log('undefined is false');
+}
+// undefined is false
+
+if (!null) {
+  console.log('null is false');
+}
+// null is false
+```
+## 深入探索
+#### 为什么 typeof null 是 object？
+`typeof null`输出为`object`其实是一个底层的错误，但直到现阶段都无法被修复。
+
+原因是，在 JavaScript 初始版本中，值以 32 位存储。前 3 位表示数据类型的标记，其余位则是值。
+
+对于所有的对象，它的前 3 位都以 000 作为类型标记位。在 JavaScript 早期版本中，`null`被认为是一个特殊的值，用来对应 C 中的空指针 。但 JavaScript 中没有 C 中的指针，所以`null`意味着什么都没有或者`void`并以全 0(32个) 表示。
+
+因此每当 JavaScript 读取`null`时，它前端的 3 位将它视为对象类型 ，这也是为什么`typeof null`返回`object`的原因。
+#### 为什么 null + 1 和 undefined + 1 表现不同？
+在执行加法运算前，隐式类型转换会尝试将表达式中的变量转换为`number`类型。`null`转化为`number`时，会转换成 0。`undefined`转换为`number`时，会转换为`NaN`。
+
+至于为什么执行如此的转换方式，我猜测是 JavaScript 早期的一个糟糕设计。
+#### 为什么 JSON.stringify 会将值为 undefined 的内容删除？
+JSON 会将`undefined`对应的`key`删除，这是 JSON 自身的转换原则。
+
+在`undefined`的情况下，有无该条数据是没有区别的，因为他们在表现形式上并无不同：
+```js
+let obj1 = { a: undefined }
+let obj2 = {}
+
+console.log(obj1.a)  // undefined
+console.log(obj2.a)  // undefined
+```
+#### 为什么 let undefiend='test' 可以覆盖掉 JavaScript 自身的 undefined？
+JavaScript 对于`undefined`的限制方式为全局创建了一个只读的`undefined`，但是并没有彻底禁止局部`undefined`变量的定义。
+
+据说在 JavaScript 高版本禁止了该操作，但没有准确的依据。
+
+请在任何时候，都不要进行`undefined`变量的覆盖，就算是你的 JSON 转换将`undefined`转换为`''`。也不要通过该操作进行，这将是及其危险的行为。
+# 布尔值
 布尔值代表“真”和“假”两个状态。“真”用关键字`true`表示，“假”用关键字`false`表示。布尔值只有这两个值。
 
 下列运算符会返回布尔值：
@@ -157,7 +221,7 @@ f() // undefined
 - `NaN`
 - `""`或`''`（空字符串）
 
-布尔值往往用于程序流程的控制，请看一个例子。
+布尔值往往用于程序流程的控制。
 ```javascript
 if ('') {
   console.log('true');

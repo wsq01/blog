@@ -503,6 +503,7 @@ export default enum Directions {
     Right
 }
 上例中 export default enum 是错误的语法，需要使用 declare enum 定义出来，然后使用 export default 导出：
+```
 // types/foo/index.d.ts
 
 declare enum Directions {
@@ -513,7 +514,9 @@ declare enum Directions {
 }
 
 export default Directions;
+```
 针对这种默认导出，我们一般会将导出语句放在整个声明文件的最前面20：
+```
 // types/foo/index.d.ts
 
 export default Directions;
@@ -525,7 +528,9 @@ declare enum Directions {
     Right
 }
 export =
+```
 在 commonjs 规范中，我们用以下方式来导出一个模块：
+```
 // 整体导出
 module.exports = foo;
 // 单个导出
@@ -545,7 +550,9 @@ import { bar } from 'foo';
 import foo = require('foo');
 // 单个导入
 import bar = foo.bar;
+```
 对于这种使用 commonjs 规范的库，假如要为它写类型声明文件的话，就需要使用到 export = 这种语法了21：
+```ts
 // types/foo/index.d.ts
 
 export = foo;
@@ -554,6 +561,7 @@ declare function foo(): string;
 declare namespace foo {
     const bar: number;
 }
+```
 需要注意的是，上例中使用了 export = 之后，就不能再单个导出 export { bar } 了。所以我们通过声明合并，使用 declare namespace foo 来将 bar 合并到 foo 里。
 准确地讲，export = 不仅可以用在声明文件中，也可以用在普通的 ts 文件中。实际上，import ... require 和 export = 都是 ts 为了兼容 AMD 规范和 commonjs 规范而创立的新语法，由于并不常用也不推荐使用，所以这里就不详细介绍了，感兴趣的可以看官方文档。
 由于很多第三方库是 commonjs 规范的，所以声明文件也就不得不用到 export = 这种语法了。但是还是需要再强调下，相比与 export =，我们更推荐使用 ES6 标准的 export default 和 export。
@@ -561,6 +569,7 @@ UMD 库
 既可以通过`<script>`标签引入，又可以通过 import 导入的库，称为 UMD 库。相比于 npm 包的类型声明文件，我们需要额外声明一个全局变量，为了实现这种方式，ts 提供了一个新语法 export as namespace。
 export as namespace
 一般使用 export as namespace 时，都是先有了 npm 包的声明文件，再基于它添加一条 export as namespace 语句，即可将声明好的一个变量声明为全局变量，举例如下22：
+```ts
 // types/foo/index.d.ts
 
 export as namespace foo;
@@ -570,7 +579,9 @@ declare function foo(): string;
 declare namespace foo {
     const bar: number;
 }
+```
 当然它也可以与 export default 一起使用：
+```ts
 // types/foo/index.d.ts
 
 export as namespace foo;
@@ -580,15 +591,19 @@ declare function foo(): string;
 declare namespace foo {
     const bar: number;
 }
+```
 直接扩展全局变量
 有的第三方库扩展了一个全局变量，可是此全局变量的类型却没有相应的更新过来，就会导致 ts 编译错误，此时就需要扩展全局变量的类型。比如扩展 String 类型23：
+```ts
 interface String {
     prependHello(): string;
 }
 
 'foo'.prependHello();
+```
 通过声明合并，使用 interface String 即可给 String 添加属性或方法。
 也可以使用 declare namespace 给已有的命名空间添加类型声明24：
+```ts
 // types/jquery-plugin/index.d.ts
 
 declare namespace JQuery {
@@ -605,10 +620,12 @@ interface JQueryStatic {
 jQuery.foo({
     bar: ''
 });
+```
 在 npm 包或 UMD 库中扩展全局变量
 如之前所说，对于一个 npm 包或者 UMD 库的声明文件，只有 export 导出的类型声明才能被导入。所以对于 npm 包或 UMD 库，如果导入此库之后会扩展全局变量，则需要使用另一种语法在声明文件中扩展全局变量的类型，那就是 declare global。
 declare global
 使用 declare global 可以在 npm 包或者 UMD 库的声明文件中扩展全局变量的类型25：
+```ts
 // types/foo/index.d.ts
 
 declare global {
@@ -621,11 +638,13 @@ export {};
 // src/index.ts
 
 'bar'.prependHello();
+```
 注意即使此声明文件不需要导出任何东西，仍然需要导出一个空对象，用来告诉编译器这是一个模块的声明文件，而不是一个全局变量的声明文件。
 模块插件
 有时通过 import 导入一个模块插件，可以改变另一个原有模块的结构。此时如果原有模块已经有了类型声明文件，而插件模块没有类型声明文件，就会导致类型不完整，缺少插件部分的类型。ts 提供了一个语法 declare module，它可以用来扩展原有模块的类型。
 declare module
 如果是需要扩展原有模块的话，需要在类型声明文件中先引用原有模块，再使用 declare module 扩展原有模块26：
+```ts
 // types/moment-plugin/index.d.ts
 
 import * as moment from 'moment';
@@ -639,7 +658,9 @@ import * as moment from 'moment';
 import 'moment-plugin';
 
 moment.foo();
+```
 declare module 也可用于在一个文件中一次性声明多个模块的类型27：
+```ts
 // types/foo-bar.d.ts
 
 declare module 'foo' {
@@ -658,8 +679,10 @@ import * as bar from 'bar';
 
 let f: Foo;
 bar.bar();
+```
 声明文件中的依赖
 一个声明文件有时会依赖另一个声明文件中的类型，比如在前面的 declare module 的例子中，我们就在声明文件中导入了 moment，并且使用了 moment.CalendarKey 这个类型：
+```ts
 // types/moment-plugin/index.d.ts
 
 import * as moment from 'moment';
@@ -667,6 +690,7 @@ import * as moment from 'moment';
 declare module 'moment' {
     export function foo(): moment.CalendarKey;
 }
+```
 除了可以在声明文件中通过 import 导入另一个声明文件中的类型之外，还有一个语法也可以用来导入另一个声明文件，那就是三斜线指令。
 三斜线指令
 与 namespace 类似，三斜线指令也是 ts 在早期版本中为了描述模块之间的依赖关系而创造的语法。随着 ES6 的广泛应用，现在已经不建议再使用 ts 中的三斜线指令来声明模块之间的依赖关系了。
@@ -676,6 +700,7 @@ declare module 'moment' {
 当我们需要依赖一个全局变量的声明文件时
 书写一个全局变量的声明文件
 这些场景听上去很拗口，但实际上很好理解——在全局变量的声明文件中，是不允许出现 import, export 关键字的。一旦出现了，那么他就会被视为一个 npm 包或 UMD 库，就不再是全局变量的声明文件了。故当我们在书写一个全局变量的声明文件时，如果需要引用另一个库的类型，那么就必须用三斜线指令了28：
+```ts
 // types/jquery-plugin/index.d.ts
 
 /// <reference types="jquery" />
@@ -684,10 +709,12 @@ declare function foo(options: JQuery.AjaxSettings): string;
 // src/index.ts
 
 foo({});
+```
 三斜线指令的语法如上，/// 后面使用 xml 的格式添加了对 jquery 类型的依赖，这样就可以在声明文件中使用 JQuery.AjaxSettings 类型了。
 注意，三斜线指令必须放在文件的最顶端，三斜线指令的前面只允许出现单行或多行注释。
 依赖一个全局变量的声明文件
 在另一个场景下，当我们需要依赖一个全局变量的声明文件时，由于全局变量不支持通过 import 导入，当然也就必须使用三斜线指令来引入了29：
+```ts
 // types/node-plugin/index.d.ts
 
 /// <reference types="node" />
@@ -698,11 +725,13 @@ export function foo(p: NodeJS.Process): string;
 import { foo } from 'node-plugin';
 
 foo(global.process);
+```
 在上面的例子中，我们通过三斜线指引入了 node 的类型，然后在声明文件中使用了 NodeJS.Process 这个类型。最后在使用到 foo 的时候，传入了 node 中的全局变量 process。
 由于引入的 node 中的类型都是全局变量的类型，它们是没有办法通过 import 来导入的，所以这种场景下也只能通过三斜线指令来引入了。
 以上两种使用场景下，都是由于需要书写或需要依赖全局变量的声明文件，所以必须使用三斜线指令。在其他的一些不是必要使用三斜线指令的情况下，就都需要使用 import 来导入。
 拆分声明文件
 当我们的全局变量的声明文件太大时，可以通过拆分为多个文件，然后在一个入口文件中将它们一一引入，来提高代码的可维护性。比如 jQuery 的声明文件就是这样的：
+```
 // node_modules/@types/jquery/index.d.ts
 
 /// <reference types="sizzle" />
@@ -710,7 +739,7 @@ foo(global.process);
 /// <reference path="JQuery.d.ts" />
 /// <reference path="misc.d.ts" />
 /// <reference path="legacy.d.ts" />
-
+```
 export = jQuery;
 其中用到了 types 和 path 两种不同的指令。它们的区别是：types 用于声明对另一个库的依赖，而 path 用于声明对另一个文件的依赖。
 上例中，sizzle 是与 jquery 平行的另一个库，所以需要使用 types="sizzle" 来声明对它的依赖。而其他的三斜线指令就是将 jquery 的声明拆分到不同的文件中了，然后在这个入口文件中使用 path="foo" 将它们一一引入。
@@ -719,6 +748,7 @@ export = jQuery;
 自动生成声明文件
 如果库的源码本身就是由 ts 写的，那么在使用 tsc 脚本将 ts 编译为 js 的时候，添加 declaration 选项，就可以同时也生成 .d.ts 声明文件了。
 我们可以在命令行中添加 --declaration（简写 -d），或者在 tsconfig.json 中添加 declaration 选项。这里以 tsconfig.json 为例：
+```
 {
     "compilerOptions": {
         "module": "commonjs",
@@ -726,8 +756,10 @@ export = jQuery;
         "declaration": true,
     }
 }
+```
 上例中我们添加了 outDir 选项，将 ts 文件的编译结果输出到 lib 目录下，然后添加了 declaration 选项，设置为 true，表示将会由 ts 文件自动生成 .d.ts 声明文件，也会输出到 lib 目录下。
 运行 tsc 之后，目录结构如下30：
+```
 /path/to/project
 ├── lib
 |  ├── bar
@@ -741,7 +773,9 @@ export = jQuery;
 |  └── index.ts
 ├── package.json
 └── tsconfig.json
+```
 在这个例子中，src 目录下有两个 ts 文件，分别是 src/index.ts 和 src/bar/index.ts，它们被编译到 lib 目录下的同时，也会生成对应的两个声明文件 lib/index.d.ts 和 lib/bar/index.d.ts。它们的内容分别是：
+```ts
 // src/index.ts
 
 export * from './bar';
@@ -761,6 +795,7 @@ export default function foo(): string;
 // lib/bar/index.d.ts
 
 export declare function bar(): string;
+```
 可见，自动生成的声明文件基本保持了源码的结构，而将具体实现去掉了，生成了对应的类型声明。
 使用 tsc 自动生成声明文件时，每个 ts 文件都会对应一个 .d.ts 声明文件。这样的好处是，使用方不仅可以在使用 import foo from 'foo' 导入默认的模块时获得类型提示，还可以在使用 import bar from 'foo/lib/bar' 导入一个子模块时，也获得对应的类型提示。
 除了 declaration 选项之外，还有几个选项也与自动生成声明文件有关，这里只简单列举出来，不做详细演示了：
@@ -781,22 +816,26 @@ emitDeclarationOnly 仅生成 .d.ts 文件，不生成 .js 文件
 在项目根目录下，编写一个 index.d.ts 文件
 针对入口文件（package.json 中的 main 字段指定的入口文件），编写一个同名不同后缀的 .d.ts 文件
 第一种方式是给 package.json 中的 types 或 typings 字段指定一个类型声明文件地址。比如：
+```
 {
     "name": "foo",
     "version": "1.0.0",
     "main": "lib/index.js",
     "types": "foo.d.ts",
 }
+```
 指定了 types 为 foo.d.ts 之后，导入此库的时候，就会去找 foo.d.ts 作为此库的类型声明文件了。
 typings 与 types 一样，只是另一种写法。
 如果没有指定 types 或 typings，那么就会在根目录下寻找 index.d.ts 文件，将它视为此库的类型声明文件。
 如果没有找到 index.d.ts 文件，那么就会寻找入口文件（package.json 中的 main 字段指定的入口文件）是否存在对应同名不同后缀的 .d.ts 文件。
 比如 package.json 是这样时：
+```
 {
     "name": "foo",
     "version": "1.0.0",
     "main": "lib/index.js"
 }
+```
 就会先识别 package.json 中是否存在 types 或 typings 字段。发现不存在，那么就会寻找是否存在 index.d.ts 文件。如果还是不存在，那么就会寻找是否存在 lib/index.d.ts 文件。假如说连 lib/index.d.ts 都不存在的话，就会被认为是一个没有提供类型声明文件的库了。
 有的库为了支持导入子模块，比如 import bar from 'foo/lib/bar'，就需要额外再编写一个类型声明文件 lib/bar.d.ts 或者 lib/bar/index.d.ts，这与自动生成声明文件类似，一个库中同时包含了多个类型声明文件。
 将声明文件发布到 @types 下

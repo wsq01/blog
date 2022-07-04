@@ -112,6 +112,7 @@ Next-Key Lock 是行锁与间隙锁的组合，这样，当 InnoDB 扫描索引�
 分别在 A 窗口和 B 窗口中查看事务隔离级别，A 窗口和 B 窗口的事务隔离级别需要保持一致。
 
 A 窗口查看隔离级别的 SQL 语句和运行结果如下所示：
+```
 mysql> SHOW VARIABLES LIKE 'tx_isolation' \G
 *************************** 1. row ***************************
 Variable_name: tx_isolation
@@ -123,19 +124,24 @@ mysql> SHOW VARIABLES LIKE 'tx_isolation' \G
 Variable_name: tx_isolation
         Value: REPEATABLE-READ
 1 row in set, 1 warning (0.03 sec)
+```
 结果显示，A窗口和 B窗口的事务隔离级别都为 REPEATABLE-READ。
 
 在 A窗口中开启一个事务，并修改 tb_student 表，SQL 语句和运行结果如下：
+```
 mysql> BEGIN;
 Query OK, 0 rows affected (0.00 sec)
 
 mysql> UPDATE test.tb_student SET age ='30' WHERE id = 1;
 Query OK, 1 row affected (0.02 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
+```
 在 B窗口中也开启一个事务，并修改 tb_student 表，SQL 语句和运行结果如下：
+```
 mysql> BEGIN;
 Query OK, 0 rows affected (0.00 sec)
 mysql> UPDATE test.tb_student SET age ='30' WHERE id = 1;
+```
 会发现 UPDATE 语句一直在执行。这时我们在 A 窗口中提交事务。
 mysql> COMMIT;
 Query OK, 0 rows affected (0.01 sec)
@@ -189,6 +195,7 @@ Record lock, heap no 2 PHYSICAL RECORD: n_fields 7; compact format; info bits 0
 “MySQL thread id 14, OS thread handle 4568, query id 886 localhost ::1 root updating”表示第 2 个事务连接的 ID 为 14，当前状态为正在更新，同时正在更新的记录需要等待其它事务将锁释放。当超过事务等待锁允许的最大时间，此时会提示“ERROR 1205(HY000):Lock wait timeout exceeded; try restarting transaction" 及当前事务执行失败，则自动执行回滚操作。
 
 MySQL 数据库采用 InnoDB 模式，默认参数 innodb_lock_wait_timeout 设置锁等待的时间是 50s，一旦数据库锁超过这个时间就会报错。可通过以下命令查看当前数据库锁等待的时间。
+```
 mysql> SHOW GLOBAL VARIABLES LIKE 'innodb_lock_wait_timeout';
 +--------------------------+-------+
 | Variable_name            | Value |
@@ -196,9 +203,11 @@ mysql> SHOW GLOBAL VARIABLES LIKE 'innodb_lock_wait_timeout';
 | innodb_lock_wait_timeout | 120   |
 +--------------------------+-------+
 1 row in set, 1 warning (0.02 sec)
+```
 下面演示了 InnoDB 间隙锁的实现机制。
 例 2
 下面在保证 A 窗口和 B 窗口的前提下，将 tb_student 表中的 id 字段设为外键，并开启一个事务，修改 tb_student 表中 id 为 1 的 age。SQL 语句和运行结果如下：
+```
 mysql> ALTER TABLE test.tb_student ADD unique key idx_id(id);
 Query OK, 0 rows affected (0.17 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -209,17 +218,23 @@ Query OK, 0 rows affected (0.00 sec)
 mysql> UPDATE test.tb_student SET age ='31' WHERE id = 1;
 Query OK, 0 rows affected (0.01 sec)
 Rows matched: 1  Changed: 0  Warnings: 0
+```
 在 B 窗口中开启一个事务，修改 tb_student 表中 id 为 2 的 age，SQL 语句和运行结果如下：
+```
 mysql> BEGIN;
 Query OK, 0 rows affected (0.00 sec)
 
 mysql>  UPDATE test.tb_student SET age ='28'WHERE id=2;
 Query OK, 1 row affected (0.01 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
+```
 这时分别提交 A窗口和 B窗口的事务。
+```
 mysql> COMMIT;
 Query OK, 0 rows affected (0.01 sec)
+```
 查询 tb_student 表的数据，SQL 语句和运行结果如下：
+```
 mysql> SELECT * FROM test.tb_student;
 +----+------+------+------+------+
 | id | name | age  | sex  | num  |
@@ -232,6 +247,7 @@ mysql> SELECT * FROM test.tb_student;
 |  6 | 赵六 |   12 | 女   |    4 |
 +----+------+------+------+------+
 6 rows in set (0.00 sec)
+```
 在上述示例中，由于 InnoDB 行级锁为间隙锁，只锁定需要的记录，因此 B窗口中的事务可以更新其它记录，两个事务之间互不影响。
 # 锁等待和死锁
 使用数据库时，有时会出现死锁。对于实际应用来说，就是出现系统卡顿。
@@ -240,6 +256,7 @@ mysql> SELECT * FROM test.tb_student;
 死锁发生以后，只有部分或完全回滚其中一个事务，才能打破死锁。多数情况下只需要重新执行因死锁回滚的事务即可。下面我们通过一个实例来了解死锁是如何产生的。
 例 1
 为了方便读者阅读，操作之前我们先查询 tb_student 表的数据和表结构。
+```
 mysql> SELECT * FROM tb_student;
 +----+------+------+------+------+
 | id | name | age  | sex  | num  |
@@ -264,24 +281,32 @@ mysql> DESC tb_student;
 | num   | int(11)     | YES  |     | NULL    |                |
 +-------+-------------+------+-----+---------+----------------+
 5 rows in set (0.00 sec)
+```
 以下操作需要打开两个会话窗口，即下面所提到的 A窗口和 B窗口。
 
 在 A窗口中执行以下命令：
+```
 mysql> BEGIN;
 mysql> UPDATE tb_student SET num=5 WHERE age=13;
 Query OK, 2 rows affected (0.04 sec)
 Rows matched: 2  Changed: 2  Warnings: 0
+```
 紧接着在 B窗口中执行以下命令。由于 age 是索引字段，与 A窗口中更新的是不同行的数据，所以这时不会出现锁等待现象。
+```
 mysql> BEGIN;
 mysql> UPDATE tb_student SET num=8 WHERE age=15;
 Query OK, 1 row affected (0.01 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
+```
 然后在 A窗口中，执行以下命令，这时就会出现锁等待现象了。
+```
 mysql> UPDATE tb_student SET num=10 WHERE age=15;
+```
 最后在 B窗口中，执行以下命令，这时会出现相互等待资源的现象，也就是死锁现象。
 mysql> UPDATE tb_student SET num=12 WHERE age=13;
 ERROR 1213 (40001): Deadlock found when trying to get lock; try restarting transaction
 我们可以通过 SHOW ENGINE INNODB STATUS 命令查看死锁的信息，运行结果如下（这里只展示了部分信息）：
+```
 LATEST DETECTED DEADLOCK
 ------------------------
 2020-08-24 16:22:23 0x3944
@@ -297,6 +322,7 @@ Record lock, heap no 5 PHYSICAL RECORD: n_fields 2; compact format; info bits 0
 0: len 4; hex 8000000f; asc     ;;
 1: len 4; hex 80000005; asc     ;;
 ......
+```
 通过以上日志，我们就能确定造成死锁的事务和 SQL 语句。
 死锁检测
 InnoDB 的并发写操作会触发死锁，同时 InnoDB 也提供了死锁检测机制。通过设置 innodb_deadlock_detect 参数的值来控制是否打开死锁检测。
@@ -306,6 +332,7 @@ innodb_deadlock_detect = OFF：关闭死锁检测。发生死锁时，系统会�
 锁等待是指在事务过程中产生的锁，其它事务需要等待上一个事务释放锁，才能占用该资源。如果该事务一直不释放，就需要持续等待下去，直到超过了锁等待时间。当超过锁等待允许的最大时间，就会出现死锁，然后当前事务执行失败，自动执行回滚操作。
 
 MySQL 通过 innodb_lock_wait_timeout 参数控制锁等待的时间，单位是秒。
+```
 mysql> SHOW VARIABLES LIKE '%innodb_lock_wait%';
 +--------------------------+-------+
 | Variable_name            | Value |
@@ -313,6 +340,7 @@ mysql> SHOW VARIABLES LIKE '%innodb_lock_wait%';
 | innodb_lock_wait_timeout | 120   |
 +--------------------------+-------+
 1 row in set, 1 warning (0.02 sec)
+```
 在实际应用中，我们要尽量防止锁等待现象的发生，下面介绍几种避免死锁的方法：
 如果不同程序会并发存取多个表，或者涉及多行记录时，尽量约定以相同的顺序访问表，这样可以大大降低死锁的发生。
 业务中要及时提交或者回滚事务，可减少死锁产生的概率。
@@ -324,6 +352,7 @@ mysql> SHOW VARIABLES LIKE '%innodb_lock_wait%';
 下面通过实例来逐一了解一下这三张表。
 例 1
 在 A窗口中，开启一个事务，在查询 tb_student 表字段 age<15 的语句上加一个写锁，SQL 命令如下：
+```
 mysql> BEGIN;
 Query OK, 0 rows affected (0.00 sec)
 
@@ -336,15 +365,19 @@ mysql> SELECT * FROM test.tb_student WHERE age<15 FOE UPDATE;
 |  6 | 赵六 |   12 | 女   |    4 |
 +----+------+------+------+------+
 3 rows in set (0.02 sec)
+```
 在 B窗口中开启一个事务，在 tb_student 表中插入 age=14 的记录，出现锁等待超时。
+```
 mysql> BEGIN;
 Query OK, 0 rows affected (0.00 sec)
 
 mysql> INSERT INTO tb_student(name,age) VALUES ('dd',14);
 ERROR 1205 (HY000): Lock wait timeout exceeded; try restarting transaction
+```
 我们通过开始提到的三张表来分析出现的锁等待问题。
 
 查询 innodb_trx 表，SQL 语句和运行结果如下：
+```
 mysql> SELECT * FROM information_schema.innodb_trx \G
 *************************** 1. row ***************************
                     trx_id: 22694
@@ -397,6 +430,7 @@ trx_adaptive_hash_timeout: 0
           trx_is_read_only: 0
 trx_autocommit_non_locking: 0
 2 rows in set (0.01 sec)
+```
 以上各列含义说明如下：
 列名	描述
 trx_id	唯一的事务 id 号。本例为 22694 和 22693
@@ -406,6 +440,7 @@ trx_mysql_thread_id	线程 id，与  SHOW FULL PROCESSLIST 相对应。本例为
 trx_query	事务运行的 SQL 语句，本例为 INSERT INTO tb_student(name,age) VALUES ('dd',14)。
 trx_operation_state	事务运行的状态。本例为 inserting。
 使用 SHOW FULL PROCESSLIST 语句查看当前线程处理情况，通常用来处理突发事件，返回的结果是实时变化的。
+```
 mysql> SHOW FULL PROCESSLIST;
 +----+------+-----------------+------+---------+------+----------+---------------------------------------------------+
 | id | User | Host            | db   | Command | Time | State    | Info                                              |
@@ -416,6 +451,7 @@ mysql> SHOW FULL PROCESSLIST;
 | 46 | root | localhost:64934 | test | Query   |    8 | update   | INSERT INTO tb_student(name,age) VALUES ('dd',14) |
 +----+------+-----------------+------+---------+------+----------+---------------------------------------------------+
 4 rows in set (0.00 sec)
+```
 以上各列含义说明如下：
 列名	描述
 id	一个标识，kill 有问题的线程时使用
@@ -429,6 +465,7 @@ info	显示这个 SQL 语句，因为长度有限，所以长的 SQL 语句就�
 下面通过 innodb_lock_waits 和 innodb_locks 两张表来判断持有锁和锁等待的对象。本例中 22696 是锁等待的对象，22695 是持有锁的对象。
 
 innodb_lock_waits 表包含每个被阻止 InnoDB 事务的一个或多个行，指示它已请求的锁以及阻止该请求的任何锁。
+```
 mysql> SELECT * FROM information_schema.innodb_lock_waits \G
 *************************** 1. row ***************************
 requesting_trx_id: 22696
@@ -436,6 +473,7 @@ requested_lock_id: 22696:197:3:1
   blocking_trx_id: 22695
 blocking_lock_id: 22695:197:3:1
 1 row in set, 1 warning (0.00 sec)
+```
 以上各列含义说明如下：
 列名	描述
 requesting_trx_id	请求（阻止）事务的 id
@@ -443,6 +481,7 @@ requested_lock_id	事务正在等待的锁的id
 blocking_trx_id	阻止事务的 id
 blocking_lock_id	阻止另一个事务继续进行的事务所持有的锁的 id
 innodb_locks 表提供有关 InnoDB 事务已请求但尚未获取的每个锁的信息，以及事务持有的阻止另一个事务的锁。
+```
 mysql> SELECT * FROM information_schema.innodb_locks \G
 *************************** 1. row ***************************
     lock_id: 22696:197:3:1
@@ -467,6 +506,7 @@ lock_space: 197
    lock_pec: 1
   lock_data: supremum pseudo-record
 2 rows in set, 1 warning (0.00 sec)
+```
 以上各列含义说明如下：
 列名	描述
 lock_id	一个唯一的锁 id 号，内部为 InnoDB

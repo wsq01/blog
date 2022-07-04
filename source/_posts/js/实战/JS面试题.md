@@ -247,3 +247,208 @@ console.log(b.x)
 1、第3行，`.`运算符优先级比`=`高，所以这里首先执行`a.x`，相当于为`a`（或者`b`）所指向的`{n: 1}`对象新增了一个属性`x`，即此时对象将变为`{n: 1, x: undefined}`。
 2、`=`从右往左进行赋值，`a = {n: 2}`，此时`a`的引用已经变成了`{n: 2}`这个对象，`a = {n: 2}`这条赋值语句返回`{n: 2}`。
 3、执行`a.x = {n：2}`，此时因为`a.x`已经绑定到了`{n: 1 , x: undefined}`这个内存地址，也就是`b.x`，于是`{ n: 1, x: undefined} => {n: 1, x: { n: 2}}`，即`b.x = { n: 2 }`。
+
+
+## Promise
+#### promise输出结果
+```js
+const promise = new Promise((resolve, reject) => {
+    console.log(1)
+    resolve()
+    console.log(2)
+})
+promise.then(() => {
+    console.log(3)
+})
+console.log(4)
+
+// => 1
+// => 2
+// => 4
+// => 3
+```
+#### 输出结果
+```js
+const first = () => (new Promise((resolve, reject) => {
+  console.log(3);
+  let p = new Promise((resolve, reject) => {
+    console.log(7);
+    setTimeout(() => {
+        console.log(5);
+        resolve(6);
+    }, 0)
+    resolve(1);
+  });
+  resolve(2);
+  p.then((arg) => {
+    console.log(arg);
+  });
+
+}));
+
+first().then((arg) => {
+  console.log(arg);
+});
+console.log(4);
+
+// => 3
+// => 7
+// => 4
+// => 1
+// => 2
+// => 5
+```
+#### 输出结果
+```js
+const promise = new Promise((resolve, reject) => {
+  setTimeout(() => {
+    console.log('once')
+    resolve('success')
+  }, 1000)
+})
+
+const start = Date.now()
+promise.then((res) => {
+  console.log(res, Date.now() - start)
+})
+promise.then((res) => {
+  console.log(res, Date.now() - start)
+})
+/*
+once
+success 1005
+success 1007
+*/
+```
+#### 输出结果
+```js
+
+process.nextTick(() => {
+  console.log('nextTick')
+})
+Promise.resolve()
+  .then(() => {
+    console.log('then')
+  })
+setImmediate(() => {
+  console.log('setImmediate')
+})
+console.log('end')
+
+/*
+
+end
+nextTick
+then
+setImmediate
+*/
+```
+#### 封装一个异步加载图片的方法
+```js
+
+function loadImageAsync(url) {
+  return new Promise(function(resolve,reject) {
+    var image = new Image();
+    image.onload = function() {
+      resolve(image) 
+    };
+    image.onerror = function() {
+      reject(new Error('Could not load image at' + url));
+    };
+    image.src = url;
+  });
+}
+```
+#### 红灯3秒亮一次，绿灯1秒亮一次，黄灯2秒亮一次；如何使用Promise让三个灯不断交替重复亮灯？
+题目要求红灯亮过后，绿灯才能亮，绿灯亮过后，黄灯才能亮，黄灯亮过后，红灯才能亮……所以怎么通过Promise实现？
+
+换句话说，就是红灯亮起时，承诺2s秒后亮绿灯，绿灯亮起时承诺1s后亮黄灯，黄灯亮起时，承诺3s后亮红灯……这显然是一个Promise链式调用，看到这里你心里或许就有思路了，我们需要将我们的每一个亮灯动作写在`then()`方法中，同时返回一个新的`Promise`，并将其状态由`pending`设置为`fulfilled`，允许下一盏灯亮起。
+```js
+
+function red() {
+  console.log('red');
+}
+
+function green() {
+  console.log('green');
+}
+
+function yellow() {
+  console.log('yellow');
+}
+
+
+let myLight = (timer, cb) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      cb();
+      resolve();
+    }, timer);
+  });
+};
+
+
+let myStep = () => {
+  Promise.resolve().then(() => {
+    return myLight(3000, red);
+  }).then(() => {
+    return myLight(2000, green);
+  }).then(()=>{
+    return myLight(1000, yellow);
+  }).then(()=>{
+    myStep();
+  })
+};
+myStep();
+
+// output:
+// => red
+// => green
+// => yellow
+// => red
+// => green
+// => yellow
+// => red
+```
+#### 输出结果
+```js
+
+Promise.resolve()
+  .then(function success (res) {
+    throw new Error('error')
+  }, function fail1 (e) {
+    console.error('fail1: ', e)
+  })
+  .catch(function fail2 (e) {
+    console.error('fail2: ', e)
+  })
+```
+`.then`可以接收两个参数，第一个是处理成功的函数，第二个是处理错误的函数。
+
+`.catch`是`.then`第二个参数的简便写法，但是它们用法上有一点需要注意：`.then`的第二个处理错误的函数捕获不了第一个处理成功的函数抛出的错误，而后续的`.catch`可以捕获之前的错误。
+```
+运行结果：
+fail2:  Error: error
+    at success (<anonymous>)
+```
+#### 输出结果
+```js
+
+Promise.resolve()
+  .then(() => {
+    return new Error('error!!!')
+  })
+  .then((res) => {
+    console.log('then: ', res)
+  })
+  .catch((err) => {
+    console.log('catch: ', err)
+  })
+```
+`.then`或者`.catch`中`return`一个`error`对象并不会抛出错误，所以不会被后续的`.catch`捕获，因为返回任意一个非`promise`的值都会被包裹成`promise`对象，即`return new Error('error!!!')`等价于`return Promise.resolve(new Error('error!!!'))`。
+```
+运行结果：
+
+then:  Error: error!!!
+    at <anonymous>
+```

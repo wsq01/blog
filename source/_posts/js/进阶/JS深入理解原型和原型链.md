@@ -32,7 +32,48 @@ var student = new Person();
 console.log(student.__proto__ === Person.prototype); // true
 ```
 从上面我们可以看出，这个连接是存在于实例与构造函数的原型对象之间的，而不是存在于实例和构造函数之间的。
+
 {% asset_img img3.png %}
+
+#### prototype和__proto__的区别
+
+{% asset_img 8.png %}
+
+```js
+var a = {};
+console.log(a.prototype);  //undefined
+console.log(a.__proto__);  //Object {}
+
+var b = function(){}
+console.log(b.prototype);  //b {}
+console.log(b.__proto__);  //function() {}
+```
+#### __proto__属性指向谁
+`__proto__`的指向取决于对象创建时的实现方式。
+
+{% asset_img 9.png %}
+
+```js
+/*1、字面量方式*/
+var a = {};
+console.log(a.__proto__);  //Object {}
+
+console.log(a.__proto__ === a.constructor.prototype); //true
+
+/*2、构造器方式*/
+var A = function(){};
+var a = new A();
+console.log(a.__proto__); //A {}
+
+console.log(a.__proto__ === a.constructor.prototype); //true
+
+/*3、Object.create()方式*/
+var a1 = {a:1}
+var a2 = Object.create(a1);
+console.log(a2.__proto__); //Object {a: 1}
+
+console.log(a2.__proto__ === a1.constructor.prototype); //false
+```
 ## 原型属性
 #### 属性访问
 每当代码读取对象的某个属性时，首先会在对象本身搜索这个属性，如果找到该属性就返回该属性的值，如果没有找到，则继续搜索该对象对应的原型对象，以此类推下去。
@@ -111,6 +152,20 @@ b1.speak();
 b2.speak();
 ```
 我们先看一下不包含函数原型的以上实例所包含的原型链的关系图：
+
 {% asset_img img6.png %}
+
 下面是加入了函数原型后的原型链的关系图。
+
 {% asset_img img7.png %}
+
+## 示例
+```js
+var A = function(){};
+var a = new A();
+console.log(a.__proto__); //A {}（即构造器function A 的原型对象）
+console.log(a.__proto__.__proto__); //Object {}（即构造器function Object 的原型对象）
+console.log(a.__proto__.__proto__.__proto__); //null
+```
+
+{% asset_img 10.png %}
