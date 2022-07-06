@@ -442,32 +442,31 @@ mysql> SHOW GRANTS FOR 'testUser'@'localhost';
 # REVOKE：删除用户权限
 在 MySQL 中，可以使用`REVOKE`语句删除某个用户的某些权限（此用户不会被删除），在一定程度上可以保证系统的安全性。
 
-使用`REVOKE`语句删除权限的语法格式有两种形式，如下所示：
-1）第一种
+使用`REVOKE`语句删除权限的语法格式有两种形式：
+## 第一种
 删除用户某些特定的权限，语法格式如下：
-```
+```sql
 REVOKE priv_type [(column_list)]...
 ON database.table
 FROM user [, user]...
 ```
-REVOKE 语句中的参数与 GRANT 语句的参数意思相同。其中：
-priv_type 参数表示权限的类型；
-column_list 参数表示权限作用于哪些列上，没有该参数时作用于整个表上；
-user 参数由用户名和主机名构成，格式为“username'@'hostname'”。
-2）第二种
-删除特定用户的所有权限，语法格式如下：
+`REVOKE`语句中的参数与`GRANT`语句的参数意思相同。其中：
+* `priv_type`参数表示权限的类型；
+* `column_list`参数表示权限作用于哪些列上，没有该参数时作用于整个表上；
+* `user`参数由用户名和主机名构成，格式为`username'@'hostname'`。
+
+## 第二种
+删除特定用户的所有权限：
 ```sql
 REVOKE ALL PRIVILEGES, GRANT OPTION FROM user [, user] ...
 ```
-
 删除用户权限需要注意以下几点：
-REVOKE 语法和 GRANT 语句的语法格式相似，但具有相反的效果。
-要使用 REVOKE 语句，必须拥有 MySQL 数据库的全局 CREATE USER 权限或 UPDATE 权限。
-例 1
-使用 REVOKE 语句取消用户 testUser 的插入权限，SQL 语句和执行过程如下。
+* `REVOKE`语法和`GRANT`语句的语法格式相似，但具有相反的效果。
+* 要使用`REVOKE`语句，必须拥有 MySQL 数据库的全局`CREATE USER`权限或`UPDATE`权限。
+
+使用`REVOKE`语句取消用户`testUser`的插入权限。
 ```sql
-mysql> REVOKE INSERT ON *.*
-    -> FROM 'testUser'@'localhost';
+mysql> REVOKE INSERT ON *.* FROM 'testUser'@'localhost';
 Query OK, 0 rows affected (0.01 sec)
 
 mysql> SHOW GRANTS FOR 'testUser'@'localhost';
@@ -478,21 +477,21 @@ mysql> SHOW GRANTS FOR 'testUser'@'localhost';
 +-----------------------------------------------------------------+
 1 row in set (0.00 sec)
 ```
-结果显示，删除 testUser 用户的 INSERT 权限成功。
 # 登录和退出服务器
 启动 MySQL 服务后，可以使用以下命令来登录。
-```sql
+```
 mysql -h hostname|hostlP -p port -u username -p DatabaseName -e "SQL语句"
 ```
-对上述参数说明如下：
--h：指定连接 MySQL 服务器的地址。可以用两种方式表示，hostname 为主机名，hostIP 为主机 IP 地址。
--p：指定连接 MySQL 服务器的端口号，port 为连接的端口号。MySQL 的默认端口号是 3306，因此如果不指定该参数，默认使用 3306 连接 MySQL 服务器。
--u：指定连接 MySQL 服务器的用户名，username 为用户名。
--p：提示输入密码，即提示 Enter password。
-DatabaseName：指定连接到 MySQL 服务器后，登录到哪一个数据库中。如果没有指定，默认为 mysql 数据库。
--e：指定需要执行的 SQL 语句，登录 MySQL 服务器后执行这个 SQL 语句，然后退出 MySQL 服务器。
-例 1
+参数说明：
+* `-h`：指定连接 MySQL 服务器的地址。可以用两种方式表示，`hostname`为主机名，`hostIP`为主机 IP 地址。
+* `-p`：指定连接 MySQL 服务器的端口号，`port`为连接的端口号。MySQL 的默认端口号是 3306，因此如果不指定该参数，默认使用 3306 连接 MySQL 服务器。
+* `-u`：指定连接 MySQL 服务器的用户名，`username`为用户名。
+* `-p`：提示输入密码，即提示`Enter password`。
+* `DatabaseName`：指定连接到 MySQL 服务器后，登录到哪一个数据库中。如果没有指定，默认为 mysql 数据库。
+* `-e`：指定需要执行的 SQL 语句，登录 MySQL 服务器后执行这个 SQL 语句，然后退出 MySQL 服务器。
+
 下面使用 root 用户登录到 test 数据库中，命令和运行过程如下：
+```
 C:\Users\11645>mysql -h localhost -u root -p test
 Enter password: ****
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -506,11 +505,13 @@ affiliates. Other names may be trademarks of their respective
 owners.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+```
 上述命令中，通过值 localhost 指定 MySQL 服务器的地址，参数 -u 指定了登录 MySQL 服务器的用户账户，参数 -p 表示会出现输入密码提示信息，最后值“test”指定了登录成功后要使用的数据库。
 
 由结果可以看到，输入命令后，会出现“Enter password”提示信息，在这条信息之后输入密码，然后按 Enter 键。密码正确后，就成功登录到 MySQL 服务器了。
-例 2
+
 下面使用 root 用户登录到自己计算机的 mysql 数据库，同时查询 student 表的表结构，命令和运行过程如下：
+```
 C:\Users\11645>mysql -h localhost -u root -p test -e"DESC student"
 Enter password: ****
 +-------+-------------+------+-----+---------+-------+
@@ -521,11 +522,13 @@ Enter password: ****
 | age   | int(4)      | YES  |     | NULL    |       |
 | stuno | int(11)     | YES  |     | NULL    |       |
 +-------+-------------+------+-----+---------+-------+
+```
 结果显示，执行命令并输入正确密码后，窗口中就会显示出 student 表的基本结构。
 
 用户也可以直接在 mysql 命令的 -p 后加上登录密码，登录密码与 -p 之间没有空格。
-例 3
+
 下面使用 root 用户登录到自己计算机的 MySQL 服务器中，密码直接加在 mysql 命令中。命令如下：
+```
 C:\Users\11645>mysql -h localhost -u root -proot
 mysql: [Warning] Using a password on the command line interface can be insecure.
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -539,34 +542,43 @@ affiliates. Other names may be trademarks of their respective
 owners.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+```
 上述命令执行后，后面不会提示输入密码。因为 -p 后面有密码，MySQL 会直接使用这个密码。
 
 退出 MySQL 服务器的方式很简单，只要在命令行输入 EXIT 或 QUIT 即可。“\q”是 QUIT 的缩写，也可以用来退出 MySQL 服务器。退出后就会显示 Bye。如下所示：
+```
 mysql> QUIT;
 Bye
+```
 # root修改普通用户密码
-在 MySQL 中，root 用户拥有很高的权限，不仅可以修改自己的密码，还可以修改其他用户的密码。本节主要介绍 root 用户修改普通用户密码的几种方法。
-使用SET语句修改普通用户的密码
-在 MySQL 中，只有 root 用户可以通过更新 MySQL 数据库来更改密码。使用 root 用户登录到 MySQL 服务器后，可以使用 SET 语句来修改普通用户密码。语法格式如下：
+在 MySQL 中，`root`用户拥有很高的权限，不仅可以修改自己的密码，还可以修改其他用户的密码。
+## 使用SET语句修改普通用户的密码
+在 MySQL 中，只有`root`用户可以通过更新 MySQL 数据库来更改密码。使用`root`用户登录到 MySQL 服务器后，可以使用`SET`语句来修改普通用户密码。
+```sql
 SET PASSWORD FOR 'username'@'hostname' = PASSWORD ('newpwd');
+```
+其中，`username`参数是普通用户的用户名，`hostname`参数是普通用户的主机名，`newpwd`是要更改的新密码。
 
-其中，username 参数是普通用户的用户名，hostname 参数是普通用户的主机名，newpwd 是要更改的新密码。
+> 注意：新密码必须使用`PASSWORD()`函数来加密，如果不使用`PASSWORD()`加密，也会执行成功，但是用户会无法登录。
 
-注意：新密码必须使用 PASSWORD() 函数来加密，如果不使用 PASSWORD() 加密，也会执行成功，但是用户会无法登录。
-
-如果是普通用户修改密码，可省略 FOR 子句来更改自己的密码。语法格式如下：
+如果是普通用户修改密码，可省略`FOR`子句来更改自己的密码。
+```sql
 SET PASSWORD = PASSWORD('newpwd');
-
-示例 1
-首先创建一个没有密码的 testuser 用户，SQL 语句和运行结果如下：
+```
+首先创建一个没有密码的 testuser 用户：
+```sql
 mysql> CREATE USER 'testuser'@'localhost';
 Query OK, 0 rows affected (0.14 sec)
-root 用户登录 MySQL 服务器后，再使用 SET 语句将 testuser 用户的密码修改为“newpwd”，SQL 语句和运行结果如下：
+```
+`root`用户登录 MySQL 服务器后，再使用`SET`语句将`testuser`用户的密码修改为`newpwd`：
+```sql
 mysql> SET PASSWORD FOR 'testuser'@'localhost' = PASSWORD("newpwd");
 Query OK, 0 rows affected, 1 warning (0.01 sec)
+```
 由运行结果可以看出，SET 语句执行成功，testuser 用户的密码被成功设置为“newpwd”。
 
 下面验证 testuser 用户密码是否修改成功。退出 MySQL 服务器，使用 testuser 用户登录，输入密码“newpwd”，SQL 语句和运行结果如下：
+```
 C:\Users\leovo>mysql -utestuser -p
 Enter password: ******
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -580,63 +592,75 @@ affiliates. Other names may be trademarks of their respective
 owners.
  
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+```
 由运行结果可以看出，testuser 用户登录成功，修改密码成功。
-示例 2
+
 使用 testuser 用户登录 MySQL 服务器，再使用 SET 语句将密码更改为“newpwd1”，SQL 语句和运行结果如下所示：
+```
 mysql> SET PASSWORD = PASSWORD('newpwd1');
 Query OK, 0 rows affected, 1 warning (0.00 sec)
-
+```
 由运行结果可以看出，修改密码成功。
-使用UPDATE语句修改普通用户的密码
+## 使用UPDATE语句修改普通用户的密码
 使用 root 用户登录 MySQL 服务器后，可以使用 UPDATE 语句修改 MySQL 数据库的 user 表的 authentication_string 字段，从而修改普通用户的密码。UPDATA 语句的语法如下：
+```sql
 UPDATE MySQL.user SET authentication_string = PASSWORD("newpwd") WHERE User = "username" AND Host = "hostname";
-
+```
 其中，username 参数是普通用户的用户名，hostname 参数是普通用户的主机名，newpwd 是要更改的新密码。
 
-注意，执行 UPDATE 语句后，需要执行 FLUSH PRIVILEGES 语句重新加载用户权限。
-示例 3
+> 注意，执行`UPDATE`语句后，需要执行`FLUSH PRIVILEGES`语句重新加载用户权限。
+
 使用 root 用户登录 MySQL 服务器，再使用 UPDATE 语句将 testuser 用户的密码修改为“newpwd2”的 SQL 语句和运行结果如下：
+```
 mysql> UPDATE MySQL.user SET authentication_string = PASSWORD ("newpwd2")
     -> WHERE User = "testuser" AND Host = "localhost";
 Query OK, 1 row affected, 1 warning (0.07 sec)
 Rows matched: 1  Changed: 1  Warnings: 1
 mysql> FLUSH PRIVILEGES;
 Query OK, 0 rows affected (0.03 sec)
+```
 由运行结果可以看出，密码修改成功。testuser 的密码被修改成了 newpwd2。使用 FLUSH PRIVILEGES 重新加载权限后，就可以使用新的密码登录 testuser 用户了。
-使用 GRANT 语句修改普通用户密码
+## 使用 GRANT 语句修改普通用户密码
 除了前面介绍的方法，还可以在全局级别使用 GRANT USAGE 语句指定某个账户的密码而不影响账户当前的权限。需要注意的是，使用 GRANT 语句修改密码，必须拥有 GRANT 权限。一般情况下最好使用该方法来指定或修改密码。语法格式如下：
+```
 GRANT USAGE ON *.* TO 'user'@’hostname’ IDENTIFIED BY 'newpwd';
-
+```
 其中，username 参数是普通用户的用户名，hostname 参数是普通用户的主机名，newpwd 是要更改的新密码。
-示例 4
+
 使用 root 用户登录 MySQL 服务器，再使用 GRANT 语句将 testuser 用户的密码修改为“newpwd3”，SQL 语句和运行结果如下：
+```
 mysql> GRANT USAGE ON *.* TO 'testuser'@'localhost' IDENTIFIED BY 'newpwd3';
 Query OK, 0 rows affected, 1 warning (0.05 sec)
+```
 由运行结果可以看出，密码修改成功。
 # 修改root密码
-在 MySQL 中，root 用户拥有很高的权限，因此必须保证 root 用户密码的安全。修改 root 用户密码的方式有很多种，本节将介绍几种常用的修改 root 用户密码的方法。
-使用mysqladmin命令在命令行指定新密码
+在 MySQL 中，`root`用户拥有很高的权限，因此必须保证`root`用户密码的安全。修改`root`用户密码的方式有很多种。
+## 使用mysqladmin命令在命令行指定新密码
 root 用户可以使用 mysqladmin 命令来修改密码，mysqladmin 的语法格式如下：
+```sql
 mysqladmin -u username -h hostname -p password "newpwd"
-
-语法参数说明如下：
-usermame 指需要修改密码的用户名称，在这里指定为 root 用户；
-hostname 指需要修改密码的用户主机名，该参数可以不写，默认是 localhost；
-password 为关键字，而不是指旧密码；
-newpwd 为新设置的密码，必须用双引号括起来。如果使用单引号会引发错误，可能会造成修改后的密码不是你想要的。
+```
+参数说明：
+* `usermame`指需要修改密码的用户名称，在这里指定为 root 用户；
+* `hostname`指需要修改密码的用户主机名，该参数可以不写，默认是 localhost；
+* `password`为关键字，而不是指旧密码；
+* `newpwd`为新设置的密码，必须用双引号括起来。如果使用单引号会引发错误，可能会造成修改后的密码不是你想要的。
 
 执行完上面的语句，root 用户的密码将被修改为“newpwd”。
-示例 1
+
 下面使用 mysqladmin 将 root 用户的密码修改为“rootpwd”，在 Windows 命令行窗口（cmd）中执行命令和运行结果如下：
+```
 C:\Users\leovo>mysqladmin -u root -p password "rootpwd"
 Enter password: ****
 mysqladmin: [Warning] Using a password on the command line interface can be insecure.
 Warning: Since password will be sent to server in plain text, use ssl connection to ensure password safety.
+```
 输入 mysqladmin 命令后，按回车键，然后输入 root 用户原来的密码。执行完毕后，密码修改成功，root 用户登录时将使用新的密码。
 
 运行结果中，输入密码后会提示在命令行界面上使用密码可能不安全的警告信息，因为在命令行输入密码时，MySQL 服务器就会提示这些安全警告信息。
 
 下面使用修改后的“rootpwd”密码登录 root 用户，SQL 语句和运行结果如下：
+```
 C:\Users\leovo>mysql -uroot -p
 Enter password: *******
 Welcome to the MySQL monitor.  Commands end with ; or \g.
@@ -650,92 +674,76 @@ affiliates. Other names may be trademarks of their respective
 owners.
 
 Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+```
 结果显示，root 用户登录成功，所以使用 mysqladmin 命令修改 root 用户密码成功。
-修改MySQL数据库的user表
-因为所有账户信息都保存在 user 表中，因此可以直接通过修改 user 表来改变 root 用户的密码。
+## 修改MySQL数据库的user表
+因为所有账户信息都保存在`user`表中，因此可以直接通过修改`user`表来改变`root`用户的密码。
 
-root 用户登录到 MySQL 服务器后，可以使用 UPDATE 语句修改 MySQL 数据库的 user 表的 authentication_string 字段，从而修改用户的密码。
+`root`用户登录到 MySQL 服务器后，可以使用`UPDATE`语句修改 MySQL 数据库的`user`表的`authentication_string`字段，从而修改用户的密码。
 
 使用 UPDATA 语句修改 root 用户密码的语法格式如下：
+```
 UPDATE mysql.user set authentication_string = PASSWORD ("rootpwd) WHERE User = "root" and Host="localhost";
-
+```
 新密码必须使用 PASSWORD() 函数来加密。执行UPDATE语句后，需要执行FLUSH PRIVILEGES语句重新加载用户权限。
-示例 2
+
 下面使用 UPDATE 语句将 root用户的密码修改为“rootpwd2”。
 
 使用 root 用户登录到 MySQL 服务器后，SQL 语句和运行结果如下所示：
+``` sql
 mysql> UPDATE mysql.user set authentication_string = password ("rootpwd2")
     -> WHERE User = "root" and Host = "localhost";
 Query OK, 1 row affected, 0 warning (0.00 sec)
 Rows matched: 1  Changed: 1  Warnings:0
 mysql> FLUSH PRIVILEGES;
 Query OK, 0 rows affected (0.06 sec)
+```
 结果显示，密码修改成功。而且使用了FLUSH PRIVILEGES;语句加载权限。退出后就必须使用新密码来登录了。
-使用SET语句修改root用户的密码
-SET PASSWORD 语句可以用来重新设置其他用户的登录密码或者自己使用的账户的密码。使用 SET 语句修改密码的语法结构如下：
+## 使用SET语句修改root用户的密码
+`SET PASSWORD`语句可以用来重新设置其他用户的登录密码或者自己使用的账户的密码。使用 SET 语句修改密码的语法结构如下：
+```
 SET PASSWORD = PASSWORD ("rootpwd");
-
-示例 3
+```
 下面使用 SET 语句将 root 用户的密码修改为“rootpwd3”。
 
 使用 root 用户登录到 MySQL 服务器后，SQL 语句和运行结果如下所示：
+```
 MySQL> SET PASSWORD = password ("rootpwd3");
 Query OK, 0 rows affected (0.00 sec)
+```
 结果显示，SET 语句执行成功，root 用户的密码被成功设置为“rootpwd3”。
 # 忘记root密码后如何重置
-在忘记 MySQL 密码的情况下，可以通过 --skip-grant-tables 关闭服务器的认证，然后重置 root 的密码，具体操作步骤如下。
-
-步骤 1)：关闭正在运行的 MySQL 服务。打开 cmd 进入 MySQL 的 bin 目录。
-
-步骤 2)：输入mysqld --console --skip-grant-tables --shared-memory 命令。–skip-grant-tables 会让 MySQL 服务器跳过验证步骤，允许所有用户以匿名的方式，无需做密码验证就可以直接登录 MySQL 服务器，并且拥有所有的操作权限。
-
-
-
-步骤 3)：上一个 DOS 窗口不要关闭，打开一个新的 DOS 窗口，此时仅输入 mysql 命令，不需要用户名和密码，即可连接到 MySQL。
-
-步骤 4)：输入命令 update mysql.user set authentication_string=password('root') where user='root' and Host ='localhost'; 设置新密码。
-
+在忘记 MySQL 密码的情况下，可以通过`--skip-grant-tables`关闭服务器的认证，然后重置`root`的密码，具体操作步骤如下。
+1. 关闭正在运行的 MySQL 服务。打开 cmd 进入 MySQL 的 bin 目录。
+2. 输入`mysqld --console --skip-grant-tables --shared-memory`命令。`–skip-grant-tables`会让 MySQL 服务器跳过验证步骤，允许所有用户以匿名的方式，无需做密码验证就可以直接登录 MySQL 服务器，并且拥有所有的操作权限。
+3. 上一个 DOS 窗口不要关闭，打开一个新的 DOS 窗口，此时仅输入 mysql 命令，不需要用户名和密码，即可连接到 MySQL。
+4. 输入命令 update mysql.user set authentication_string=password('root') where user='root' and Host ='localhost'; 设置新密码。
 注意：MySQL 5.7 版本中的 user 表里已经去掉了 password 字段，改为了 authentication_string。
-
-步骤 5)：刷新权限（必须步骤），输入flush privileges;命令。
-
-步骤 6)：因为之前使用 --skip-grant-tables 启动，所以需要重启 MySQL 服务器去掉 --skip-grant-tables。输入无误后输入quit;命令退出 MySQL 服务。
-
-
-
-步骤 7)：重启 MySQL 服务，使用用户名 root 和刚才设置的新密码 root 登录就可以了。
+5. 刷新权限（必须步骤），输入flush privileges;命令。
+6. 因为之前使用 --skip-grant-tables 启动，所以需要重启 MySQL 服务器去掉 --skip-grant-tables。输入无误后输入quit;命令退出 MySQL 服务。
+7. 重启 MySQL 服务，使用用户名 root 和刚才设置的新密码 root 登录就可以了。
 
 # 修改密码的3种方式
-在使用数据库时，我们也许会遇到 MySQL 需要修改密码的情况，比如密码太简单需要修改等。本节主要介绍了 3 种修改 MySQL 数据库密码的方法。
-1. 使用 SET PASSWORD 命令
-步骤 1)：输入命令mysql -u root -p指定 root 用户登录 MySQL，输入后按回车键输入密码。如果没有配置环境变量，请在 MySQL 的 bin 目录下登录操作。
-
-步骤 2)：使用 SET PASSWORD 修改密码命令格式为 set password for username @localhost = password(newpwd);
+在使用数据库时，我们也许会遇到 MySQL 需要修改密码的情况，比如密码太简单需要修改等。3 种修改 MySQL 数据库密码的方法。
+## 1. 使用 SET PASSWORD 命令
+1. 输入命令`mysql -u root -p`指定 root 用户登录 MySQL，输入后按回车键输入密码。如果没有配置环境变量，请在 MySQL 的 bin 目录下登录操作。
+2. 使用 SET PASSWORD 修改密码命令格式为 set password for username @localhost = password(newpwd);
 ，其中 username 为要修改密码的用户名，newpwd 为要修改的新密码。如图所示。
+3. 输入quit;命令退出 MySQL 重新登录，输入新密码“root”登录就可以了；
 
-
-
-步骤 3)：输入quit;命令退出 MySQL 重新登录，输入新密码“root”登录就可以了；
-2. 使用mysqladmin修改密码
+## 2. 使用mysqladmin修改密码
 使用 mysqladmin 命令修改 MySQL 的 root 用户密码格式为 mysqladmin -u用户名 -p旧密码 password 新密码。
 
 注意：下图修改密码的命令中 -uroot 和 -proot 是整体，不要写成 -u root -p root，-u 和 root 间可以加空格，但是会有警告出现，所以就不要加空格了。
 
-
-3. UPDATE直接编辑user表
-步骤 1)：输入命令mysql -u root -p指定 root 用户登录 MySQL，输入后按回车键输入密码。如果没有配置环境变量，请在 MySQL 的 bin 目录下登录操作。
-
-步骤 2)：输入use mysql;命令连接权限数据库。
-
-步骤 3)：输入命令update mysql.user set authentication_string=password('新密码') where user='用户名' and Host ='localhost';设置新密码。
-
-步骤 4)：输入 flush privileges; 命令刷新权限。
-
-步骤 5)：输入quit;命令退出 MySQL 重新登录，此时密码已经修改为刚才输入的新密码了。
+## 3. UPDATE直接编辑user表
+1. 输入命令mysql -u root -p指定 root 用户登录 MySQL，输入后按回车键输入密码。如果没有配置环境变量，请在 MySQL 的 bin 目录下登录操作。
+2. 输入use mysql;命令连接权限数据库。
+3. 输入命令update mysql.user set authentication_string=password('新密码') where user='用户名' and Host ='localhost';设置新密码。
+4. 输入 flush privileges; 命令刷新权限。
+5. 输入quit;命令退出 MySQL 重新登录，此时密码已经修改为刚才输入的新密码了。
 
 
-
-如果你忘记了 MySQL 的 root 密码，可参考《MySQL忘记root密码解决方案》一节。
 # 权限控制实现原理
 MySQL 权限表在数据库启动时载入内存，用户通过身份认证后，系统会在内存中进行相应权限的存取。当 MySQL 允许一个用户执行各种操作时，它将首先核实该用户向 MySQL 服务器发送的连接请求，然后确认用户的操作请求是否被允许。
 
@@ -757,12 +765,9 @@ MySQL 通过 IP 地址和用户名联合进行身份认证。例如 MySQL 安装
 1. 用户向 MySQL 发出操作请求。
 2. MySQL 首先检查 user 表，匹配 User、Host 字段值，查看请求的全局权限在 user 表中是否被授权。授权则允许操作执行，如果指定的权限在 user 表中没有被授权。MySQL 将检查 db 表。
 3. db 表是下一安全层级，其中的权限限定于数据库层级，在该层级的 SELECT 权限允许用户查看指定数据库的所有表中的数据。
-
 MySQL 检查 db 权限表中的权限信息，匹配 User、Host 字段值，查看请求的数据库级别的权限在 db 表中是否被授权。授权则允许操作执行，否则 MySQL 继续向下查找。
+4. MySQL 检查 tables_priv 权限表中的权限信息，匹配 User、Host 字段值，查看请求的数据表级别的权限在 tables_priv 表中是否被授权。授权则允许操作执行，否则 MySQL 继续向下查找。
+5. MySQL 检查 columns_priv 权限表中的权限信息，匹配  User、Host 字段值，查看请求的列级别的权限在 columns_priv 表中是否被授权。授权则允许操作执行，否则 MySQL 继续向下查找。
+6. 如果所有权限表都检查完毕，还是没有找到允许的权限操作，那么 MySQL 将返回错误信息，即用户请求的操作不能执行，操作失败。
 
-4）MySQL 检查 tables_priv 权限表中的权限信息，匹配 User、Host 字段值，查看请求的数据表级别的权限在 tables_priv 表中是否被授权。授权则允许操作执行，否则 MySQL 继续向下查找。
-
-5）MySQL 检查 columns_priv 权限表中的权限信息，匹配  User、Host 字段值，查看请求的列级别的权限在 columns_priv 表中是否被授权。授权则允许操作执行，否则 MySQL 继续向下查找。
-
-6）如果所有权限表都检查完毕，还是没有找到允许的权限操作，那么 MySQL 将返回错误信息，即用户请求的操作不能执行，操作失败。
 提示：上面提到 MySQL 通过向下层级的顺序检查权限表，但并不意味着所有的权限都要执行该过程。例如，一个用户登录到 MySQL 服务器之后只执行对 MySQL 的管理操作，此时只涉及管理权限，因此 MySQL 只检查 user 表。

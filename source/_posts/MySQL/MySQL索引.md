@@ -323,7 +323,7 @@ DROP INDEX <索引名> ON <表名>
 
 注意：如果删除的列是索引的组成部分，那么在删除该列时，也会将该列从索引中删除；如果组成索引的所有列都被删除，那么整个索引将被删除。
 ## 删除索引
-删除表`tb_stu_info`中的索引，输入的 SQL 语句和执行结果如下所示。
+删除表`tb_stu_info`中的索引。
 ```
 mysql> DROP INDEX height ON tb_stu_info;
 Query OK, 0 rows affected (0.27 sec)
@@ -340,7 +340,7 @@ Create Table: CREATE TABLE `tb_stu_info` (
 ) ENGINE=InnoDB DEFAULT CHARSET=gb2312
 1 row in set (0.00 sec)
 ```
-删除表`tb_stu_info2`中名称为`id`的索引，输入的 SQL 语句和执行结果如下所示。
+删除表`tb_stu_info2`中名称为`id`的索引。
 ```
 mysql> ALTER TABLE tb_stu_info2 DROP INDEX height;
 Query OK, 0 rows affected (0.13 sec)
@@ -374,7 +374,7 @@ mysql> SELECT * FROM tb_student;
 |  6 | 赵六 |   12 | 女   |
 +----+------+------+------+
 ```
-下面在查询语句中使用`LIKE`关键字，且匹配的字符串中含有“%”符号，使用`EXPLAIN`分析查询情况，SQL 语句和运行结果如下：
+下面在查询语句中使用`LIKE`关键字，且匹配的字符串中含有“%”符号，使用`EXPLAIN`分析查询情况：
 ```
 mysql>  EXPLAIN SELECT * FROM tb_student WHERE name LIKE '%四'\G
 *************************** 1. row ***************************
@@ -415,7 +415,7 @@ possible_keys: index_name
 ###  2. 查询语句中使用多列索引
 多列索引是在表的多个字段上创建一个索引，只有查询条件中使用了这些字段中的第一个字段，索引才会被使用。
 
-在`name`和`age`两个字段上创建多列索引，并验证多列索引的使用情况，SQL 语句和运行结果如下：
+在`name`和`age`两个字段上创建多列索引，并验证多列索引的使用情况：
 ```
 mysql> CREATE INDEX index_name_age ON tb_student(name,age);
 Query OK, 6 rows affected (0.11 sec)

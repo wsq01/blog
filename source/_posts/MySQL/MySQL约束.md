@@ -38,11 +38,11 @@ categories: [MySQL]
 ### 设置单字段主键
 在`CREATE TABLE`语句中，通过`PRIMARY KEY`关键字来指定主键。
 
-在定义字段的同时指定主键，语法格式如下：
-```
+在定义字段的同时指定主键：
+```sql
 <字段名> <数据类型> PRIMARY KEY [默认值]
 ```
-```
+```sql
 mysql> CREATE TABLE tb_emp3
     -> (
     -> id INT(11) PRIMARY KEY,
@@ -61,11 +61,11 @@ mysql> DESC tb_emp3;
 | salary | float       | YES  |     | NULL    |       |
 +--------+-------------+------+-----+---------+-------+
 ```
-或者是在定义完所有字段之后指定主键，语法格式如下：
-```
+或者是在定义完所有字段之后指定主键：
+```sql
 [CONSTRAINT <约束名>] PRIMARY KEY [字段名]
 ```
-```
+```sql
 mysql> CREATE TABLE tb_emp4
     -> (
     -> id INT(11),
@@ -92,12 +92,12 @@ mysql> DESC tb_emp4;
 
 实际上设计学生选课表，要限定的是一个学生只能选择同一课程一次。因此，学生编号和课程编号可以放在一起共同作为主键，这也就是联合主键了。
 
-主键由多个字段联合组成，语法格式如下：
+主键由多个字段联合组成：
 ```
 PRIMARY KEY [字段1，字段2，…,字段n]
 ```
 注意：当主键是由多个字段组成时，不能直接在字段名后面声明主键约束。
-```
+```sql
 mysql> CREATE TABLE tb_emp5
     -> (
     -> name VARCHAR(25),
@@ -118,11 +118,11 @@ mysql> DESC tb_emp5;
 ## 在修改表时添加主键约束
 主键约束不仅可以在创建表的同时创建，也可以在修改表时添加。但是需要注意的是，设置成主键约束的字段中不允许有空值。
 
-在修改数据表时添加主键约束的语法格式如下：
-```
+在修改数据表时添加主键约束：
+```sql
 ALTER TABLE <数据表名> ADD PRIMARY KEY(<字段名>);
 ```
-```
+```sql
 mysql> DESC tb_emp2;
 +--------+-------------+------+-----+---------+-------+
 | Field  | Type        | Null | Key | Default | Extra |
@@ -152,11 +152,11 @@ mysql> DESC tb_emp2;
 ## 删除主键约束
 当一个表中不需要主键约束时，就需要从表中将其删除。
 
-删除主键约束的语法格式如下所示：
-```
+删除主键约束：
+```sql
 ALTER TABLE <数据表名> DROP PRIMARY KEY;
 ```
-```
+```sql
 mysql> ALTER TABLE tb_emp2 DROP PRIMARY KEY;
 Query OK, 0 rows affected (0.94 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -165,8 +165,8 @@ Records: 0  Duplicates: 0  Warnings: 0
 # 主键自增长
 在 MySQL 中，当主键定义为自增长后，这个主键的值就不再需要用户输入数据了，而由数据库系统根据定义自动赋值。每增加一条记录，主键会自动以相同的步长进行增长。
 
-通过给字段添加`AUTO_INCREMENT`属性来实现主键自增长。语法格式如下：
-```
+通过给字段添加`AUTO_INCREMENT`属性来实现主键自增长。
+```sql
 字段名 数据类型 AUTO_INCREMENT
 ```
 * 默认情况下，`AUTO_INCREMENT`的初始值是 1，每新增一条记录，字段值自动加 1。
@@ -175,7 +175,7 @@ Records: 0  Duplicates: 0  Warnings: 0
 * `AUTO_INCREMENT`约束的字段只能是整数类型（`TINYINT、SMALLINT、INT、BIGINT`等）。
 * `AUTO_INCREMENT`约束字段的最大值受该字段的数据类型约束，如果达到上限，`AUTO_INCREMENT`就会失效。
 
-```
+```sql
 mysql> CREATE TABLE tb_student(
     -> id INT(4) PRIMARY KEY AUTO_INCREMENT,
     -> name VARCHAR(25) NOT NULL
@@ -186,7 +186,7 @@ mysql> CREATE TABLE tb_student(
 加上`AUTO_INCREMENT`约束条件后，字段中的每个值都是自动增加的。因此，这个字段不可能出现相同的值。通常情况下，`AUTO_INCREMENT`都是作为`id`字段的约束条件，并且将`id`字段作为表的主键。
 ## 指定自增字段初始值
 如果第一条记录设置了该字段的初始值，那么新增加的记录就从这个初始值开始自增。例如，如果表中插入的第一条记录的`id`值设置为 5，那么再插入记录时，`id`值就会从 5 开始往上增加。
-```
+```sql
 mysql> CREATE TABLE tb_student2 (
     -> id INT NOT NULL AUTO_INCREMENT,
     -> name VARCHAR(20) NOT NULL,
@@ -206,19 +206,18 @@ mysql> SELECT * FROM tb_student2;
 ```
 由结果可以看出，`id`值从 100 开始自动增长。
 ## 自增字段值不连续
-```
+```sql
 mysql> CREATE TABLE tb_student3(
     -> id INT PRIMARY KEY AUTO_INCREMENT,
     -> name VARCHAR(20) UNIQUE KEY,
     -> age INT DEFAULT NULL
     -> );
 ```
-向`tb_student3`表中插入数据，SQL 语句如下：
-```
+```sql
 INSERT INTO tb_student3 VALUES(1,1,1);
 ```
 此时，表`tb_student3`中已经有了`（1,1,1）`这条记录，这时再执行一条插入数据命令：
-```
+```sql
 mysql> INSERT INTO tb_student3 VALUES(null,1,1);
 ERROR 1062 (23000): Duplicate entry '1' for key 'name'
 ```
@@ -239,8 +238,8 @@ MySQL 外键约束（`FOREIGN KEY`）是表的一个特殊字段，经常与主�
 * 外键中列的数据类型必须和主表主键中对应列的数据类型相同。
 
 ## 在创建表时设置外键约束
-在`CREATE TABLE`语句中，通过`FOREIGN KEY`关键字来指定外键，具体的语法格式如下：
-```
+在`CREATE TABLE`语句中，通过`FOREIGN KEY`关键字来指定外键：
+```sql
 [CONSTRAINT <外键名>] FOREIGN KEY 字段名 [，字段名2，…]
 REFERENCES <主表名> 主键列1 [，主键列2，…]
 ```
@@ -252,7 +251,7 @@ REFERENCES <主表名> 主键列1 [，主键列2，…]
 | name | VARCHAR(22) | 部门名称 |
 | location | VARCHAR(22) | 部门位置 |
 
-```
+```sql
 mysql> CREATE TABLE tb_dept1
     -> (
     -> id INT(11) PRIMARY KEY,
@@ -260,8 +259,8 @@ mysql> CREATE TABLE tb_dept1
     -> location VARCHAR(50)
     -> );
 ```
-创建数据表`tb_emp6`，并在表`tb_emp6`上创建外键约束，让它的键`deptId`作为外键关联到表`tb_dept1`的主键`id`，SQL 语句和运行结果如下所示。
-```
+创建数据表`tb_emp6`，并在表`tb_emp6`上创建外键约束，让它的键`deptId`作为外键关联到表`tb_dept1`的主键`id`。
+```sql
 mysql> CREATE TABLE tb_emp6
     -> (
     -> id INT(11) PRIMARY KEY,
@@ -290,13 +289,13 @@ mysql> DESC tb_emp6;
 ## 在修改表时添加外键约束
 外键约束也可以在修改表时添加，但是添加外键约束的前提是：从表中外键列中的数据必须与主表中主键列中的数据一致或者是没有数据。
 
-在修改数据表时添加外键约束的语法格式如下：
-```
+在修改数据表时添加外键约束：
+```sql
 ALTER TABLE <数据表名> ADD CONSTRAINT <外键名>
 FOREIGN KEY(<列名>) REFERENCES <主表名> (<列名>);
 ```
 修改数据表`tb_emp2`，将字段`deptId`设置为外键，与数据表`tb_dept1`的主键`id`进行关联，SQL 语句和运行结果如下所示。
-```
+```sql
 mysql> ALTER TABLE tb_emp2
     -> ADD CONSTRAINT fk_tb_dept1
     -> FOREIGN KEY(deptId)
@@ -322,11 +321,11 @@ Create Table: CREATE TABLE `tb_emp2` (
 ## 删除外键约束
 当一个表中不需要外键约束时，就需要从表中将其删除。外键一旦删除，就会解除主表和从表间的关联关系。
 
-删除外键约束的语法格式如下所示：
-```
+删除外键约束：
+```sql
 ALTER TABLE <表名> DROP FOREIGN KEY <外键约束名>;
 ```
-```
+```sql
 mysql> ALTER TABLE tb_emp2 DROP FOREIGN KEY fk_tb_dept1;
 Query OK, 0 rows affected (0.19 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -352,11 +351,11 @@ MySQL 唯一约束（`Unique Key`）是指所有记录中字段的值不能重�
 ## 在创建表时设置唯一约束
 唯一约束可以在创建表时直接设置，通常设置在除了主键以外的其它列上。
 
-在定义完列之后直接使用`UNIQUE`关键字指定唯一约束，语法格式如下：
-```
+在定义完列之后直接使用`UNIQUE`关键字指定唯一约束：
+```sql
 <字段名> <数据类型> UNIQUE
 ```
-```
+```sql
 mysql> CREATE TABLE tb_dept2
     -> (
     -> id INT(11) PRIMARY KEY,
@@ -375,11 +374,11 @@ mysql> DESC tb_dept2;
 +----------+-------------+------+-----+---------+-------+
 ```
 ## 在修改表时添加唯一约束
-在修改表时添加唯一约束的语法格式为：
-```
+在修改表时添加唯一约束：
+```sql
 ALTER TABLE <数据表名> ADD CONSTRAINT <唯一约束名> UNIQUE(<列名>);
 ```
-```
+```sql
 mysql> ALTER TABLE tb_dept1 ADD CONSTRAINT unique_name UNIQUE(name);
 Query OK, 0 rows affected (0.63 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -394,11 +393,11 @@ mysql> DESC tb_dept1;
 +----------+-------------+------+-----+---------+-------+
 ```
 ## 删除唯一约束
-在 MySQL 中删除唯一约束的语法格式如下：
-```
+在 MySQL 中删除唯一约束：
+```sql
 ALTER TABLE <表名> DROP INDEX <唯一约束名>;
 ```
-```
+```sql
 mysql> ALTER TABLE tb_dept1 DROP INDEX unique_name;
 Query OK, 0 rows affected (0.20 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -416,8 +415,8 @@ mysql> DESC tb_dept1;
 # 检查约束
 MySQL 检查约束（`CHECK`）是用来检查数据表中字段值有效性的一种手段，可以通过`CREATE TABLE`或`ALTER TABLE`语句实现。设置检查约束时要根据实际情况进行设置，这样能够减少无效数据的输入。
 ## 选取设置检查约束的字段
-检查约束使用`CHECK`关键字，具体的语法格式如下：
-```
+检查约束使用`CHECK`关键字：
+```sql
 CHECK <表达式>
 ```
 其中，“表达式”指的就是 SQL 表达式，用于指定需要检查的限定条件。
@@ -431,11 +430,11 @@ CHECK <表达式>
 ## 在创建表时设置检查约束
 一般情况下，如果系统的表结构已经设计完成，那么在创建表时就可以为字段设置检查约束了。
 
-创建表时设置检查约束的语法格式如下：
-```
+创建表时设置检查约束：
+```sql
 CHECK(<检查约束>)
 ```
-```
+```sql
 mysql> CREATE TABLE tb_emp7
     -> (
     -> id INT(11) PRIMARY KEY,
@@ -450,11 +449,11 @@ Query OK, 0 rows affected (0.37 sec)
 ## 在修改表时添加检查约束
 如果一个表创建完成，可以通过修改表的方式为表添加检查约束。
 
-修改表时设置检查约束的语法格式如下：
-```
+修改表时设置检查约束：
+```sql
 ALTER TABLE tb_emp7 ADD CONSTRAINT <检查约束名> CHECK(<检查约束>)
 ```
-```
+```sql
 mysql> ALTER TABLE tb_emp7
     -> ADD CONSTRAINT check_id
     -> CHECK(id>0);
@@ -462,11 +461,11 @@ Query OK, 0 rows affected (0.19 sec)
 Records: 0  Duplicates: 0  Warnings: 0
 ```
 ## 删除检查约束
-修改表时删除检查约束的语法格式如下：
-```
+修改表时删除检查约束：
+```sql
 ALTER TABLE <数据表名> DROP CONSTRAINT <检查约束名>;
 ```
-```
+```sql
 mysql> ALTER TABLE tb_emp7 DROP CONSTRAINT check_id;
 Query OK, 0 rows affected (0.19 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -476,12 +475,12 @@ Records: 0  Duplicates: 0  Warnings: 0
 
 默认值约束通常用在已经设置了非空约束的列，这样能够防止数据表在录入数据时出现错误。
 ## 在创建表时设置默认值约束
-创建表时可以使用`DEFAULT`关键字设置默认值约束，具体的语法格式如下：
-```
+创建表时可以使用`DEFAULT`关键字设置默认值约束：
+```sql
 <字段名> <数据类型> DEFAULT <默认值>;
 ```
 其中，“默认值”为该字段设置的默认值，如果是字符类型的，要用单引号括起来。
-```
+```sql
 mysql> CREATE TABLE tb_dept3
     -> (
     -> id INT(11) PRIMARY KEY,
@@ -503,12 +502,12 @@ mysql> DESC tb_dept3;
 
 注意：在创建表时为列添加默认值，可以一次为多个列添加默认值，需要注意不同列的数据类型。
 ## 在修改表时添加默认值约束
-修改表时添加默认值约束的语法格式如下：
-```
+修改表时添加默认值约束：
+```sql
 ALTER TABLE <数据表名>
 CHANGE COLUMN <字段名> <数据类型> DEFAULT <默认值>;
 ```
-```
+```sql
 mysql> ALTER TABLE tb_dept3
     -> CHANGE COLUMN location
     -> location VARCHAR(50) DEFAULT 'Shanghai';
@@ -527,12 +526,12 @@ mysql> DESC tb_dept3;
 ## 删除默认值约束
 当一个表中的列不需要设置默认值时，就需要从表中将其删除。
 
-修改表时删除默认值约束的语法格式如下：
-```
+修改表时删除默认值约束：
+```sql
 ALTER TABLE <数据表名>
 CHANGE COLUMN <字段名> <字段名> <数据类型> DEFAULT NULL;
 ```
-```
+```sql
 mysql> ALTER TABLE tb_dept3
     -> CHANGE COLUMN location
     -> location VARCHAR(50) DEFAULT NULL;
@@ -551,11 +550,11 @@ mysql> DESC tb_dept3;
 # 非空约束
 MySQL 非空约束（`NOT NULL`）指字段的值不能为空。对于使用了非空约束的字段，如果用户在添加数据时没有指定值，数据库系统就会报错。可以通过`CREATE TABLE`或`ALTER TABLE`语句实现。在表中某个列的定义后加上关键字`NOT NULL`作为限定词，来约束该列的取值不能为空。
 ## 在创建表时设置非空约束
-创建表时可以使用`NOT NULL`关键字设置非空约束，具体的语法格式如下：
-```
+创建表时可以使用`NOT NULL`关键字设置非空约束：
+```sql
 <字段名> <数据类型> NOT NULL;
 ```
-```
+```sql
 mysql> CREATE TABLE tb_dept4
     -> (
     -> id INT(11) PRIMARY KEY,
@@ -576,13 +575,13 @@ mysql> DESC tb_dept3;
 ## 在修改表时添加非空约束
 如果在创建表时忘记了为字段设置非空约束，也可以通过修改表进行非空约束的添加。
 
-修改表时设置非空约束的语法格式如下：
-```
+修改表时设置非空约束：
+```sql
 ALTER TABLE <数据表名>
 CHANGE COLUMN <字段名>
 <字段名> <数据类型> NOT NULL;
 ```
-```
+```sql
 mysql> ALTER TABLE tb_dept4
     -> CHANGE COLUMN location
     -> location VARCHAR(50) NOT NULL;
@@ -599,12 +598,12 @@ mysql> DESC tb_dept4;
 +----------+-------------+------+-----+----------+-------+
 ```
 ## 删除非空约束
-修改表时删除非空约束的语法规则如下：
-```
+修改表时删除非空约束：
+```sql
 ALTER TABLE <数据表名>
 CHANGE COLUMN <字段名> <字段名> <数据类型> NULL;
 ```
-```
+```sql
 mysql> ALTER TABLE tb_dept4
     -> CHANGE COLUMN location
     -> location VARCHAR(50) NULL;
@@ -623,11 +622,11 @@ mysql> DESC tb_dept4;
 # 查看表中的约束
 在 MySQL 中可以使用`SHOW CREATE TABLE`语句来查看表中的约束。
 
-查看数据表中的约束语法格式如下：
-```
+查看数据表中的约束：
+```sql
 SHOW CREATE TABLE <数据表名>;
 ```
-```
+```sql
 mysql> CREATE TABLE tb_emp8
     -> (
     -> id INT(11) PRIMARY KEY,

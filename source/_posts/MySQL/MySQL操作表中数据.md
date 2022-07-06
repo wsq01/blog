@@ -15,9 +15,9 @@ categories: [MySQL]
 INSERT INTO <表名> [ <列名1> [ , … <列名n>] ]
 VALUES (值1) [… , (值n) ];
 ```
-语法说明如下。
+语法说明：
 * <表名>：指定被操作的表名。
-* <列名>：指定需要插入数据的列名。若向表中的所有列插入数据，则全部的列名均可以省略，直接采用`INSERT<表名>VALUES(…)`即可。
+* <列名>：指定需要插入数据的列名。若向表中的所有列插入数据，则全部的列名均可以省略，直接采用`INSERT <表名> VALUES(…)`即可。
 * `VALUES`或`VALUE`子句：该子句包含要插入的数据清单。数据清单中数据的顺序要和列的顺序相对应。
 
 #### INSERT…SET语句
@@ -28,20 +28,20 @@ SET <列名1> = <值1>,
     <列名2> = <值2>,
         …
 ```
-此语句用于直接给表中的某些列指定对应的列值，即要插入的数据的列名在`SET`子句中指定，col_name 为指定的列名，等号后面为指定的数据，而对于未指定的列，列值会指定为该列的默认值。
+此语句用于直接给表中的某些列指定对应的列值，即要插入的数据的列名在`SET`子句中指定，`col_name`为指定的列名，等号后面为指定的数据，而对于未指定的列，列值会指定为该列的默认值。
 
-由 INSERT 语句的两种形式可以看出：
-使用 INSERT…VALUES 语句可以向表中插入一行数据，也可以插入多行数据；
-使用 INSERT…SET 语句可以指定插入行中每列的值，也可以指定部分列的值；
-INSERT…SELECT 语句向表中插入其他表的数据。
-采用 INSERT…SET 语句可以向表中插入部分列的值，这种方式更为灵活；
-INSERT…VALUES 语句可以一次插入多条数据。
+由`INSERT`语句的两种形式可以看出：
+* 使用`INSERT…VALUES`语句可以向表中插入一行数据，也可以插入多行数据；
+* 使用`INSERT…SET`语句可以指定插入行中每列的值，也可以指定部分列的值；
+* `INSERT…SELECT`语句向表中插入其他表的数据；
+* 采用`INSERT…SET`语句可以向表中插入部分列的值，这种方式更为灵活；
+* `INSERT…VALUES`语句可以一次插入多条数据。
 
-在 MySQL 中，用单条 INSERT 语句处理多个插入要比使用多条 INSERT 语句更快。
+在 MySQL 中，用单条`INSERT`语句处理多个插入要比使用多条`INSERT`语句更快。
 
-当使用单条 INSERT 语句插入多行数据的时候，只需要将每行数据用圆括号括起来即可。
+当使用单条`INSERT`语句插入多行数据的时候，只需要将每行数据用圆括号括起来即可。
 ## 向表中的全部字段添加值
-在 test_db 数据库中创建一个课程信息表 tb_courses，包含课程编号 course_id、课程名称 course_name、课程学分 course_grade 和课程备注 course_info，输入的 SQL 语句和执行结果如下所示。
+在`test_db`数据库中创建一个课程信息表`tb_courses`，包含课程编号`course_id`、课程名称`course_name`、课程学分`course_grade`和课程备注`course_info`。
 ```sql
 mysql> CREATE TABLE tb_courses
     -> (
@@ -75,8 +75,6 @@ mysql> SELECT * FROM tb_courses;
 可以看到插入记录成功。在插入数据时，指定了`tb_courses`表的所有字段，因此将为每一个字段插入新的值。
 
 `INSERT`语句后面的列名称顺序可以不是`tb_courses`表定义时的顺序，即插入数据时，不需要按照表定义的顺序插入，只要保证值的顺序与列字段的顺序相同就可以。
-
-在`tb_courses`表中插入一条新记录，`course_id`值为 2，`course_name`值为`Database`，`course_grade`值为 3，`info`值为`MySQL`。
 ```sql
 mysql> INSERT INTO tb_courses
     -> (course_name,course_info,course_id,course_grade)
@@ -92,11 +90,8 @@ mysql> SELECT * FROM tb_courses;
 2 rows in set (0.00 sec)
 ```
 使用`INSERT`插入数据时，允许列名称列表`column_list`为空，此时值列表中需要为表的每一个字段指定值，并且值的顺序必须和数据表中字段定义时的顺序相同。
-
-在`tb_courses`表中插入一条新记录，`course_id`值为 3，`course_name`值为`Java`，`course_grade`值为 4，`info`值为`Jave EE`。
 ```sql
-mysql> INSERT INTO tb_courses
-    -> VLAUES(3,'Java',4,'Java EE');
+mysql> INSERT INTO tb_courses VLAUES(3,'Java',4,'Java EE');
 Query OK, 1 rows affected (0.08 sec)
 mysql> SELECT * FROM tb_courses;
 +-----------+-------------+--------------+------------------+
@@ -114,8 +109,6 @@ mysql> SELECT * FROM tb_courses;
 
 ## 向表中指定字段添加值
 为表的指定字段插入数据，是在`INSERT`语句中只向部分字段中插入值，而其他字段的值为表定义时的默认值。
-
-在`tb_courses`表中插入一条新记录，`course_name`值为`System`，`course_grade`值为 3，`course_info`值为`Operating System`。
 ```sql
 mysql> INSERT INTO tb_courses
     -> (course_name,course_grade,course_info)
@@ -178,7 +171,7 @@ mysql> SELECT * FROM tb_courses_new;
 UPDATE <表名> SET 字段 1=值 1 [,字段 2=值 2… ] [WHERE 子句 ]
 [ORDER BY 子句] [LIMIT 子句]
 ```
-语法说明如下：
+语法说明：
 * <表名>：用于指定要更新的表名称。
 * `SET`子句：用于指定表中要修改的列名及其列值。其中，每个指定的列值可以是表达式，也可以是该列对应的默认值。如果指定的是默认值，可用关键字`DEFAULT`表示列值。
 * `WHERE`子句：可选项。用于限定表中要修改的行。若不指定，则修改表中所有的行。
@@ -190,8 +183,7 @@ UPDATE <表名> SET 字段 1=值 1 [,字段 2=值 2… ] [WHERE 子句 ]
 ## 修改表中的数据
 在`tb_courses_new`表中，更新所有行的`course_grade`字段值为 4。
 ```sql
-mysql> UPDATE tb_courses_new
-    -> SET course_grade=4;
+mysql> UPDATE tb_courses_new SET course_grade=4;
 Query OK, 3 rows affected (0.11 sec)
 Rows matched: 4  Changed: 3  Warnings: 0
 mysql> SELECT * FROM tb_courses_new;
@@ -206,7 +198,7 @@ mysql> SELECT * FROM tb_courses_new;
 4 rows in set (0.00 sec)
 ```
 ## 根据条件修改表中的数据
-在`tb_courses`表中，更新`course_id`值为 2 的记录，将`course_grade`字段值改为 3.5，将`course_name`字段值改为`B`。
+在`tb_courses`表中，更新`course_id`值为 2 的记录，将`course_grade`字段值改为 3.5，将`course_name`字段值改为`DB`。
 ```sql
 mysql> UPDATE tb_courses_new
     -> SET course_name='DB',course_grade=3.5
@@ -228,11 +220,11 @@ mysql> SELECT * FROM tb_courses_new;
 # DELETE：删除数据
 在 MySQL 中，可以使用`DELETE`语句来删除表的一行或者多行数据。
 ## 删除单个表中的数据
-使用 DELETE 语句从单个表中删除数据，语法格式为：
+使用`DELETE`语句从单个表中删除数据，语法格式为：
 ```sql
 DELETE FROM <表名> [WHERE 子句] [ORDER BY 子句] [LIMIT 子句]
 ```
-语法说明如下：
+语法说明：
 * <表名>：指定要删除数据的表名。
 * `ORDER BY`子句：可选项。表示删除时，表中各行将按照子句中指定的顺序进行删除。
 * `WHERE`子句：可选项。表示为删除操作限定删除条件，若省略该子句，则代表删除该表中的所有行。
@@ -251,8 +243,7 @@ Empty set (0.00 sec)
 ## 根据条件删除表中的数据
 在`tb_courses_new`表中，删除`course_id`为 4 的记录。
 ```sql
-mysql> DELETE FROM tb_courses
-    -> WHERE course_id=4;
+mysql> DELETE FROM tb_courses WHERE course_id=4;
 Query OK, 1 row affected (0.00 sec)
 mysql> SELECT * FROM tb_courses;
 +-----------+-------------+--------------+------------------+
