@@ -278,19 +278,6 @@ const extendHex = shortHex =>
 extendHex('#03f'); // '#0033ff'
 extendHex('05a'); // '#0055aa'
 ```
-## getURLParameters
-返回包含当前URL参数的对象。
-通过适当的正则表达式，使用`String.match()`来获得所有的键值对，`Array.reduce()`来映射和组合成一个单一的对象。将`location.search`作为参数传递给当前`url`。
-```js
-const getURLParameters = url =>
-  (url.match(/([^?=&]+)(=([^&]*))/g) || []).reduce(
-    (a, v) => ((a[v.slice(0, v.indexOf('='))] = v.slice(v.indexOf('=') + 1)), a),
-    {}
-  );
-
-getURLParameters('http://url.com/page?name=Adam&surname=Smith'); // {name: 'Adam', surname: 'Smith'}
-getURLParameters('google.com'); // {}
-```
 ## httpGet
 向传递的URL发出一个`GET`请求。
 使用`XMLHttpRequest` web API向给定的`url`发出`get`请求。 通过调用给定的`callback`和`responseText`来处理`onload`事件。 通过运行提供的`err`函数，处理`onerror`事件。省略第四个参数`err`，默认将错误记录到控制台的`error`流。
@@ -347,21 +334,7 @@ const isBrowser = () => ![typeof window, typeof document].includes('undefined');
 isBrowser(); // true (browser)
 isBrowser(); // false (Node)
 ```
-## parseCookie
-解析HTTP Cookie标头字符串并返回所有`cookie`的`name-value`对的对象。
-使用`String.split(';')`将键值对彼此分开。 使用`Array.map()`和`String.split('=')`将键与每对中的值分开。使用`Array.reduce()`和`decodeURIComponent()`创建一个包含所有键值对的对象。
-```js
-const parseCookie = str =>
-  str
-    .split(';')
-    .map(v => v.split('='))
-    .reduce((acc, v) => {
-      acc[decodeURIComponent(v[0].trim())] = decodeURIComponent(v[1].trim());
-      return acc;
-    }, {});
 
-parseCookie('foo=bar; equation=E%3Dmc%5E2'); // { foo: 'bar', equation: 'E=mc^2' }
-```
 ## prettyBytes
 将字节数转换为可读的字符串。
 根据存取字节数常用的单位构建一个数组字典。使用`Number.toPrecision()`将数字截断为一定数量的数字。将构建、美化好的字符串返回，并考虑提供的选项以及是否为负值。省略第二个参数`precision`，使用默认精度为3的数字。省略第三个参数`addSpace`，默认情况下在数字和单位之间添加空格。

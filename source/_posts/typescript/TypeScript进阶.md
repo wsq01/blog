@@ -871,7 +871,8 @@ interface Alarm {
   weight: number;
 }
 ​
-// index.ts(5,3): error TS2403: Subsequent variable declarations must have the same type.  Variable 'price' must be of type 'number', but here has type 'string'.
+// index.ts(5,3): error TS2403: Subsequent variable declarations must have the same type.
+// Variable 'price' must be of type 'number', but here has type 'string'.
 ```
 接口中方法的合并，与函数的合并一样：
 ```ts

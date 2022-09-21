@@ -13,7 +13,7 @@ MySQL 视图（View）是一种虚拟存在的表，同真实表一样，视图�
 
 视图可以从原有的表上选取对用户有用的信息，那些对用户没用，或者用户没有权限了解的信息，都可以直接屏蔽掉，作用类似于筛选。这样做既使应用简单化，也保证了系统的安全。
 
-例如，下面的数据库中有一张公司部门表`department`。
+例如，数据库中有一张公司部门表`department`和一张员工表`worker`。
 ```sql
 mysql> DESC department;
 +----------+-------------+------+-----+---------+-------+
@@ -26,14 +26,13 @@ mysql> DESC department;
 +----------+-------------+------+-----+---------+-------+
 4 rows in set (0.02 sec)
 ```
-还有一张员工表 worker。
 ```sql
 mysql> DESC worker;
 +-------------+-------------+------+-----+---------+-------+
 | Field       | Type        | Null | Key | Default | Extra |
 +-------------+-------------+------+-----+---------+-------+
 | num         | int(10)     | NO   | PRI | NULL    |       |
-| d_id        | int(4)      | YES  |MUL     | NULL    |       |
+| d_id        | int(4)      | YES  |MUL  | NULL    |       |
 | name        | varchar(20) | NO   |     | NULL    |       |
 | sex         | varchar(4)  | NO   |     | NULL    |       |
 | birthday    | datetime    | YES  |     | NULL    |       |
@@ -83,7 +82,6 @@ MySQL 的视图不支持输入参数的功能，因此交互性上还有欠缺�
 * 视图可以和表一起使用。
 * 视图不包含数据，所以每次使用视图时，都必须执行查询中所需的任何一个检索操作。如果用多个连接和过滤条件创建了复杂的视图或嵌套了视图，可能会发现系统运行性能下降得十分严重。因此，在部署大量视图应用时，应该进行系统测试。
 
-提示：`ORDER BY`子句可以用在视图中，但若该视图检索数据的`SELECT`语句中也含有`ORDER BY`子句，则该视图中的`ORDER BY`子句将被覆盖。
 # 创建视图
 创建视图是指在已经存在的 MySQL 数据库表上建立视图。视图可以建立在一张表中，也可以建立在多张表中。
 ## 基本语法
@@ -98,7 +96,7 @@ CREATE VIEW <视图名> AS <SELECT语句>
 对于创建视图中的`SELECT`语句的指定存在以下限制：
 * 用户除了拥有`CREATE VIEW`权限外，还具有操作中涉及的基础表和其他视图的相关权限。
 * `SELECT`语句不能引用系统或用户变量。
-* `SELECT`语句不能包含 FROM 子句中的子查询。
+* `SELECT`语句不能包含`FROM`子句中的子查询。
 * `SELECT`语句不能引用预处理语句参数。
 
 视图定义中引用的表或视图必须存在。但是，创建完视图后，可以删除定义引用的表或视图。可使用`CHECK TABLE`语句检查视图定义是否存在这类问题。
@@ -150,8 +148,6 @@ mysql> SELECT * FROM view_students_info;
 10 rows in set (0.04 sec)
 ```
 默认情况下，创建的视图和基本表的字段是一样的，也可以通过指定视图字段的名称来创建视图。
-
-在`tb_students_info`表上创建一个名为`v_students_info`的视图。
 ```sql
 mysql> CREATE VIEW v_students_info
     -> (s_id,s_name,d_id,s_age,s_sex,s_height,s_date)
@@ -204,34 +200,6 @@ mysql> SELECT * FROM v_students_info;
 10 rows in set (0.01 sec)
 ```
 通过这个视图可以很好地保护基本表中的数据。视图中包含`s_id、s_name`和`dept_name，s_id`字段对应`tb_students_info`表中的`id`字段，`s_name`字段对应`tb_students_info`表中的`name`字段，`dept_name`字段对应`tb_departments`表中的`dept_name`字段。
-## 查询视图
-视图一经定义之后，就可以如同查询数据表一样，使用`SELECT`语句查询视图中的数据，语法和查询基础表的数据一样。
-
-视图用于查询主要应用在以下几个方面：
-* 使用视图重新格式化检索出的数据。
-* 使用视图简化复杂的表连接。
-* 使用视图过滤数据。
-
-`DESCRIBE`可以用来查看视图，语法如下：
-```
-DESCRIBE 视图名；
-```
-```sql
-mysql> DESCRIBE v_students_info;
-+----------+---------------+------+-----+------------+-------+
-| Field    | Type          | Null | Key | Default    | Extra |
-+----------+---------------+------+-----+------------+-------+
-| s_id     | int(11)       | NO   |     | 0          |       |
-| s_name   | varchar(45)   | YES  |     | NULL       |       |
-| d_id     | int(11)       | YES  |     | NULL       |       |
-| s_age    | int(11)       | YES  |     | NULL       |       |
-| s_sex    | enum('M','F') | YES  |     | NULL       |       |
-| s_height | int(11)       | YES  |     | NULL       |       |
-| s_date   | date          | YES  |     | 2016-10-22 |       |
-+----------+---------------+------+-----+------------+-------+
-7 rows in set (0.04 sec)
-```
-注意：`DESCRIBE`一般情况下可以简写成`DESC`，输入这个命令的执行结果和输入`DESCRIBE`是一样的。
 # 查看视图
 创建好视图后，可以通过查看视图的语句来查看视图的字段信息以及详细信息。
 ## 查看视图的字段信息
@@ -243,7 +211,7 @@ DESCRIBE 视图名;
 ```
 DESC 视图名;
 ```
-下面创建学生信息表 studentinfo 的一个视图，用于查询学生姓名和考试分数。
+创建学生信息表`studentinfo`的一个视图，用于查询学生姓名和考试分数。
 ```sql
 mysql> CREATE TABLE studentinfo(
     -> ID INT(11) PRIMARY KEY,
@@ -257,7 +225,6 @@ Query OK, 0 rows affected (0.10 sec)
 mysql> CREATE VIEW v_studentinfo AS SELECT name,score FROM studentinfo;
 Query OK, 0 rows affected (0.04 sec)
 ```
-通过`DESCRIBE`语句查看视图`v_studentsinfo`中的字段信息。
 ```sql
 mysql> DESCRIBE v_studentinfo;
 +-------+--------------+------+-----+---------+-------+

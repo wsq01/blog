@@ -6,7 +6,7 @@ categories: [MySQL]
 ---
 
 
-# 索引（Index）是什么
+# 索引是什么
 索引是一种特殊的数据库结构，由数据表中的一列或多列组合而成，可以用来快速查询数据表中有某一特定值的记录。
 
 通过索引，查询数据时不用读完记录的所有信息，而只是查询索引列。否则，数据库系统将读取每条记录的所有信息进行匹配。
@@ -79,12 +79,10 @@ HASH 索引不是基于树形的数据结构查找数据，而是根据索引列
 ## 逻辑区分
 根据索引的具体用途，MySQL 中的索引在逻辑上分为以下 5 类：
 ### 普通索引
-普通索引是 MySQL 中最基本的索引类型，它没有任何限制，唯一任务就是加快系统对数据的访问速度。
-
-普通索引允许在定义索引的列中插入重复值和空值。
+普通索引没有任何限制，唯一任务就是加快系统对数据的访问速度。普通索引允许在定义索引的列中插入重复值和空值。
 
 创建普通索引时，通常使用的关键字是`INDEX`或`KEY`。
-```
+```sql
 CREATE INDEX index_id ON tb_student(id);
 ```
 ### 唯一索引
@@ -93,7 +91,7 @@ CREATE INDEX index_id ON tb_student(id);
 唯一索引列的值必须唯一，允许有空值。如果是组合索引，则列值的组合必须唯一。
 
 创建唯一索引通常使用`UNIQUE`关键字。
-```
+```sql
 CREATE UNIQUE INDEX index_id ON tb_student(id);
 ```
 其中，`id`字段可以有唯一性约束，也可以没有。
@@ -110,8 +108,8 @@ CREATE UNIQUE INDEX index_id ON tb_student(id);
 
 空间索引主要用于地理空间数据类型`GEOMETRY`。
 
-下面在`tb_student`表中的`line`字段上建立名为`index_line`的索引，SQL 语句如下：
-```
+下面在`tb_student`表中的`line`字段上建立名为`index_line`的索引：
+```sql
 CREATE SPATIAL INDEX index_line ON tb_student(line);
 ```
 其中，`tb_student`表的存储引擎必须是 MyISAM，`line`字段必须为空间数据类型，而且是非空的。
@@ -124,8 +122,8 @@ CREATE SPATIAL INDEX index_line ON tb_student(line);
 
 创建全文索引使用`FULLTEXT`关键字。
 
-在`tb_student`表中的`info`字段上建立名为`index_info`的全文索引，SQL 语句如下：
-```
+在`tb_student`表中的`info`字段上建立名为`index_info`的全文索引：
+```sql
 CREATE FULLTEXT INDEX index_info ON tb_student(info);
 ```
 其中，`index_info`的存储引擎必须是 MyISAM，`info`字段必须是`CHAR、VARCHAR`和`TEXT`等类型。
@@ -136,8 +134,8 @@ CREATE FULLTEXT INDEX index_info ON tb_student(info);
 
 单列索引可以是普通索引，也可以是唯一性索引，还可以是全文索引。只要保证该索引只对应一个字段即可。
 
-下面在`tb_student`表中的`address`字段上建立名为`index_addr`的单列索引，`address`字段的数据类型为`VARCHAR(20)`，索引的数据类型为`CHAR(4)`。SQL 语句如下：
-```
+下面在`tb_student`表中的`address`字段上建立名为`index_addr`的单列索引，`address`字段的数据类型为`VARCHAR(20)`，索引的数据类型为`CHAR(4)`。
+```sql
 CREATE INDEX index_addr ON tb_student(address(4));
 ```
 这样，查询时可以只查询`address`字段的前 4 个字符，而不需要全部查询。
@@ -145,7 +143,7 @@ CREATE INDEX index_addr ON tb_student(address(4));
 组合索引也称为复合索引或多列索引。相对于单列索引来说，组合索引是将原表的多个列共同组成一个索引。多列索引是在表的多个字段上创建一个索引。该索引指向创建时对应的多个字段，可以通过这几个字段进行查询。但是，只有查询条件中使用了这些字段中第一个字段时，索引才会被使用。
 
 例如，在表中的`id、name`和`sex`字段上建立一个多列索引，那么，只有查询条件使用了`id`字段时，该索引才会被使用。
-```
+```sql
 CREATE INDEX index_na ON tb_student(name,address);
 ```
 该索引创建好了以后，查询条件中必须有`name`字段才能使用索引。
@@ -157,10 +155,10 @@ CREATE INDEX index_na ON tb_student(name,address);
 MySQL 提供了三种创建索引的方法：
 ### 1.使用 CREATE INDEX 语句
 可以使用专门用于创建索引的`CREATE INDEX`语句在一个已有的表上创建索引，但该语句不能创建主键。
-```
+```sql
 CREATE <索引名> ON <表名> (<列名> [<长度>] [ ASC | DESC])
 ```
-语法说明如下：
+语法说明：
 * <索引名>：指定索引名。一个表可以创建多个索引，但每个索引在该表中的名称是唯一的。
 * <表名>：指定要创建索引的表名。
 * <列名>：指定要创建索引的列名。通常可以考虑将查询语句中在`JOIN`子句和`WHERE`子句里经常出现的列作为索引列。
@@ -169,19 +167,19 @@ CREATE <索引名> ON <表名> (<列名> [<长度>] [ ASC | DESC])
 
 ### 2.使用 CREATE TABLE 语句
 索引也可以在创建表（`CREATE TABLE`）的同时创建。在`CREATE TABLE`语句中添加以下语句。
-```
+```sql
 CONSTRAINT PRIMARY KEY [索引类型] (<列名>,…)
 ```
 在`CREATE TABLE`语句中添加此语句，表示在创建新表的同时创建该表的主键。
-```
+```sql
 KEY | INDEX [<索引名>] [<索引类型>] (<列名>,…)
 ```
 在`CREATE TABLE`语句中添加此语句，表示在创建新表的同时创建该表的索引。
-```
+```sql
 UNIQUE [ INDEX | KEY] [<索引名>] [<索引类型>] (<列名>,…)
 ```
 在`CREATE TABLE`语句中添加此语句，表示在创建新表的同时创建该表的唯一性索引。
-```
+```sql
 FOREIGN KEY <索引名> <列名>
 ```
 在`CREATE TABLE`语句中添加此语句，表示在创建新表的同时创建该表的外键。
@@ -189,25 +187,25 @@ FOREIGN KEY <索引名> <列名>
 在使用`CREATE TABLE`语句定义列选项的时候，可以通过直接在某个列定义后面添加`PRIMARY KEY`的方式创建主键。而当主键是由多个列组成的多列索引时，则不能使用这种方法，只能用在语句的最后加上一个`PRIMARY KRY(<列名>，…)`子句的方式来实现。
 ### 2.使用 ALTER TABLE 语句
 `CREATE INDEX`语句可以在一个已有的表上创建索引，`ALTER TABLE`语句也可以在一个已有的表上创建索引。在使用`ALTER TABLE`语句修改表的同时，可以向已有的表添加索引。具体的做法是在`ALTER TABLE`语句中添加以下语法成分的某一项或几项。
-```
+```sql
 ADD INDEX [<索引名>] [<索引类型>] (<列名>,…)
 ```
 在`ALTER TABLE`语句中添加此语法成分，表示在修改表的同时为该表添加索引。
-```
+```sql
 ADD PRIMARY KEY [<索引类型>] (<列名>,…)
 ```
 在`ALTER TABLE`语句中添加此语法成分，表示在修改表的同时为该表添加主键。
-```
+```sql
 ADD UNIQUE [ INDEX | KEY] [<索引名>] [<索引类型>] (<列名>,…)
 ```
 在`ALTER TABLE`语句中添加此语法成分，表示在修改表的同时为该表添加唯一性索引。
-```
+```sql
 ADD FOREIGN KEY [<索引名>] (<列名>,…)
 ```
 在`ALTER TABLE`语句中添加此语法成分，表示在修改表的同时为该表添加外键。
 ## 创建普通索引
 创建普通索引时，通常使用`INDEX`关键字。
-```
+```sql
 mysql> CREATE TABLE tb_stu_info
     -> (
     -> id INT NOT NULL,
@@ -233,7 +231,7 @@ Create Table: CREATE TABLE `tb_stu_info` (
 ```
 ## 创建唯一索引
 创建唯一索引，通常使用`UNIQUE`参数。
-```
+```sql
 mysql> CREATE TABLE tb_stu_info2
     -> (
     -> id INT NOT NULL,
@@ -259,14 +257,14 @@ Create Table: CREATE TABLE `tb_stu_info2` (
 ```
 # 查看索引
 可以使用`SHOW INDEX`语句查看表中创建的索引。
-```
+```sql
 SHOW INDEX FROM <表名> [ FROM <数据库名>]
 ```
-语法说明如下：
+语法说明：
 * <表名>：指定需要查看索引的数据表名。
 * <数据库名>：指定需要查看索引的数据表所在的数据库，可省略。比如，`SHOW INDEX FROM student FROM test;`语句表示查看`test`数据库中`student`数据表的索引。
 
-```
+```sql
 mysql> SHOW INDEX FROM tb_stu_info2\G
 *************************** 1. row ***************************
         Table: tb_stu_info2
@@ -308,7 +306,7 @@ Index_comment:
 当不再需要索引时，可以使用`DROP INDEX`语句或`ALTER TABLE`语句来对索引进行删除。
 ### 1. 使用 DROP INDEX 语句
 语法格式：
-```
+```sql
 DROP INDEX <索引名> ON <表名>
 ```
 语法说明如下：
@@ -324,7 +322,7 @@ DROP INDEX <索引名> ON <表名>
 注意：如果删除的列是索引的组成部分，那么在删除该列时，也会将该列从索引中删除；如果组成索引的所有列都被删除，那么整个索引将被删除。
 ## 删除索引
 删除表`tb_stu_info`中的索引。
-```
+```sql
 mysql> DROP INDEX height ON tb_stu_info;
 Query OK, 0 rows affected (0.27 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -341,7 +339,7 @@ Create Table: CREATE TABLE `tb_stu_info` (
 1 row in set (0.00 sec)
 ```
 删除表`tb_stu_info2`中名称为`id`的索引。
-```
+```sql
 mysql> ALTER TABLE tb_stu_info2 DROP INDEX height;
 Query OK, 0 rows affected (0.13 sec)
 Records: 0  Duplicates: 0  Warnings: 0
@@ -361,7 +359,7 @@ Create Table: CREATE TABLE `tb_stu_info2` (
 索引可以提高查询的速度，但并不是使用带有索引的字段查询时，索引都会起作用。使用索引有几种特殊情况，在这些情况下，有可能使用带有索引的字段查询时，索引并没有起作用。
 ## 1. 查询语句中使用LIKE关键字
 在查询语句中使用`LIKE`关键字进行查询时，如果匹配字符串的第一个字符为`%`，索引不会被使用。如果`%`不是在第一个位置，索引就会被使用。
-```
+```sql
 mysql> SELECT * FROM tb_student;
 +----+------+------+------+
 | id | name | age  | sex  |
@@ -375,7 +373,7 @@ mysql> SELECT * FROM tb_student;
 +----+------+------+------+
 ```
 下面在查询语句中使用`LIKE`关键字，且匹配的字符串中含有“%”符号，使用`EXPLAIN`分析查询情况：
-```
+```sql
 mysql>  EXPLAIN SELECT * FROM tb_student WHERE name LIKE '%四'\G
 *************************** 1. row ***************************
            id: 1
@@ -416,7 +414,7 @@ possible_keys: index_name
 多列索引是在表的多个字段上创建一个索引，只有查询条件中使用了这些字段中的第一个字段，索引才会被使用。
 
 在`name`和`age`两个字段上创建多列索引，并验证多列索引的使用情况：
-```
+```sql
 mysql> CREATE INDEX index_name_age ON tb_student(name,age);
 Query OK, 6 rows affected (0.11 sec)
 
@@ -457,7 +455,7 @@ possible_keys: NULL
 因为`name`字段是多列索引的第一个字段，所以只有查询条件中使用了`name`字段才会使`index_name_age`索引起作用。
 ### 3. 查询语句中使用OR关键字
 查询语句只有`OR`关键字时，如果`OR`前后的两个条件的列都是索引，那么查询中将使用索引。如果`OR`前后有一个条件的列不是索引，那么查询中将不使用索引。
-```
+```sql
 mysql> EXPLAIN SELECT * FROM tb_student WHERE name='张三' or sex='男'\G
 *************************** 1. row ***************************
            id: 1

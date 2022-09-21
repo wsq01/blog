@@ -5640,10 +5640,13 @@ button {
   border-bottom: 0.1rem #999 dotted;
 }
 .article-entry ul,
-.article-entry ol,
 .article-entry dl {
   margin: 1.5rem 0 1.5rem 2rem;
 }
+.article-entry ol {
+  margin: 1.5rem 0 1.5rem 0;
+}
+
 .article-entry p,
 .article-entry table,
 .article-entry blockquote {

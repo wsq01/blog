@@ -17,21 +17,20 @@ categories: javascript
 #### 使用时间戳
 其原理是用时间戳来判断是否已到回调该执行时间，记录上次执行的时间戳，然后每次触发`scroll`事件执行回调，回调中判断当前时间戳距离上次执行时间戳的间隔是否已经到达 规定时间段，如果是，则执行，并更新上次执行的时间戳，如此循环。
 ```js
-function throttle(fn, delay) {
+const throttle = (() => {
   // 记录上一次函数触发的时间
-  var lastTime = 0;
-  return function() {
+  let last = 0
+  return (callback, wait = 800) => {
     // 记录当前函数触发的时间
-    var nowTime = Date.now();
-    if (nowTime - lastTime > delay) {
-      // 修正this指向问题
-      fn.call(this, arguments);
-      // 同步时间
-      lastTime = nowTime;
+    let now = +new Date()
+    if (now - last > wait) {
+      callback()
+      last = now
     }
   }
-}
-document.onscroll = throttle(function() { console.log('scroll事件被触发了' + Date.now()) }, 200)
+})()
+
+throttle(() => { console.log('scroll事件被触发了' + Date.now()) }, 200)
 ```
 #### 使用定时器
 当触发事件的时候，我们设置一个定时器，再触发事件的时候，如果定时器存在，就不执行，直到定时器执行，然后执行函数，清空定时器，这样就可以设置下个定时器。
@@ -79,15 +78,17 @@ document.getElementById('btn').onclick = debounce(bindClick, 1000)
 ```
 ```js
 // 第一版
-function debounce(fn, delay) {
+const debounce = (() => {
   // 记录上一次的延时器
-  var timer = null;
-  return function() {
+  let timer = null
+  return (callback, wait = 800) => {
     // 清除上一次延时器
-    clearTimeout(timer)
-    timer = setTimeout(fn, delay)
+    timer && clearTimeout(timer)
+    timer = setTimeout(callback, wait)
   }
-}
+})()
+
+debounce(() => { console.log('加载数据') }, 500)
 ```
 如果我们在`onclick`事件中使用`console.log(this)`，在不使用`debounce`函数的时候，`this`指向`button`按钮。但是如果使用`debounce`函数，`this`就会指向`Window`对象！所以我们需要将`this`指向正确的对象。
 ```js

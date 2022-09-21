@@ -1,10 +1,10 @@
 # 侧边栏菜单
 menu:
   主页: /
-  归档: /archives
+  # 归档: /archives
   分类: /categories
   标签: /tags
-  # 旅行: /tags/旅行/
+  # 前端: /categories/javascript/
   # 关于我: /2019/about
 
 # 站点次标题和打字动效
@@ -91,7 +91,8 @@ rss: /atom.xml
 
 # 是否启用黑夜模式开关
 darkmode: true
-
+# 动态背景效果: 0-关闭，1-动态线条(跟随鼠标)
+canvas_bg: 1
 # 页面点击小红心(开启请设置为true)
 clickLove: true
 

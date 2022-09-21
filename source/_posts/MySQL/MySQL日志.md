@@ -35,7 +35,7 @@ MySQL 中 4 种日志文件的作用：
 
 在 MySQL 配置文件中，错误日志所记录的信息可以通过`log-error`和`log-warnings`来定义，其中，`log-err`定义是否启用错误日志功能和错误日志的存储位置，`log-warnings`定义是否将警告信息也记录到错误日志中。
 
-将`log_error`选项加入到 MySQL 配置文件的 `[mysqld]`组中，形式如下：
+将`log_error`选项加入到 MySQL 配置文件的 `[mysqld]`组中：
 ```
 [mysqld]
 log-error=dir/{filename}
@@ -57,13 +57,13 @@ mysql> SHOW VARIABLES LIKE 'log_error';
 ```
 错误日志以文本文件的形式存储，直接使用普通文本工具就可以查看。
 ### 删除错误日志
-在 MySQL 中，可以使用`mysqladmin`命令来开启新的错误日志，以保证 MySQL 服务器上的硬盘空间。
+在 MySQL 中，可以使用`mysqladmin`命令来开启新的错误日志。
 ```sql
 mysqladmin -uroot -p flush-logs
 ```
 执行该命令后，MySQL 服务器首先会自动创建一个新的错误日志，然后将旧的错误日志更名为`filename.err-old`。
 
-MySQL 服务器发生异常时，管理员可以在错误日志中找到发生异常的时间、原因，然后根据这些信息来解决异常。对于很久之前的错误日志，查看的可能性不大，可以直接将这些错误日志删除。
+MySQL 服务器发生异常时，可以在错误日志中找到发生异常的时间、原因，然后根据这些信息来解决异常。对于很久之前的错误日志，查看的可能性不大，可以直接将这些错误日志删除。
 # 二进制日志
 二进制日志也可叫作变更日志。主要用于记录数据库的变化情况，即 SQL 语句的 DDL 和 DML 语句，不包含数据记录查询操作。
 
@@ -115,7 +115,7 @@ mysql> SHOW binary logs;
 ```
 ### 2. 查看当前正在写入的二进制日志文件
 可以使用以下命令查看当前 MySQL 中正在写入的二进制日志文件。
-```
+```sql
 mysql> SHOW master status;
 +----------------------------+----------+--------------+------------------+-------------------+
 | File                       | Position | Binlog_Do_DB | Binlog_Ignore_DB | Executed_Gtid_Set |
@@ -130,7 +130,7 @@ mysqlbinlog filename.number
 ```
 `mysqlbinlog`命令只在当前文件夹下查找指定的二进制日志，因此需要在二进制日志所在的目录下运行该命令，否则将会找不到指定的二进制日志文件。
 
-下面使用`mysqlbinlog`命令，来查看`C:\log`目录下的`mylog.000001`文件，代码执行如下：
+下面使用`mysqlbinlog`命令，来查看`C:\log`目录下的`mylog.000001`文件：
 ```
 C:\Users\11645>cd C:\log
 C:\log>mysqlbinlog mylog.000001
@@ -203,7 +203,7 @@ mysqlbinlog filename.number | mysql -u root -p
 
 使用`mysqlbinlog`命令进行还原操作时，必须是编号小的先还原。例如，`mylog.000001`必须在`mylog.000002`之前还原。
 
-下面使用二进制日志来还原数据库，代码如下：
+下面使用二进制日志来还原数据库：
 ```sql
 mysqlbinlog mylog.000001 | mysql -u root -p
 mysqlbinlog mylog.000002 | mysql -u root -p
@@ -234,7 +234,7 @@ log=dir/filename
 ## 查看通用查询日志
 如果希望了解用户最近的操作，可以查看通用查询日志。通用查询日志以文本文件的形式存储，可以使用普通文本文件查看该类型日志内容。
 
-首先我们查看通用查询日志功能是否是开启状态，然后查询`tb_student`表的记录，SQL 命令和执行过程如下：
+首先我们查看通用查询日志功能是否是开启状态，然后查询`tb_student`表的记录：
 ```sql
 mysql> SHOW VARIABLES LIKE '%general%';
 +------------------+----------------------------------------------------------------+
@@ -293,7 +293,7 @@ Variable_name: general_log_file
 ```
 ### 删除通用查询日志
 在 MySQL 中，可以使用`mysqladmin`命令来开启新的通用查询日志。新的通用查询日志会直接覆盖旧的查询日志，不需要再手动删除了。
-```sql
+```bash
 mysqladmin -uroot -p flush-logs
 ```
 需要注意的是，如果希望备份旧的通用查询日志，必须先将旧的日志文件拷贝出来或者改名。然后，再执行`mysqladmin`命令。
@@ -304,7 +304,7 @@ mysqladmin -uroot -p flush-logs
 # 慢查询日志
 慢查询日志用来记录在 MySQL 中执行时间超过指定时间的查询语句。通过慢查询日志，可以查找出哪些查询语句的执行效率低，以便进行优化。
 
-通俗的说，MySQL 慢查询日志是排查问题的 SQL 语句，以及检查当前 MySQL 性能的一个重要功能。如果不是调优需要，一般不建议启动该参数，因为开启慢查询日志会或多或少带来一定的性能影响。
+MySQL 慢查询日志是排查问题的 SQL 语句，以及检查当前 MySQL 性能的一个重要功能。如果不是调优需要，一般不建议启动该参数，因为开启慢查询日志会或多或少带来一定的性能影响。
 
 默认情况下，慢查询日志功能是关闭的。可以通过以下命令查看是否开启慢查询日志功能。
 ```sql
@@ -323,7 +323,7 @@ mysql> SHOW VARIABLES LIKE 'long_query_time';
 | long_query_time | 10.000000 |
 +-----------------+-----------+
 ```
-参数说明如下：
+参数说明：
 * `slow_query_log`：慢查询开启状态
 * `slow_query_log_file`：慢查询日志存放的位置（一般设置为 MySQL 的数据存放目录）
 * `long_query_time`：查询超过多少秒才记录
@@ -340,7 +340,7 @@ long_query_time=n
 其中：
 * `dir`参数指定慢查询日志的存储路径，如果不指定存储路径，慢查询日志将默认存储到 MySQL 数据库的数据文件夹下。
 * `filename`参数指定日志的文件名，生成日志文件的完整名称为`filename-slow.log`。如果不指定文件名，默认文件名为`hostname-slow.log`，`hostname`是 MySQL 服务器的主机名。
-* “n”参数是设定的时间值，该值的单位是秒。如果不设置`long_query_time`选项，默认时间为 10 秒。
+* `n`参数是设定的时间值，单位是秒。如果不设置`long_query_time`选项，默认时间为 10 秒。
 
 还可以通过以下命令启动慢查询日志、设置指定时间：
 ```sql
@@ -350,7 +350,7 @@ SET GLOBAL long_query_time=n;
 ## 查看慢查询日志
 如果你想查看哪些查询语句的执行效率低，可以从慢查询日志中获得信息。和错误日志、查询日志一样，慢查询日志也是以文本文件的形式存储的，可以使用普通的文本文件查看工具来查看。
 
-开启 MySQL 慢查询日志功能，并设置时间，命令和执行过程如下：
+开启 MySQL 慢查询日志功能，并设置时间：
 ```sql
 mysql> SET GLOBAL slow_query_log=ON;
 Query OK, 0 rows affected (0.05 sec)
@@ -358,7 +358,7 @@ Query OK, 0 rows affected (0.05 sec)
 mysql> SET GLOBAL long_query_time=0.001;
 Query OK, 0 rows affected (0.00 sec)
 ```
-查询`tb_student`表中的数据，SQL 语句和执行过程如下：
+查询`tb_student`表中的数据：
 ```sql
 mysql> USE test;
 Database changed
@@ -371,7 +371,7 @@ mysql> SELECT * FROM tb_student;
 |  3 | Python |
 +----+--------+
 ```
-相应的，慢查询日志的部分内容如下：
+慢查询日志的部分内容如下：
 ```
 # Time: 2020-06-01T01:59:18.368780Z
 # User@Host: root[root] @ localhost [::1]  Id:     3
@@ -387,7 +387,7 @@ mysqladmin -uroot -p flush-logs
 ```
 执行该命令后，命令行会提示输入密码。输入正确密码后，将执行删除操作。新的慢查询日志会直接覆盖旧的查询日志，不需要再手动删除。
 
-数据库管理员也可以手工删除慢查询日志，删除之后需要重新启动 MySQL 服务。
+也可以手工删除慢查询日志，删除之后需要重新启动 MySQL 服务。
 
 注意：通用查询日志和慢查询日志都是使用这个命令，使用时一定要注意，一旦执行这个命令，通用查询日志和慢查询日志都只存在新的日志文件中。如果需要备份旧的慢查询日志文件，必须先将旧的日志改名，然后重启 MySQL 服务或执行`mysqladmin`命令。
 # 设置日志输出方式
@@ -404,7 +404,7 @@ mysql> SHOW VARIABLES LIKE '%log_out%';
 ```
 结果显示，日志输出类型为`FILE`。
 
-要想在运行时更改日志输出目标，可以在启动服务器时，设置全局系统变量`log_output`的值，格式如下：
+要想在运行时更改日志输出目标，可以在启动服务器时，设置全局系统变量`log_output`的值：
 ```sql
 SET GLOBAL log_output='value';
 ```
@@ -417,4 +417,4 @@ SET GLOBAL log_output='value';
 
 相对于写入到文件，日志写入到数据表中要耗费更多的系统资源。因此，对于需要启用查询日志，又需要获得更高的系统性能，建议优先选择将日志写入到文件。
 
-日志表（`slow_log`或`general_log`）中的内容只允许查看，不允许修改，除非服务器自己进行更改。因此，你只能对日志表使用`SELECT `语句，不能使用`INSERT、DELETE`或`UPDATE`语句。不过，可以使用`TRUNCATE TABLE`语句来清空日志表。
+日志表（`slow_log`或`general_log`）中的内容只允许查看，不允许修改，除非服务器自己进行更改。因此，你只能对日志表使用`SELECT`语句，不能使用`INSERT、DELETE`或`UPDATE`语句。不过，可以使用`TRUNCATE TABLE`语句来清空日志表。

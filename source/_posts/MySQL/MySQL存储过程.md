@@ -36,13 +36,13 @@ categories: [MySQL]
 数据的独立可以达到解耦的效果，也就是说，程序可以调用存储过程，来替代执行多条的 SQL 语句。这种情况下，存储过程把数据同用户隔离开来，优点就是当数据表的结构改变时，调用表不用修改程序，只需要数据库管理者重新编写存储过程即可。
 
 # 创建存储过程
-可以使用`CREATE PROCEDURE`语句创建存储过程，语法格式如下：
-```
+可以使用`CREATE PROCEDURE`语句创建存储过程：
+```sql
 CREATE PROCEDURE <过程名> ( [过程参数[,…] ] ) <过程体>
 [过程参数[,…] ] 格式
 [ IN | OUT | INOUT ] <参数名> <类型>
 ```
-语法说明如下：
+语法说明：
 ### 1.过程名
 存储过程的名称，默认在当前数据库中创建。若需要在特定数据库中创建存储过程，则要在名称前面加上数据库的名称，即`db_name.sp_name`。
 
@@ -65,23 +65,23 @@ MySQL 存储过程支持三种类型的参数，即输入参数、输出参数�
 DELIMITER $$
 ```
 语法说明如下：
-* `$$`是用户定义的结束符，通常这个符号可以是一些特殊的符号，如两个“?”或两个“￥”等。
-* 当使用 DELIMITER 命令时，应该避免使用反斜杠“\”字符，因为它是 MySQL 的转义字符。
+* `$$`是用户定义的结束符，通常这个符号可以是一些特殊的符号，如两个`?`或两个`￥`等。
+* 当使用`DELIMITER`命令时，应该避免使用反斜杠`\`字符，因为它是 MySQL 的转义字符。
 
 在 MySQL 命令行客户端输入如下 SQL 语句。
-```
+```sql
 mysql > DELIMITER ??
 ```
 成功执行这条 SQL 语句后，任何命令、语句或程序的结束标志就换为两个问号“??”了。
 
 若希望换回默认的分号“;”作为结束标志，则在 MySQL 命令行客户端输入下列语句即可：
-```
+```sql
 mysql > DELIMITER ;
 ```
-注意：DELIMITER 和分号“;”之间一定要有一个空格。在创建存储过程时，必须具有`CREATE ROUTINE`权限。
+注意：`DELIMITER`和分号`;`之间一定要有一个空格。在创建存储过程时，必须具有`CREATE ROUTINE`权限。
 
 创建名称为`ShowStuScore`的存储过程，存储过程的作用是从学生成绩信息表中查询学生的成绩信息，输入的 SQL 语句和执行过程如下所示。
-```
+```sql
 mysql> DELIMITER //
 mysql> CREATE PROCEDURE ShowStuScore()
     -> BEGIN
@@ -92,7 +92,7 @@ Query OK， 0 rows affected (0.09 sec)
 结果显示 ShowStuScore 存储过程已经创建成功。
 
 创建名称为`GetScoreByStu`的存储过程，输入参数是学生姓名。存储过程的作用是通过输入的学生姓名从学生成绩信息表中查询指定学生的成绩信息，输入的 SQL 语句和执行过程如下所示。
-```
+```sql
 mysql> DELIMITER //
 mysql> CREATE PROCEDURE GetScoreByStu
     -> (IN name VARCHAR(30))
@@ -105,13 +105,12 @@ Query OK, 0 rows affected (0.01 sec)
 # 查看存储过程
 创建好存储过程后，用户可以通过`SHOW ATATUS`语句来查看存储过程的状态，也可以通过`SHOW CREATE`语句来查看存储过程的定义。
 ## 查看存储过程的状态
-MySQL 中可以通过 SHOW STATUS 语句查看存储过程的状态，其基本语法形式如下：
-```
+MySQL 中可以通过`SHOW STATUS`语句查看存储过程的状态：
+```sql
 SHOW PROCEDURE STATUS LIKE 存储过程名;
 ```
 `LIKE`存储过程名用来匹配存储过程的名称，`LIKE`不能省略。
-
-```
+```sql
 CREATE TABLE `studentinfo` (
     `ID` int(11) NOT NULL,
     `NAME` varchar(20) DEFAULT NULL,
@@ -164,13 +163,11 @@ collation_connection: gbk_chinese_ci
 ```
 查询结果显示了存储过程的创建时间、修改时间和字符集等信息。
 ## 查看存储过程的定义
-MySQL 中可以通过 SHOW CREATE 语句查看存储过程的状态，语法格式如下：
-```
+MySQL 中可以通过`SHOW CREATE`语句查看存储过程的状态：
+```sql
 SHOW CREATE PROCEDURE 存储过程名;
 ```
-
-下面使用 SHOW CREATE 查询名为 showstuscore 的存储过程的状态，SQL 语句和运行结果如下：
-```
+```sql
 mysql> SHOW CREATE PROCEDURE showstuscore \G
 *************************** 1. row ***************************
            Procedure: showstuscore
@@ -189,29 +186,27 @@ collation_connection: gbk_chinese_ci
 `SHOW STATUS`语句只能查看存储过程是操作的哪一个数据库、存储过程的名称、类型、谁定义的、创建和修改时间、字符编码等信息。但是，这个语句不能查询存储过程的集体定义，如果需要查看详细定义，需要使用`SHOW CREATE`语句。
 
 存储过程的信息都存储在`information_schema`数据库下的`Routines`表中，可以通过查询该表的记录来查询存储过程的信息，SQL 语句如下：
-```
+```sql
 SELECT * FROM information_schema.Routines WHERE ROUTINE_NAME=存储过程名;
 ```
 在`information_schema`数据库下的 routines 表中，存储着所有存储过程的定义。所以，使用`SELECT`语句查询`routines`表中的存储过程和函数的定义时，一定要使用`routine_name`字段指定存储过程的名称，否则，将查询出所有的存储过程的定义。
 # 修改存储过程
 MySQL 中通过`ALTER PROCEDURE`语句来修改存储过程。
-
-MySQL 中修改存储过程的语法格式如下：
-```
+```sql
 ALTER PROCEDURE 存储过程名 [ 特征 ... ]
 ```
 特征指定了存储过程的特性，可能的取值有：
-CONTAINS SQL 表示子程序包含 SQL 语句，但不包含读或写数据的语句。
-NO SQL 表示子程序中不包含 SQL 语句。
-READS SQL DATA 表示子程序中包含读数据的语句。
-MODIFIES SQL DATA 表示子程序中包含写数据的语句。
-SQL SECURITY { DEFINER |INVOKER } 指明谁有权限来执行。
-DEFINER 表示只有定义者自己才能够执行。
-INVOKER 表示调用者可以执行。
-COMMENT 'string' 表示注释信息。
+* `CONTAINS SQL`表示子程序包含 SQL 语句，但不包含读或写数据的语句。
+* `NO SQL`表示子程序中不包含 SQL 语句。
+* `READS SQL DATA`表示子程序中包含读数据的语句。
+* `MODIFIES SQL DATA`表示子程序中包含写数据的语句。
+* `SQL SECURITY { DEFINER |INVOKER }`指明谁有权限来执行。
+* `DEFINER`表示只有定义者自己才能够执行。
+* `INVOKER`表示调用者可以执行。
+* `COMMENT 'string'`表示注释信息。
 
 下面修改存储过程 showstuscore 的定义，将读写权限改为 MODIFIES SQL DATA，并指明调用者可以执行，代码如下：
-```
+```sql
 mysql> ALTER PROCEDURE showstuscore MODIFIES SQL DATA SQL SECURITY INVOKER;
 Query OK, 0 rows affected (0.01 sec)
 执行代码，并查看修改后的信息，运行结果如下：
@@ -236,32 +231,32 @@ collation_connection: gbk_chinese_ci
 # 删除存储过程
 存储过程被创建后，就会一直保存在数据库服务器上，直至被删除。当 MySQL 数据库中存在废弃的存储过程时，我们需要将它从数据库中删除。
 
-MySQL 中使用`DROP PROCEDURE`语句来删除数据库中已经存在的存储过程。语法格式如下：
-```
+MySQL 中使用`DROP PROCEDURE`语句来删除数据库中已经存在的存储过程。
+```sql
 DROP PROCEDURE [ IF EXISTS ] <过程名>
 ```
-语法说明如下：
+语法说明：
 * 过程名：指定要删除的存储过程的名称。
 * `IF EXISTS`：指定这个关键字，用于防止因删除不存在的存储过程而引发的错误。
 
 注意：存储过程名称后面没有参数列表，也没有括号，在删除之前，必须确认该存储过程没有任何依赖关系，否则会导致其他与之关联的存储过程无法运行。
 
-下面删除存储过程`ShowStuScore`，SQL 语句和运行结果如下：
-```
+下面删除存储过程`ShowStuScore`：
+```sql
 mysql> DROP PROCEDURE ShowStuScore;
 Query OK, 0 rows affected (0.08 sec)
 ```
-删除后，可以通过查询`information_schema`数据库下的`routines`表来确认上面的删除是否成功。SQL 语句和运行结果如下：
-```
+删除后，可以通过查询`information_schema`数据库下的`routines`表来确认上面的删除是否成功。
+```sql
 mysql> SELECT * FROM information_schema.routines WHERE routine_name='ShowStuScore';
 Empty set (0.03 sec)
 ```
 结果显示，没有查询出任何记录，说明存储过程`ShowStuScore`已经被删除了。
 # 存储函数
-存储函数和存储过程一样，都是在数据库中定义一些 SQL 语句的集合。存储函数可以通过 return 语句返回函数值，主要用于计算并返回一个值。而存储过程没有直接返回值，主要用于执行操作。
+存储函数和存储过程一样，都是在数据库中定义一些 SQL 语句的集合。存储函数可以通过`return`语句返回函数值，主要用于计算并返回一个值。而存储过程没有直接返回值，主要用于执行操作。
 
-在 MySQL 中，使用`CREATE FUNCTION`语句来创建存储函数，其语法形式如下：
-```
+在 MySQL 中，使用`CREATE FUNCTION`语句来创建存储函数：
+```sql
 CREATE FUNCTION sp_name ([func_parameter[...]])
 RETURNS type
 [characteristic ...] routine_body
@@ -276,7 +271,7 @@ RETURNS type
 注意：在具体创建函数时，函数名不能与已经存在的函数名重名。除了上述要求外，推荐函数名命名（标识符）为`function_xxx`或者`func_xxx`。
 
 `func_parameter`可以由多个参数组成，其中每个参数由参数名称和参数类型组成，其形式如下：
-```
+```sql
 [IN | OUT | INOUT] param_name type;
 ```
 其中：
@@ -284,7 +279,7 @@ RETURNS type
 * `param_name`参数是存储函数的参数名称；
 * `type`参数指定存储函数的参数类型，该类型可以是 MySQL 数据库的任意数据类型。
 
-```
+```sql
 mysql> USE test;
 Database changed
 mysql> DELIMITER //
@@ -299,7 +294,7 @@ mysql> DELIMITER ;
 ```
 上述代码中，创建了`func_student`函数，该函数拥有一个类型为`INT(11)`的参数`id`，返回值为`VARCHAR(20)`类型。`SELECT`语句从`tb_student`表中查询`id`字段值等于所传入参数`id`值的记录，同时返回该条记录的`name`字段值。
 
-创建函数与创建存储过程一样，需要通过命令 DELIMITER // 将 SQL 语句的结束符由“;”修改为“//”，最后通过命令 DELIMITER ; 将结束符号修改成 SQL 语句中默认的结束符号。
+创建函数与创建存储过程一样，需要通过命令`DELIMITER //`将 SQL 语句的结束符由“;”修改为“//”，最后通过命令`DELIMITER`; 将结束符号修改成 SQL 语句中默认的结束符号。
 
 如果在存储函数中的`RETURN`语句返回一个类型不同于函数的`RETURNS`子句中指定类型的值，返回值将被强制为恰当的类型。比如，如果一个函数返回一个`ENUM`或`SET`值，但是`RETURN`语句返回一个整数，对于`SET`成员集的相应的`ENUM`成员，从函数返回的值是字符串。
 
@@ -330,9 +325,9 @@ MySQL 中使用`CALL`语句来调用存储过程。调用存储过程后，数�
 ```
 CALL sp_name([parameter[...]]);
 ```
-其中，`sp_name`表示存储过程的名称，parameter 表示存储过程的参数。
+其中，`sp_name`表示存储过程的名称，`parameter`表示存储过程的参数。
 
-```
+```sql
 mysql> DELIMITER ;
 mysql> CALL ShowStuScore();
 +--------------+---------------+
@@ -364,7 +359,7 @@ Query OK, 0 rows affected (0.03 sec)
 因为存储过程实际上也是一种函数，所以存储过程名后需要有( )符号，即使不传递参数也需要。
 ## 调用存储函数
 在 MySQL 中，存储函数的使用方法与 MySQL 内部函数的使用方法是一样的。换言之，用户自己定义的存储函数与 MySQL 内部函数是一个性质的。区别在于，存储函数是用户自己定义的，而内部函数是 MySQL 开发者定义的。
-```
+```sql
 mysql> SELECT func_student(3);
 +-----------------+
 | func_student(3) |
@@ -380,7 +375,7 @@ mysql> SELECT func_student(3);
 变量是表达式语句中最基本的元素，可以用来临时存储数据。在存储过程和函数中都可以定义和使用变量。用户可以使用`DECLARE`关键字来定义变量，定义后可以为变量赋值。这些变量的作用范围是`BEGIN...END`程序段中。
 
 ## 1. 定义变量
-MySQL 中可以使用 DECLARE 关键字来定义变量，其基本语法如下：
+MySQL 中可以使用`DECLARE`关键字来定义变量，其基本语法如下：
 ```
 DECLARE var_name[,...] type [DEFAULT value]
 ```
@@ -390,28 +385,28 @@ DECLARE var_name[,...] type [DEFAULT value]
 * `type`参数用来指定变量的类型；
 * `DEFAULT value`子句将变量默认值设置为`value`，没有使用`DEFAULT`子句时，默认值为`NULL`。
 
-下面定义变量 my_sql，数据类型为 INT 类型，默认值为 10。SQL 语句如下：
+下面定义变量`my_sql`，数据类型为`INT`类型，默认值为 10。
 ```
 DECLARE my_sql INT DEFAULT 10;
 ```
 ## 2. 为变量赋值
-MySQL 中可以使用 SET 关键字来为变量赋值，SET 语句的基本语法如下：
+MySQL 中可以使用`SET`关键字来为变量赋值：
 ```
 SET var_name = expr[,var_name = expr]...
 ```
 其中：
-SET 关键字用来为变量赋值；
-var_name 参数是变量的名称；
-expr 参数是赋值表达式。
+* `SET`关键字用来为变量赋值；
+* `var_name`参数是变量的名称；
+* `expr`参数是赋值表达式。
 
-注意：一个 SET 语句可以同时为多个变量赋值，各个变量的赋值语句之间用逗号隔开。
+注意：一个`SET`语句可以同时为多个变量赋值，各个变量的赋值语句之间用逗号隔开。
 
-下面为变量 my_sql 赋值为 30。SQL 语句如下：
+下面为变量`my_sql`赋值为 30。
 ```
 SET my_sql=30;
 ```
-MySQL 中还可以使用`SELECT..INTO`语句为变量赋值。其基本语法如下：
-```
+MySQL 中还可以使用`SELECT..INTO`语句为变量赋值。
+```sql
 SELECT col_name [...] INTO var_name[,...]
 FROM table_name WEHRE condition
 ```
@@ -423,8 +418,8 @@ FROM table_name WEHRE condition
 
 注意：当将查询结果赋值给变量时，该查询语句的返回结果只能是单行。
 
-下面从 tb_student 表中查询 id 为 2 的记录，将该记录的 id 值赋给变量 my_sql。SQL 语句如下：
-```
+下面从`tb_student`表中查询`id`为 2 的记录，将该记录的`id`值赋给变量`my_sql`。
+```sql
 SELECT id INTO my_sql FROM tb_student WEHRE id=2;
 ```
 # 定义条件和处理程序
@@ -432,16 +427,16 @@ SELECT id INTO my_sql FROM tb_student WEHRE id=2;
 
 定义条件是指事先定义程序执行过程中遇到的问题，处理程序定义了在遇到这些问题时应当采取的处理方式和解决办法，保证存储过程和函数在遇到警告或错误时能继续执行，从而增强程序处理问题的能力，避免程序出现异常被停止执行。
 ## 1. 定义条件
-MySQL 中可以使用`DECLARE`关键字来定义条件。其基本语法如下：
-```
+MySQL 中可以使用`DECLARE`关键字来定义条件。
+```sql
 DECLARE condition_name CONDITION FOR condition_value
 condition value:
 SQLSTATE [VALUE] sqlstate_value | mysql_error_code
 ```
 其中：
-condition_name 参数表示条件的名称；
-condition_value 参数表示条件的类型；
-sqlstate_value 参数和 mysql_error_code 参数都可以表示 MySQL 的错误。sqlstate_value 表示长度为 5 的字符串类型错误代码，mysql_error_code 表示数值类型错误代码。例如 ERROR 1146(42S02) 中，sqlstate_value 值是 42S02，mysql_error_code 值是 1146。
+* `condition_name`参数表示条件的名称；
+* `condition_value`参数表示条件的类型；
+* `sqlstate_value`参数和`mysql_error_code`参数都可以表示 MySQL 的错误。`sqlstate_value`表示长度为 5 的字符串类型错误代码，`mysql_error_code`表示数值类型错误代码。例如`ERROR 1146(42S02)`中，`sqlstate_value`值是 42S02，`mysql_error_code`值是 1146。
 
 下面定义“ERROR 1146 (42S02)”这个错误，名称为 can_not_find。 可以用两种不同的方法来定义，代码如下：
 ```
@@ -452,8 +447,8 @@ DECLARE can_not_find CONDITION FOR SQLSTATE '42S02';
 DECLARE can_not_find CONDITION FOR 1146;
 ```
 ## 2. 定义处理程序
-MySQL 中可以使用 DECLARE 关键字来定义处理程序。其基本语法如下：
-```
+MySQL 中可以使用`DECLARE`关键字来定义处理程序。
+```SQL
 DECLARE handler_type HANDLER FOR condition_value[...] sp_statement
 handler_type:
 CONTINUE | EXIT | UNDO
@@ -461,9 +456,9 @@ condition_value:
 SQLSTATE [VALUE] sqlstate_value | condition_name | SQLWARNING | NOT FOUND | SQLEXCEPTION | mysql_error_code
 ```
 其中，handler_type 参数指明错误的处理方式，该参数有 3 个取值。这 3 个取值分别是 CONTINUE、EXIT 和 UNDO。
-CONTINUE 表示遇到错误不进行处理，继续向下执行；
-EXIT 表示遇到错误后马上退出；
-UNDO 表示遇到错误后撤回之前的操作，MySQL 中暂时还不支持这种处理方式。
+* `CONTINUE`表示遇到错误不进行处理，继续向下执行；
+* `EXIT`表示遇到错误后马上退出；
+* `UNDO`表示遇到错误后撤回之前的操作，MySQL 中暂时还不支持这种处理方式。
 
 注意：通常情况下，执行过程中遇到错误应该立刻停止执行下面的语句，并且撤回前面的操作。但是，MySQL 中现在还不能支持 UNDO 操作。因此，遇到错误时最好执行 EXIT 操作。如果事先能够预测错误类型，并且进行相应的处理，那么可以执行 CONTINUE 操作。
 
@@ -475,10 +470,10 @@ UNDO 表示遇到错误后撤回之前的操作，MySQL 中暂时还不支持这
 * `SQLEXCEPTION`：匹配所有没有被`SQLWARNING`或`NOT FOUND`捕获的`sqlstate_value`值；
 * `mysql_error_code`：匹配数值类型错误代码。
 
-sp_statement 参数为程序语句段，表示在遇到定义的错误时，需要执行的一些存储过程或函数。
+`sp_statement`参数为程序语句段，表示在遇到定义的错误时，需要执行的一些存储过程或函数。
 
 下面是定义处理程序的几种方式，代码如下：
-```
+```SQL
 //方法一：捕获 sqlstate_value
 DECLARE CONTINUE HANDLER FOR SQLSTATE '42S02' SET @info='CAN NOT FIND';
 
@@ -556,9 +551,10 @@ mysql> SELECT @X;
 下面介绍游标的使用，主要包括游标的声明、打开、使用和关闭。
 1. 声明游标
 MySQL 中使用 DECLARE 关键字来声明游标，并定义相应的 SELECT 语句，根据需要添加 WHERE 和其它子句。其语法的基本形式如下：
+```
 DECLARE cursor_name CURSOR FOR select_statement;
-
-其中，cursor_name 表示游标的名称；select_statement 表示 SELECT 语句，可以返回一行或多行数据。
+```
+其中，`cursor_name`表示游标的名称；`select_statement`表示`SELECT`语句，可以返回一行或多行数据。
 例 1
 下面声明一个名为 nameCursor 的游标，代码如下：
 ```
@@ -573,14 +569,15 @@ Query OK, 0 rows affected (0.07 sec)
 ```
 以上语句定义了 nameCursor 游标，游标只局限于存储过程中，存储过程处理完成后，游标就消失了。
 2. 打开游标
-声明游标之后，要想从游标中提取数据，必须首先打开游标。在 MySQL 中，打开游标通过 OPEN 关键字来实现，其语法格式如下：
+声明游标之后，要想从游标中提取数据，必须首先打开游标。在 MySQL 中，打开游标通过`OPEN`关键字来实现：
+```
 OPEN cursor_name;
-
-其中，cursor_name 表示所要打开游标的名称。需要注意的是，打开一个游标时，游标并不指向第一条记录，而是指向第一条记录的前边。
+```
+其中，`cursor_name`表示所要打开游标的名称。需要注意的是，打开一个游标时，游标并不指向第一条记录，而是指向第一条记录的前边。
 
 在程序中，一个游标可以打开多次。用户打开游标后，其他用户或程序可能正在更新数据表，所以有时会导致用户每次打开游标后，显示的结果都不同。
 3. 使用游标
-游标顺利打开后，可以使用 FETCH...INTO 语句来读取数据，其语法形式如下：
+游标顺利打开后，可以使用`FETCH...INTO`语句来读取数据：
 ```
 FETCH cursor_name INTO var_name [,var_name]...
 ```
@@ -588,15 +585,16 @@ FETCH cursor_name INTO var_name [,var_name]...
 
 MySQL 的游标是只读的，也就是说，你只能顺序地从开始往后读取结果集，不能从后往前，也不能直接跳到中间的记录。
 4. 关闭游标
-游标使用完毕后，要及时关闭，在 MySQL 中，使用 CLOSE 关键字关闭游标，其语法格式如下：
+游标使用完毕后，要及时关闭，在 MySQL 中，使用`CLOSE`关键字关闭游标：
+```
 CLOSE cursor_name;
+```
+`CLOSE`释放游标使用的所有内部内存和资源，因此每个游标不再需要时都应该关闭。
 
-CLOSE 释放游标使用的所有内部内存和资源，因此每个游标不再需要时都应该关闭。
-
-在一个游标关闭后，如果没有重新打开，则不能使用它。但是，使用声明过的游标不需要再次声明，用 OPEN 语句打开它就可以了。
+在一个游标关闭后，如果没有重新打开，则不能使用它。但是，使用声明过的游标不需要再次声明，用`OPEN`语句打开它就可以了。
 
 如果你不明确关闭游标，MySQL 将会在到达 END 语句时自动关闭它。游标关闭之后，不能使用 FETCH 来使用该游标。
-例 2
+
 创建 users 数据表，并插入数据，SQL 语句和运行结果如下：
 ```
 mysql> CREATE TABLE `users`
@@ -684,12 +682,12 @@ mysql> SELECT * FROM users //
 在存储过程和自定义函数中可以使用流程控制语句来控制程序的流程。MySQL 中流程控制语句有：`IF`语句、`CASE`语句、`LOOP`语句、`LEAVE`语句、`ITERATE`语句、`REPEAT`语句和`WHILE`语句等。
 ## 1. IF语句
 IF 语句用来进行条件判断，根据是否满足条件（可包含多个条件），来执行不同的语句，是流程控制中最常用的判断语句。其语法的基本形式如下：
-···
+```SQL
 IF search_condition THEN statement_list
     [ELSEIF search_condition THEN statement_list]...
     [ELSE statement_list]
 END IF
-···
+```
 其中，`search_condition`参数表示条件判断语句，如果返回值为`TRUE`，相应的 SQL 语句列表（`statement_list`）被执行；如果返回值为`FALSE`，则`ELSE`子句的语句列表被执行。`statement_list`可以包括一个或多个语句。
 
 注意：MySQL 中的`IF()`函数不同于这里的`IF`语句。
@@ -741,29 +739,28 @@ CASE
 END CASE;
 ```
 ## 3. LOOP 语句
-LOOP 语句可以使某些特定的语句重复执行。与 IF 和 CASE 语句相比，LOOP 只实现了一个简单的循环，并不进行条件判断。
+`LOOP`语句可以使某些特定的语句重复执行。与`IF`和`CASE`语句相比，`LOOP`只实现了一个简单的循环，并不进行条件判断。
 
-LOOP 语句本身没有停止循环的语句，必须使用 LEAVE 语句等才能停止循环，跳出循环过程。LOOP 语句的基本形式如下：
-```
+`LOOP`语句本身没有停止循环的语句，必须使用`LEAVE`语句等才能停止循环，跳出循环过程。
+```SQL
 [begin_label:]LOOP
     statement_list
 END LOOP [end_label]
 ```
-其中，begin_label 参数和 end_label 参数分别表示循环开始和结束的标志，这两个标志必须相同，而且都可以省略；statement_list 参数表示需要循环执行的语句。
-例 3
-使用 LOOP 语句进行循环操作。代码如下：
-```
+其中，`begin_label`参数和`end_label`参数分别表示循环开始和结束的标志，这两个标志必须相同，而且都可以省略；`statement_list`参数表示需要循环执行的语句。
+```SQL
 add_num:LOOP
     SET @count=@count+1;
 END LOOP add_num;
 ```
-该示例循环执行 count 加 1 的操作。因为没有跳出循环的语句，这个循环成了一个死循环。LOOP 循环都以 END LOOP 结束。
-4. LEAVE 语句
-LEAVE 语句主要用于跳出循环控制。其语法形式如下：
+该示例循环执行`count`加 1 的操作。因为没有跳出循环的语句，这个循环成了一个死循环。`LOOP`循环都以`END LOOP`结束。
+## 4. LEAVE 语句
+`LEAVE`语句主要用于跳出循环控制。
+```
 LEAVE label
+```
+其中，`label`参数表示循环的标志，`LEAVE`语句必须跟在循环标志前面。
 
-其中，label 参数表示循环的标志，LEAVE 语句必须跟在循环标志前面。
-例 4
 下面是一个 LEAVE 语句的示例。代码如下：
 ```
 add_num:LOOP
@@ -773,14 +770,13 @@ add_num:LOOP
 END LOOP add num;
 ```
 该示例循环执行 count 加 1 的操作。当 count 的值等于 100 时，跳出循环。
-5. ITERATE 语句
-ITERATE 是“再次循环”的意思，用来跳出本次循环，直接进入下一次循环。ITERATE 语句的基本语法形式如下：
-ITERATE label
-
-其中，label 参数表示循环的标志，ITERATE 语句必须跟在循环标志前面。
-例 5
-下面是一个 ITERATE 语句的示例。代码如下：
+## 5. ITERATE 语句
+`ITERATE`是“再次循环”的意思，用来跳出本次循环，直接进入下一次循环。
 ```
+ITERATE label
+```
+其中，`label`参数表示循环的标志，`ITERATE`语句必须跟在循环标志前面。
+```SQL
 add_num:LOOP
     SET @count=@count+1;
     IF @count=100 THEN
@@ -791,46 +787,41 @@ add_num:LOOP
 END LOOP add_num;
 ```
 该示例循环执行 count 加 1 的操作，count 值为 100 时结束循环。如果 count 的值能够整除 3，则跳出本次循环，不再执行下面的 SELECT 语句。
+
 说明：LEAVE 语句和 ITERATE 语句都用来跳出循环语句，但两者的功能是不一样的。LEAVE 语句是跳出整个循环，然后执行循环后面的程序。而 ITERATE 语句是跳出本次循环，然后进入下一次循环。使用这两个语句时一定要区分清楚。
-
-6. REPEAT 语句
-REPEAT 语句是有条件控制的循环语句，每次语句执行完毕后，会对条件表达式进行判断，如果表达式返回值为 TRUE，则循环结束，否则重复执行循环中的语句。
-
-REPEAT 语句的基本语法形式如下：
-```
+## 6. REPEAT 语句
+`REPEAT`语句是有条件控制的循环语句，每次语句执行完毕后，会对条件表达式进行判断，如果表达式返回值为`TRUE`，则循环结束，否则重复执行循环中的语句。
+```SQL
 [begin_label:] REPEAT
     statement_list
     UNTIL search_condition
 END REPEAT [end_label]
 ```
 其中：
-begin_label 为 REPEAT 语句的标注名称，该参数可以省略；
-REPEAT 语句内的语句被重复，直至 search_condition 返回值为 TRUE。
-statement_list 参数表示循环的执行语句；
-search_condition 参数表示结束循环的条件，满足该条件时循环结束。
-REPEAT 循环都用 END REPEAT 结束。
-例 6
-下面是一个使用 REPEAT 语句的示例。代码如下：
-```
+* `begin_label`为`REPEAT`语句的标注名称，该参数可以省略；
+* `REPEAT`语句内的语句被重复，直至`search_condition`返回值为`TRUE`。
+* `statement_list`参数表示循环的执行语句；
+* `search_condition`参数表示结束循环的条件，满足该条件时循环结束。
+
+`REPEAT`循环都用`END REPEAT`结束。
+```SQL
 REPEAT
     SET @count=@count+1;
     UNTIL @count=100
 END REPEAT;
 ```
-该示例循环执行 count 加 1 的操作，count 值为 100 时结束循环。
-7. WHILE 语句
-WHILE 语句也是有条件控制的循环语句。WHILE 语句和 REPEAT 语句不同的是，WHILE 语句是当满足条件时，执行循环内的语句，否则退出循环。WHILE 语句的基本语法形式如下：
-```
+该示例循环执行`count`加 1 的操作，`count`值为 100 时结束循环。
+## 7. WHILE 语句
+`WHILE`语句也是有条件控制的循环语句。`WHILE`语句和`REPEAT`语句不同的是，`WHILE`语句是当满足条件时，执行循环内的语句，否则退出循环。`WHILE`语句的基本语法形式如下：
+```SQL
 [begin_label:] WHILE search_condition DO
     statement list
 END WHILE [end label]
 ```
-其中，search_condition 参数表示循环执行的条件，满足该条件时循环执行；statement_list 参数表示循环的执行语句。WHILE 循环需要使用 END WHILE 来结束。
-例 7
-下面是一个使用 WHILE 语句的示例。代码如下：
-```
+其中，`search_condition`参数表示循环执行的条件，满足该条件时循环执行；`statement_list`参数表示循环的执行语句。`WHILE`循环需要使用`END WHILE`来结束。
+```SQL
 WHILE @count<100 DO
     SET @count=@count+1;
 END WHILE;
 ```
-该示例循环执行 count 加 1 的操作，count 值小于 100 时执行循环。如果 count 值等于 100 了，则跳出循环。
+该示例循环执行`count`加 1 的操作，`count`值小于 100 时执行循环。如果`count`值等于 100 了，则跳出循环。

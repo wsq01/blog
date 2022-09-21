@@ -835,9 +835,7 @@ mysql> SELECT IFNULL(5,8),IFNULL(NULL,'OK'),IFNULL(SQRT(-8),'FALSE'),SQRT(-8);
 1 row in set (0.00 sec)
 ```
 ## CASE函数：搜索语句
-除了`IF`函数，MySQL 还提供了一个替代的条件语句`CASE`。 MySQL `CASE`语句使代码更加可读和高效。
-
-`CASE`语句有两种形式：简单的和可搜索`CASE`语句。
+除了`IF`函数，MySQL 还提供了一个替代的条件语句`CASE`。`CASE`语句有两种形式：简单的和可搜索`CASE`语句。
 ## 简单的 CASE 语句
 简单的`CASE`语句就是指使用简单`CASE`语句来检查表达式的值与一组唯一值的匹配。
 ```sql
@@ -850,9 +848,15 @@ END CASE;
 ```
 其中：<表达式> 可以是任何有效的表达式。我们将 <表达式> 的值与每个`WHEN`子句中的值进行比较，例如 <值1>，<值2> 等。如果 <表达式> 和 <值n> 的值相等，则执行相应的`WHEN`分支中的命令 <操作>。如果`WHEN`子句中的 <值n> 没有与 <表达式> 的值匹配，则`ELSE`子句中的命令将被执行。`ELSE`子句是可选的。 如果省略`ELSE`子句，并且找不到匹配项，MySQL 将引发错误。
 ```sql
-mysql> SELECT CASE WEEKDAY(NOW()) WHEN 0 THEN '星期一' WHEN 1 THEN '星期二' WHEN
-2 THEN '星期三' WHEN 3 THEN '星期四' WHEN 4 THEN '星期五' WHEN 5 THEN '星期六'
-ELSE '星期天' END AS COLUMN1,NOW(),WEEKDAY(NOW()),DAYNAME(NOW());
+mysql> SELECT CASE WEEKDAY(NOW())
+    WHEN 0 THEN '星期一'
+    WHEN 1 THEN '星期二'
+    WHEN 2 THEN '星期三'
+    WHEN 3 THEN '星期四'
+    WHEN 4 THEN '星期五'
+    WHEN 5 THEN '星期六'
+    ELSE '星期天'
+    END AS COLUMN1,NOW(),WEEKDAY(NOW()),DAYNAME(NOW());
 +---------+---------------------+----------------+----------------+
 | COLUMN1 | NOW()               | WEEKDAY(NOW()) | DAYNAME(NOW()) |
 +---------+---------------------+----------------+----------------+

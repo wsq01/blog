@@ -47,6 +47,8 @@ Number(undefined) // NaN
 
 // null：转成0
 Number(null) // 0
+
+Number('5e2') // 500
 ```
 `Number`函数将字符串转为数值，要比`parseInt`函数严格很多。基本上，只要有一个字符无法转成数值，整个字符串就会被转为`NaN`。
 ```javascript
