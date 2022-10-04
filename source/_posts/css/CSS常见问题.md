@@ -165,3 +165,46 @@ div::-webkit-scrollbar {
 * `div::-webkit-scrollbar-corner`边角，即两个滚动条的交汇处
 * `div::-webkit-resizer`两个滚动条的交汇处上用于通过拖动调整元素大小的小控件注意此方案有兼容性问题，一般需要隐藏滚动条时我都是用一个色块通过定位盖上去，或者将子级元素调大，父级元素使用`overflow-hidden`截掉滚动条部分。暴力且直接。
 
+# 平滑滚动
+```css
+html {
+  scroll-behavior: smooth;
+}
+```
+# 禁用textarea文本框调整大小
+```css
+textarea.no-resize {
+  resize: none;
+}
+
+textarea.horizontal-resize {
+  resize: horizontal;
+}
+
+textarea.vertical-resize {
+  resize: vertical;
+}
+```
+
+# 首字下沉
+```css
+::first-letter {
+  font-size: 250%;
+}
+```
+# 改变输入框光标的颜色
+```css
+input {
+  caret-color: red;
+}
+```
+# 限制输入框值的范围
+```css
+input:in-range {
+  background: rgba(0, 255, 0, .25);
+}
+
+input:out-of-range {
+  background: rgba(255, 0, 0, .25);
+}
+```
