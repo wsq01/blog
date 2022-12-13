@@ -186,15 +186,11 @@ import demo
 要实现这个效果，可以借助 Python 内置的`__name__`变量。当直接运行一个模块时，`name`变量的值为`__main__`；而将模块被导入其他程序中并运行该程序时，处于模块中的`__name__`变量的值就变成了模块名。因此，如果希望测试函数只有在直接运行模块文件时才执行，则可在调用测试函数时增加判断，即只有当`__name__ =='__main__'`时才调用测试函数。
 
 因此，我们可以修改 demo.py 模板文件中的测试代码为：
-```
+```py
 if __name__ == '__main__':
-    say()
-    clangs = CLanguage("C语言中文网","http://c.biancheng.net")
-    clangs.say()
-```
-这样，当我们直接运行 demo.py 模板文件时，其执行结果不变；而运行 test.py 文件时，其执行结果为：
-```
-Python教程 http://c.biancheng.net/python
+  say()
+  clangs = CLanguage("小明","xiaoming")
+  clangs.say()
 ```
 显然，这里执行的仅是模板文件中的输出语句，测试代码并未执行。
 ## 自定义模块编写说明文档
@@ -347,7 +343,7 @@ ls -a
 #设置PYTHON PATH 环境变盘
 PYTHONPATH=.:/Users/mengma/python_module
 
-Mac OS X 的多个路径之间同样以冒号（:）作为分隔符，因此上面一行同样设置了两条路径：点（.）代表当前路径，还有一条路径是 /Users/mengma/python_module（memgma 是作者在 Mac OS X 系统的登录名）。
+Mac OS X 的多个路径之间同样以冒号（:）作为分隔符，因此上面一行同样设置了两条路径：点（.）代表当前路径，还有一条路径是 /Users/mengma/python_module。
 
 在完成了 PYTHONPATH 变量值的设置后，在 .bash_profile 文件的最后添加导出 PYTHONPATH 变量的语句。
 #导出PYTHON PATH 环境变量
@@ -376,34 +372,34 @@ say()
 CLanguage()
 disPython()
 ```
-在此基础上，如果 demo.py 模块中的 disPython() 函数不想让其它文件引入，则只需将其名称改为 _disPython() 或者 __disPython()。修改之后，再次执行 test.py，其输出结果为：
+在此基础上，如果`demo.py`模块中的`disPython()`函数不想让其它文件引入，则只需将其名称改为`_disPython()`或者`__disPython()`。修改之后，再次执行`test.py`，其输出结果为：
 ```
 人生苦短，我学Python！
-C语言中文网：http://c.biancheng.net
+小明：xiaoming
 Traceback (most recent call last):
   File "C:/Users/mengma/Desktop/2.py", line 4, in <module>
     disPython()
 NameError: name 'disPython' is not defined
 ```
-显然，test.py 文件中无法使用未引入的 disPython() 函数。
+显然，`test.py`文件中无法使用未引入的`disPython()`函数。
 ## Python模块__all__变量
-除此之外，还可以借助模块提供的 __all__ 变量，该变量的值是一个列表，存储的是当前模块中一些成员（变量、函数或者类）的名称。通过在模块文件中设置 __all__ 变量，当其它文件以“from 模块名 import *”的形式导入该模块时，该文件中只能使用 __all__ 列表中指定的成员。
-也就是说，只有以“from 模块名 import *”形式导入的模块，当该模块设有 __all__ 变量时，只能导入该变量指定的成员，未指定的成员是无法导入的。
+除此之外，还可以借助模块提供的`__all__`变量，该变量的值是一个列表，存储的是当前模块中一些成员（变量、函数或者类）的名称。通过在模块文件中设置`__all__`变量，当其它文件以`from 模块名 import *`的形式导入该模块时，该文件中只能使用`__all__`列表中指定的成员。
+也就是说，只有以`from 模块名 import *`形式导入的模块，当该模块设有`__all__`变量时，只能导入该变量指定的成员，未指定的成员是无法导入的。
 
 举个例子，修改 demo.py 模块文件中的代码：
-```
+```py
 def say():
-    print("人生苦短，我学Python！")
+  print("人生苦短，我学Python！")
 def CLanguage():
-    print("C语言中文网：http://c.biancheng.net")
+  print("小明")
 def disPython():
-    print("Python教程：http://c.biancheng.net/python")
+  print("小红")
 __all__ = ["say","CLanguage"]
 ```
-可见，`__all__`变量只包含 say() 和 CLanguage() 的函数名，不包含 disPython() 函数的名称。此时直接执行  test.py 文件，其执行结果为：
+可见，`__all__`变量只包含`say()`和`CLanguage()`的函数名，不包含`disPython()`函数的名称。此时直接执行`test.py`文件，其执行结果为：
 ```
 人生苦短，我学Python！
-C语言中文网：http://c.biancheng.net
+小明
 Traceback (most recent call last):
   File "C:/Users/mengma/Desktop/2.py", line 4, in <module>
     disPython()
@@ -411,46 +407,34 @@ NameError: name 'disPython' is not defined
 ```
 显然，对于 test.py 文件来说，demo.py 模块中的 disPython() 函数是未引入，这样调用是非法的。
 
-再次声明，__all__ 变量仅限于在其它文件中以“from 模块名 import *”的方式引入。也就是说，如果使用以下 2 种方式引入模块，则 __all__ 变量的设置是无效的。
+再次声明，`__all__`变量仅限于在其它文件中以“from 模块名 import *”的方式引入。也就是说，如果使用以下 2 种方式引入模块，则`__all__`变量的设置是无效的。
 
 1) 以“import 模块名”的形式导入模块。通过该方式导入模块后，总可以通过模块名前缀（如果为模块指定了别名，则可以使用模快的别名作为前缀）来调用模块内的所有成员（除了以下划线开头命名的成员）。
-
-仍以 demo.py 模块文件和 test.py 文件为例，修改它们的代码如下所示：
-```
+```py
 #demo.py
 def say():
-    print("人生苦短，我学Python！")
+  print("人生苦短，我学Python！")
 def CLanguage():
-    print("C语言中文网：http://c.biancheng.net")
+  print("小明")
 def disPython():
-    print("Python教程：http://c.biancheng.net/python")
+  print("小红")
 __all__ = ["say"]
 #test.py
 import demo
 demo.say()
 demo.CLanguage()
 demo.disPython()
-运行 test.py 文件，其输出结果为：
-人生苦短，我学Python！
-C语言中文网：http://c.biancheng.net
-Python教程：http://c.biancheng.net/python
 ```
-可以看到，虽然 demo.py 模块文件中设置有  __all__ 变量，但是当以“import demo”的方式引入后，__all__ 变量将不起作用。
+可以看到，虽然 demo.py 模块文件中设置有`__all__`变量，但是当以`import demo`的方式引入后，`__all__`变量将不起作用。
 
-2) 以“from 模块名 import 成员”的形式直接导入指定成员。使用此方式导入的模块，__all__ 变量即便设置，也形同虚设。
-
-仍以 demo.py 和 test.py 为例，修改 test.py 文件中的代码，如下所示：
-```
+2) 以`from 模块名 import 成员`的形式直接导入指定成员。使用此方式导入的模块，`__all__`变量即便设置，也形同虚设。
+```py
 from demo import say
 from demo import CLanguage
 from demo import disPython
 say()
 CLanguage()
 disPython()
-运行 test.py，输出结果为：
-人生苦短，我学Python！
-C语言中文网：http://c.biancheng.net
-Python教程：http://c.biancheng.net/python
 ```
 # 包
 实际开发中，一个大型的项目往往需要使用成百上千的 Python 模块，如果将这些模块都堆放在一起，势必不好管理。而且，使用模块可以有效避免变量名或函数名重名引发的冲突，但是如果模块名重复怎么办呢？因此，Python提出了包（Package）的概念。
