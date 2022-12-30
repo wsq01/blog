@@ -314,70 +314,56 @@ True
 ```
 另外，对于所有没有 return 语句的函数定义，Python 都会在末尾加上 return None，使用不带值的 return 语句（也就是只有 return 关键字本身），那么就返回 None。
 # return函数返回值
-到目前为止，我们创建的函数都只是对传入的数据进行了处理，处理完了就结束。但实际上，在某些场景中，我们还需函数将处理的结果反馈回来，就好像主管向下级员工下达命令，让其去打印文件，员工打印好文件后并没有完成任务，还需要将文件交给主管。
-
-Python中，用 def 语句创建函数时，可以用 return 语句指定应该返回的值，该返回值可以是任意类型。需要注意的是，return 语句在同一函数中可以出现多次，但只要有一个得到执行，就会直接结束函数的执行。
-
-函数中，使用 return 语句的语法格式如下：
+Python中，用`def`语句创建函数时，可以用`return`语句指定应该返回的值，该返回值可以是任意类型。需要注意的是，`return`语句在同一函数中可以出现多次，但只要有一个得到执行，就会直接结束函数的执行。
 ```
 return [返回值]
 ```
-其中，返回值参数可以指定，也可以省略不写（将返回空值 None）。
+其中，返回值参数可以指定，也可以省略不写（将返回空值`None`）。
 ```py
-def add(a,b):
-    c = a + b
-    return c
+def add(a, b):
+  c = a + b
+  return c
 #函数赋值给变量
-c = add(3,4)
-print(c)
+c = add(3, 4)
+print(c) # 7
 #函数返回值作为其他函数的实际参数
-print(add(3,4))
+print(add(3, 4)) # 7
 ```
-运行结果为：
-```
-7
-7
-```
-本例中，add() 函数既可以用来计算两个数的和，也可以连接两个字符串，它会返回计算的结果。
+本例中，`add()`函数既可以用来计算两个数的和，也可以连接两个字符串，它会返回计算的结果。
 
-通过 return 语句指定返回值后，我们在调用函数时，既可以将该函数赋值给一个变量，用变量保存函数的返回值，也可以将函数再作为某个函数的实际参数。
+通过`return`语句指定返回值后，我们在调用函数时，既可以将该函数赋值给一个变量，用变量保存函数的返回值，也可以将函数再作为某个函数的实际参数。
 ```py
 def isGreater0(x):
-    if x > 0:
-        return True
-    else:
-        return False
-print(isGreater0(5))
-print(isGreater0(0))
+  if x > 0:
+    return True
+  else:
+    return False
+print(isGreater0(5)) # True
+print(isGreater0(0)) # False
 ```
-运行结果为：
-```
-True
-False
-```
-可以看到，函数中可以同时包含多个 return 语句，但需要注意的是，最终真正执行的做多只有 1 个，且一旦执行，函数运行会立即结束。
+可以看到，函数中可以同时包含多个`return`语句，但需要注意的是，最终真正执行的做多只有 1 个，且一旦执行，函数运行会立即结束。
 
-以上实例中，我们通过 return 语句，都仅返回了一个值，但其实通过 return 语句，可以返回多个值，读者可以阅读《Python函数返回多个值》一节做详细了解。
+以上实例中，我们通过`return`语句，都仅返回了一个值，但其实通过`return`语句，可以返回多个值。
 # 变量作用域
-所谓作用域，就是变量的有效范围，就是变量可以在哪个范围以内使用。有些变量可以在整段代码的任意位置使用，有些变量只能在函数内部使用，有些变量只能在 for 循环内部使用。
+所谓作用域，就是变量的有效范围，就是变量可以在哪个范围以内使用。有些变量可以在整段代码的任意位置使用，有些变量只能在函数内部使用，有些变量只能在`for`循环内部使用。
 
-变量的作用域由变量的定义位置决定，在不同位置定义的变量，它的作用域是不一样的。本节我们只讲解两种变量，局部变量和全局变量。
+变量的作用域由变量的定义位置决定，在不同位置定义的变量，它的作用域是不一样的。
 ## 局部变量
-在函数内部定义的变量，它的作用域也仅限于函数内部，出了函数就不能使用了，我们将这样的变量称为局部变量（Local Variable）。
+在函数内部定义的变量，它的作用域也仅限于函数内部，出了函数就不能使用了，我们将这样的变量称为局部变量。
 
 要知道，当函数被执行时，Python 会为其分配一块临时的存储空间，所有在函数内部定义的变量，都会存储在这块空间中。而在函数执行完毕后，这块临时存储空间随即会被释放并回收，该空间中存储的变量自然也就无法再被使用。
 
 举个例子：
 ```py
 def demo():
-    add = "http://c.biancheng.net/python/"
-    print("函数内部 add =",add)
+  add = "python"
+  print("函数内部 add =",add)
 demo()
 print("函数外部 add =",add)
 ```
 程序执行结果为：
 ```
-函数内部 add = http://c.biancheng.net/python/
+函数内部 add = python
 Traceback (most recent call last):
   File "C:\Users\mengma\Desktop\file.py", line 6, in <module>
     print("函数外部 add =",add)
@@ -391,14 +377,14 @@ NameError: name 'add' is not defined
 def demo(name,add):
     print("函数内部 name =",name)
     print("函数内部 add =",add)
-demo("Python教程","http://c.biancheng.net/python/")
+demo("Python教程","python")
 print("函数外部 name =",name)
 print("函数外部 add =",add)
 ```
 程序执行结果为：
 ```
 函数内部 name = Python教程
-函数内部 add = http://c.biancheng.net/python/
+函数内部 add = python
 Traceback (most recent call last):
   File "C:\Users\mengma\Desktop\file.py", line 7, in <module>
     print("函数外部 name =",name)
@@ -406,14 +392,14 @@ NameError: name 'name' is not defined
 ```
 由于 Python 解释器是逐行运行程序代码，由此这里仅提示给我“name 没有定义”，实际上在函数外部访问 add 变量也会报同样的错误。
 ## 全局变量
-除了在函数内部定义变量，Python 还允许在所有函数的外部定义变量，这样的变量称为全局变量（Global Variable）。
+除了在函数内部定义变量，Python 还允许在所有函数的外部定义变量，这样的变量称为全局变量。
 
 和局部变量不同，全局变量的默认作用域是整个程序，即全局变量既可以在各个函数的外部使用，也可以在各函数内部使用。
 
 定义全局变量的方式有以下 2 种：
 在函数体外定义的变量，一定是全局变量，例如：
 ```py
-add = "http://c.biancheng.net/shell/"
+add = "shell"
 def text():
     print("函数体内访问：",add)
 text()
@@ -421,24 +407,25 @@ print('函数体外访问：',add)
 ```
 运行结果为：
 ```
-函数体内访问： http://c.biancheng.net/shell/
-函数体外访问： http://c.biancheng.net/shell/
+函数体内访问： shell
+函数体外访问： shell
 ```
 在函数体内定义全局变量。即使用 global 关键字对变量进行修饰后，该变量就会变为全局变量。例如：
 ```py
 def text():
     global add
-    add= "http://c.biancheng.net/java/"
+    add= "java"
     print("函数体内访问：",add)
 text()
 print('函数体外访问：',add)
 ```
 运行结果为：
-函数体内访问： http://c.biancheng.net/java/
-函数体外访问： http://c.biancheng.net/java/
-
+```
+函数体内访问： java
+函数体外访问： java
+```
 注意，在使用 global 关键字修饰变量名时，不能直接给变量赋初值，否则会引发语法错误。
-获取指定作用域范围中的变量
+## 获取指定作用域范围中的变量
 在一些特定场景中，我们可能需要获取某个作用域内（全局范围内或者局部范围内）所有的变量，Python 提供了以下 3 种方式：
 1) globals()函数
 globals() 函数为 Python 的内置函数，它可以返回一个包含全局范围内所有变量的字典，该字典中的每个键值对，键为变量名，值为该变量的值。
@@ -465,9 +452,10 @@ print(globals()['Pyname'])
 globals()['Pyname'] = "Python入门教程"
 print(Pyname)
 程序执行结果为：
+```
 Python教程
 Python入门教程
-
+```
 2) locals()函数
 locals() 函数也是 Python 内置函数之一，通过调用该函数，我们可以得到一个包含当前作用域内所有变量的字典。这里所谓的“当前作用域”指的是，在函数内部调用 locals() 函数，会获得包含所有局部变量的字典；而在全局范文内调用 locals() 函数，其功能和 globals() 函数相同。
 
@@ -477,11 +465,11 @@ locals() 函数也是 Python 内置函数之一，通过调用该函数，我们
 Pyname = "Python教程"
 Pyadd = "http://c.biancheng.net/python/"
 def text():
-    #局部变量
-    Shename = "shell教程"
-    Sheadd= "http://c.biancheng.net/shell/"
-    print("函数内部的 locals:")
-    print(locals())
+  #局部变量
+  Shename = "shell教程"
+  Sheadd= "http://c.biancheng.net/shell/"
+  print("函数内部的 locals:")
+  print(locals())
 text()
 print("函数外部的 locals:")
 print(locals())
@@ -493,21 +481,22 @@ print(locals())
 ```
 当使用 locals() 函数获取所有全局变量时，和 globals() 函数一样，其返回的字典中会默认包含有很多变量，这些都是 Python 主程序内置的，读者暂时不用理会它们。
 
-
 注意，当使用 locals() 函数获得所有局部变量组成的字典时，可以向 globals() 函数那样，通过指定键访问对应的变量值，但无法对变量值做修改。例如：
-```
+```py
 #全局变量
 Pyname = "Python教程"
 Pyadd = "http://c.biancheng.net/python/"
 def text():
-    #局部变量
-    Shename = "shell教程"
-    Sheadd= "http://c.biancheng.net/shell/"
-    print(locals()['Shename'])
-    locals()['Shename'] = "shell入门教程"
-    print(Shename)
+  #局部变量
+  Shename = "shell教程"
+  Sheadd= "http://c.biancheng.net/shell/"
+  print(locals()['Shename'])
+  locals()['Shename'] = "shell入门教程"
+  print(Shename)
 text()
+```
 程序执行结果为：
+```
 shell教程
 shell教程
 ```
@@ -611,7 +600,7 @@ outdef()
 #闭包函数，其中 exponent 称为自由变量
 def nth_power(exponent):
   def exponent_of(base):
-      return base ** exponent
+    return base ** exponent
   return exponent_of # 返回值是 exponent_of 函数
 square = nth_power(2) # 计算一个数的平方
 cube = nth_power(3) # 计算一个数的立方
@@ -760,14 +749,12 @@ None
 ```
 可以看出，`exec()`中最适合放置运行后没有结果的语句，而`eval()`中适合放置有结果返回的语句。
 
-如果 eval() 里放置一个没有结果返回的语句会怎样呢？例如下面代码：
+如果`eval()`里放置一个没有结果返回的语句会怎样呢？例如下面代码：
+```
 a= eval("a = 2")
-这时 Python 解释器会报 SyntaxError 错误，提示 eval() 中不识别等号语法。
-eval() 和 exec() 函数的应用场景
-在使用 Python 开发服务端程序时，这两个函数应用得非常广泛。例如，客户端向服务端发送一段字符串代码，服务端无需关心具体的内容，直接跳过 eval() 或 exec() 来执行，这样的设计会使服务端与客户端的耦合度更低，系统更易扩展。
+```
+这时 Python 解释器会报`SyntaxError`错误，提示`eval()`中不识别等号语法。
+#### eval() 和 exec() 函数的应用场景
+在使用 Python 开发服务端程序时，这两个函数应用得非常广泛。例如，客户端向服务端发送一段字符串代码，服务端无需关心具体的内容，直接跳过`eval()`或`exec()`来执行，这样的设计会使服务端与客户端的耦合度更低，系统更易扩展。
 
-另外，如果读者以后接触 TensorFlow 框架，就会发现该框架中的静态图就是类似这个原理实现的：
-TensorFlow 中先将张量定义在一个静态图里，这就相当将键值对添加到字典里一样；
-TensorFlow 中通过 session 和张量的 eval() 函数来进行具体值的运算，就当于使用 eval() 函数进行具体值的运算一样。
-
-需要注意的是，在使用 eval() 或是 exec() 来处理请求代码时，函数 eval() 和 exec() 常常会被黑客利用，成为可以执行系统级命令的入口点，进而来攻击网站。解决方法是：通过设置其命名空间里的可执行函数，来限制 eval() 和 exec() 的执行范围。
+需要注意的是，在使用`eval()`或是`exec()`来处理请求代码时，函数`eval()`和`exec()`常常会被黑客利用，成为可以执行系统级命令的入口点，进而来攻击网站。解决方法是：通过设置其命名空间里的可执行函数，来限制`eval()`和`exec()`的执行范围。

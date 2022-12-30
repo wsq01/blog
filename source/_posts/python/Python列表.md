@@ -16,7 +16,7 @@
 
 {% asset_img 2.gif 负值索引示意图 %}
 
-注意，在使用负值作为列序中各元素的索引值时，是从 -1 开始，而不是从 0 开始。
+> 注意，在使用负值作为列序中各元素的索引值时，是从 -1 开始，而不是从 0 开始。
 
 无论是采用正索引值，还是负索引值，都可以访问序列中的任何元素。
 ```python
@@ -29,7 +29,7 @@ print(str[5],"==",str[-1])
 ```py
 sname[start : end : step]
 ```
-其中，各个参数的含义分别是：
+各个参数的含义：
 * `sname`：表示序列的名称；
 * `start`：表示切片的开始索引位置（包括该位置），此参数也可以不指定，会默认为 0，也就是从序列的开头进行切片；
 * `end`：表示切片的结束索引位置（不包括该位置），如果不指定，则默认为序列的长度；
@@ -56,145 +56,116 @@ print("hello " + "world" + str) # hello world!
 Python 中，使用数字`n`乘以一个序列会生成新的序列，其内容为原来序列被重复`n`次的结果。
 ```py
 str="hello"
-print(str*3)
-```
-输出结果为：
-```
-'hellohellohello'
+print(str * 3) # hellohellohello
 ```
 比较特殊的是，列表类型在进行乘法运算时，还可以实现初始化指定长度列表的功能。例如如下的代码，将创建一个长度为 5 的列表，列表中的每个元素都是`None`，表示什么都没有。
 ```py
-list = [None]*5
-print(list)
-```
-输出结果为：
-```
-[None, None, None, None, None]
+list = [None] * 5
+print(list) # [None, None, None, None, None]
 ```
 ## 检查元素是否包含在序列中
-Python 中，可以使用`in`关键字检查某元素是否为序列的成员：
+可以使用`in`关键字检查某元素是否为序列的成员：
 ```py
 value in sequence
 ```
 其中，`value`表示要检查的元素，`sequence`表示指定的序列。
 ```py
 str="www.baidu.com"
-print('c' in str)
-```
-运行结果为：
-```
-False
+print('c' in str) # True
 ```
 和`in`关键字用法相同，但功能恰好相反的，还有`not in`关键字，它用来检查某个元素是否不包含在指定的序列中：
 ```py
 str="www.baidu.com"
-print('c' not in str)
-```
-输出结果为：
-```
-True
+print('c' not in str) # False
 ```
 ## 和序列相关的内置函数
 Python 提供了几个内置函数，可用于实现与序列相关的一些常用操作。
 
-| 函数	        | 功能 |
-| :--: | :--: |
-| len()	     |    计算序列的长度，即返回序列中包含多少个元素。 |
-| max()	     |    找出序列中的最大元素。注意，对序列使用 sum() 函数时，做加和操作的必须都是数字，不能是字符或字符串，否则该函数将抛出异常，因为解释器无法判定是要做连接操作（+ 运算符可以连接两个序列），还是做加和操作。 |
+| 函数        | 功能 |
+| :--:        | :--: |
+| len()	      |    计算序列的长度，即返回序列中包含多少个元素。 |
+| max()	      |    找出序列中的最大元素。注意，对序列使用 sum() 函数时，做加和操作的必须都是数字，不能是字符或字符串，否则该函数将抛出异常，因为解释器无法判定是要做连接操作（+ 运算符可以连接两个序列），还是做加和操作。 |
 | min()	      |   找出序列中的最小元素。 |
-| list()	     |  将序列转换为列表。 |
+| list()	  |  将序列转换为列表。 |
 | str()	      |   将序列转换为字符串。 |
 | sum()	      |   计算元素和。 |
-| sorted()	   |  对元素进行排序。 |
-| reversed()	 |  反向序列中的元素。 |
+| sorted()	  |  对元素进行排序。 |
+| reversed()  |  反向序列中的元素。 |
 | enumerate() |	  将序列组合为一个索引序列，多用在 for 循环中。 |
 
 # list列表
-Python 中没有数组，但是加入了列表。
-
-列表会将所有元素都放在一对中括号`[ ]`里面，相邻元素之间用逗号`,`分隔：
+Python 中没有数组，但是加入了列表。列表会将所有元素都放在一对中括号`[ ]`里面，相邻元素之间用逗号`,`分隔：
 ```py
 [element1, element2, element3, ..., elementn]
 ```
 格式中，`element1 ~ elementn`表示列表中的元素，个数没有限制，只要是 Python 支持的数据类型就可以。
 
 从内容上看，列表可以存储整数、小数、字符串、列表、元组等任何类型的数据，并且同一个列表中元素的类型也可以不同。
-```
-["http://www.test.com/python/", 1, [2,3,4] , 3.0]
+```py
+["python", 1, [2,3,4] , 3.0]
 ```
 注意，在使用列表时，虽然可以将不同类型的数据放入到同一个列表中，但通常情况下不这么做，同一列表中只放入同一类型的数据，这样可以提高程序的可读性。
 
 另外，经常用`list`代指列表，这是因为列表的数据类型就是`list`，通过`type()`函数就可以知道：
 ```py
-type( ["http://c.biancheng.net/python/", 1, [2,3,4] , 3.0] )
+type( ["python", 1, [2,3,4] , 3.0] )
 <class 'list'>
 ```
 可以看到，它的数据类型为`list`，就表示它是一个列表。
 ## 创建列表
-在 Python 中，创建列表的方法可分为两种。
-### 1.使用 [ ] 直接创建列表
-使用`[ ]`创建列表后，一般使用=将它赋值给某个变量：
+创建列表的方法可分为两种。
+### 1.使用 [] 直接创建列表
+使用`[]`创建列表后，一般使用`=`将它赋值给某个变量：
 ```python
 listname = [element1 , element2 , element3 , ... , elementn]
 ```
 其中，`listname`表示变量名，`element1 ~ elementn`表示列表元素。
-
-例如，下面定义的列表都是合法的：
 ```py
 num = [1, 2, 3, 4, 5, 6, 7]
-name = ["hello", "world"]
 program = ["JS", "Python", "Java"]
 ```
 另外，使用此方式创建列表时，列表中元素可以有多个，也可以一个都没有：
 ```
-emptylist = [ ]
+emptylist = []
 ```
-这表明，emptylist 是一个空列表。
+这表明，`emptylist`是一个空列表。
 ### 2.使用 list() 函数创建列表
-除了使用`[ ]`创建列表外，Python 还提供了一个内置的函数`list()`，使用它可以将其它数据类型转换为列表类型。
+Python 还提供了一个内置的函数`list()`，使用它可以将其它数据类型转换为列表类型。
 ```py
 #将字符串转换成列表
 list1 = list("hello")
-print(list1)
+print(list1) # ['h', 'e', 'l', 'l', 'o']
 #将元组转换成列表
 tuple1 = ('Python', 'Java', 'C++', 'JavaScript')
 list2 = list(tuple1)
-print(list2)
+print(list2) # ['Python', 'Java', 'C++', 'JavaScript']
 #将字典转换成列表
 dict1 = {'a':100, 'b':42, 'c':9}
 list3 = list(dict1)
-print(list3)
+print(list3) # ['a', 'b', 'c']
 #将区间转换成列表
 range1 = range(1, 6)
 list4 = list(range1)
-print(list4)
+print(list4) # [1, 2, 3, 4, 5]
 #创建空列表
-print(list())
-```
-运行结果：
-```
-['h', 'e', 'l', 'l', 'o']
-['Python', 'Java', 'C++', 'JavaScript']
-['a', 'b', 'c']
-[1, 2, 3, 4, 5]
-[]
+print(list()) # []
 ```
 ## 访问列表元素
 列表是 Python 序列的一种，我们可以使用索引访问列表中的某个元素（得到的是一个元素的值），也可以使用切片访问列表中的一组元素（得到的是一个新的子列表）。
 
-使用索引访问列表元素的格式为：
+使用索引访问列表元素：
 ```
 listname[i]
 ```
-其中，`listname`表示列表名字，i`表示索引值。列表的索引可以是正数，也可以是负数。
+其中，`listname`表示列表名字，`i`表示索引值。列表的索引可以是正数，也可以是负数。
 
-使用切片访问列表元素的格式为：
+使用切片访问列表元素：
 ```
 listname[start : end : step]
 ```
 其中，`listname`表示列表名字，`start`表示起始索引，`end`表示结束索引，`step`表示步长。
 ```py
-url = list("http://c.biancheng.net/shell/")
+url = list("http://www.baidu.com/python")
 #使用索引访问列表中的某个元素
 print(url[3])  #使用正数索引
 print(url[-4])  #使用负数索引
@@ -206,13 +177,13 @@ print(url[-6: -1])  #使用负数切片
 运行结果：
 ```
 p
-e
-['b', 'i', 'a', 'n', 'c', 'h', 'e', 'n', 'g']
-['b', 'n', 'e']
-['s', 'h', 'e', 'l', 'l']
+t
+['w', '.', 'b', 'a', 'i', 'd', 'u', '.', 'c']
+['w', 'a', 'u']
+['p', 'y', 't', 'h', 'o']
 ```
 ## 删除列表
-对于已经创建的列表，如果不再使用，可以使用`del`关键字将其删除。
+可以使用`del`关键字将其删除。
 
 实际开发中并不经常使用`del`来删除列表，因为 Python 自带的垃圾回收机制会自动销毁无用的列表，即使开发者不手动删除，Python 也会自动将其回收。
 ```py
@@ -239,15 +210,9 @@ NameError: name 'intlist' is not defined
 language = ["Python", "C++", "Java"]
 birthday = [1991, 1998, 1995]
 info = language + birthday
-print("language =", language)
-print("birthday =", birthday)
-print("info =", info)
-```
-运行结果：
-```
-language = ['Python', 'C++', 'Java']
-birthday = [1991, 1998, 1995]
-info = ['Python', 'C++', 'Java', 1991, 1998, 1995]
+print(language) # ['Python', 'C++', 'Java']
+print(birthday) # [1991, 1998, 1995]
+print(info) # ['Python', 'C++', 'Java', 1991, 1998, 1995]
 ```
 从运行结果可以发现，使用`+`会生成一个新的列表，原有的列表不会被改变。
 
@@ -324,7 +289,7 @@ print(l)
 l.insert(3, ['Ruby', 'SQL'])
 print(l)
 #插入字符串，整个字符串被当成一个元素
-l.insert(0, "http://www.baidu.com")
+l.insert(0, "JS")
 print(l)
 ```
 输出结果为：
@@ -332,11 +297,11 @@ print(l)
 ['Python', 'C', 'C++', 'Java']
 ['Python', 'C', ('C#', 'Go'), 'C++', 'Java']
 ['Python', 'C', ('C#', 'Go'), ['Ruby', 'SQL'], 'C++', 'Java']
-['http://www.baidu.com', 'Python', 'C', ('C#', 'Go'), ['Ruby', 'SQL'], 'C++', 'Java']
+['JS', 'Python', 'C', ('C#', 'Go'), ['Ruby', 'SQL'], 'C++', 'Java']
 ```
 提示，`insert()`主要用来在列表的中间位置插入元素，如果你仅仅希望在列表的末尾追加元素，那更建议使用`append()`和`extend()`。
 # list列表删除元素
-在 Python 列表中删除元素主要分为以下 3 种场景：
+列表中删除元素主要分为以下 3 种场景：
 * 根据目标元素所在位置的索引进行删除，可以使用`del`关键字或者`pop()`方法；
 * 根据元素本身的值进行删除，可使用列表（`list`类型）提供的`remove()`方法；
 * 将列表中所有元素全部删除，可使用列表（`list`类型）提供的`clear()`方法。
@@ -359,15 +324,10 @@ del listname[start : end]
 lang = ["Python", "C++", "Java", "PHP", "Ruby", "MATLAB"]
 #使用正数索引
 del lang[2]
-print(lang)
+print(lang) # ['Python', 'C++', 'PHP', 'Ruby', 'MATLAB']
 #使用负数索引
 del lang[-2]
-print(lang)
-```
-运行结果：
-```
-['Python', 'C++', 'PHP', 'Ruby', 'MATLAB']
-['Python', 'C++', 'PHP', 'MATLAB']
+print(lang) # ['Python', 'C++', 'PHP', 'MATLAB']
 ```
 ```py
 lang = ["Python", "C++", "Java", "PHP", "Ruby", "MATLAB"]
