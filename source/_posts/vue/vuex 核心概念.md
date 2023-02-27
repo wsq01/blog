@@ -678,9 +678,9 @@ export default {
   }
 }
 ```
-####模块动态注册
+#### 模块动态注册
 在`store`创建之后，你可以使用`store.registerModule`方法注册模块。
-```
+```js
 // 注册模块 `myModule`
 store.registerModule('myModule', {
   // ...
@@ -694,14 +694,15 @@ store.registerModule(['nested', 'myModule'], {
 模块动态注册功能使得其他Vue插件可以通过在`store`中附加新模块的方式来使用Vuex管理状态。例如，`vuex-router-sync`插件就是通过动态注册模块将`vue-router`和`vuex`结合在一起，实现应用的路由状态管理。
 你也可以使用`store.unregisterModule(moduleName)`来动态卸载模块。注意，你不能使用此方法卸载静态模块（即创建`store`时声明的模块）。
 在注册一个新`module`时，你很有可能想保留过去的`state`，例如从一个服务端渲染的应用保留 state。你可以通过`preserveState`选项将其归档：`store.registerModule('a', module, { preserveState: true })`。
-####模块重用
+#### 模块重用
 有时我们可能需要创建一个模块的多个实例，例如：
 *   创建多个`store`，他们公用同一个模块 (例如当`runInNewContext`选项是`false`或`'once'`时，为了在服务端渲染中避免有状态的单例)
 *   在一个`store`中多次注册同一个模块
 
 如果我们使用一个纯对象来声明模块的状态，那么这个状态对象会通过引用被共享，导致状态对象被修改时`store`或模块间数据互相污染的问题。
-实际上这和Vue组件内的`data`是同样的问题。因此解决办法也是相同的——使用一个函数来声明模块状态（仅 2.3.0+ 支持）：
-```
+
+实际上这和Vue组件内的`data`是同样的问题。因此解决办法也是相同的——使用一个函数来声明模块状态：
+```js
 const MyReusableModule = {
   state () {
     return {

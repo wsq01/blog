@@ -1,5 +1,9 @@
-
-
+---
+title: Python函数和lambda表达式
+date: 2022-12-13 12:08:52
+tags: [python]
+categories: python
+---
 
 
 函数的本质就是一段有特定功能、可以重复使用的代码，这段代码已经被提前编写好了，并且为其起一个“好听”的名字。在后续编写程序过程中，如果需要同样的功能，直接通过起好的名字就可以调用这段代码。
@@ -13,7 +17,7 @@ def 函数名(参数列表):
 其中，用`[]`括起来的为可选择部分，即可以使用，也可以省略。
 
 各部分参数的含义：
-* 函数名：其实就是一个符合 Python 语法的标识符，函数名最好能够体现出该函数的功能。
+* 函数名：一个符合 Python 语法的标识符。
 * 形参列表：设置该函数可以接收多少个参数，多个参数之间用逗号（`,`）分隔。
 * `[return [返回值] ]`：整体作为函数的可选参参数，用于设置该函数的返回值。也就是说，一个函数，可以用返回值，也可以没有返回值，是否需要根据实际情况而定。
 
@@ -41,14 +45,12 @@ def str_max(str1,str2):
 其中，函数名即指的是要调用的函数的名称；形参值指的是当初创建函数时要求传入的各个形参的值。如果该函数有返回值，我们可以通过一个变量来接收该值，当然也可以不接受。
 
 需要注意的是，创建函数有多少个形参，那么调用时就需要传入多少个值，且顺序必须和创建函数时一致。即便该函数没有参数，函数名后的小括号也不能省略。
-
-例如，我们可以调用上面创建的 pass_dis() 和 str_max() 函数：
 ```py
 pass_dis()
 strmax = str_max("python","shell")
 print(strmax) # shell
 ```
-首先，对于调用空函数来说，由于函数本身并不包含任何有价值的执行代码，也没有返回值，应该调用空函数不会有任何效果。
+首先，对于调用空函数来说，由于函数本身并不包含任何有价值的执行代码，也没有返回值，所以调用空函数不会有任何效果。
 
 其次，对于上面程序中调用`str_max()`函数，由于当初定义该函数为其设置了 2 个参数，因此这里在调用该参数，就必须传入 2 个参数。同时，由于该函数内部还使用了`return`语句，因此我们可以使用`strmax`变量来接收该函数的返回值。
 # 为函数提供说明文档
@@ -81,29 +83,25 @@ str_max(str1, str2)
 通常情况下，定义函数时都会选择有参数的函数形式，函数参数的作用是传递数据给函数，令其对接收的数据做具体的操作处理。
 
 在使用函数时，经常会用到形式参数（简称“形参”）和实际参数（简称“实参”），二者都叫参数，之间的区别是：
-* 形式参数：在定义函数时，函数名后面括号中的参数就是形式参数，例如:
+* 形式参数：在定义函数时，函数名后面括号中的参数就是形式参数:
 ```py
 #定义函数时，这里的函数参数 obj 就是形式参数
 def demo(obj):
   print(obj)
 ```
-* 实际参数：在调用函数时，函数名后面括号中的参数称为实际参数，也就是函数的调用者给函数的参数。例如:
+* 实际参数：在调用函数时，函数名后面括号中的参数称为实际参数，也就是函数的调用者给函数的参数。
 ```py
 a = "测试"
 #调用已经定义好的 demo 函数，此时传入的函数参数 a 就是实际参数
 demo(a)
 ```
-实参和形参的区别，就如同剧本选主角，剧本中的角色相当于形参，而演角色的演员就相当于实参。
-
-明白了什么是形参和实参后，再来想一个问题，那就是实参是如何传递给形参的呢？
-
 根据实际参数的类型不同，函数参数的传递方式可分为 2 种，分别为值传递和引用（地址）传递：
 * 值传递：适用于实参类型为不可变类型（字符串、数字、元组）；
 * 引用（地址）传递：适用于实参类型为可变类型（列表，字典）；
 
 值传递和引用传递的区别是，函数参数进行值传递后，若形参的值发生改变，不会影响实参的值；而函数参数继续引用传递后，改变形参的值，实参的值也会一同改变。
 
-例如，定义一个名为 demo 的函数，分别为传入一个字符串类型的变量（代表值传递）和列表类型的变量（代表引用传递）：
+例如，定义一个名为`demo`的函数，分别为传入一个字符串类型的变量（代表值传递）和列表类型的变量（代表引用传递）：
 ```py
 def demo(obj) :
   obj += obj
@@ -140,81 +138,65 @@ def girth(width , height):
   return 2 * (width + height)
 #调用函数时，必须传递 2 个参数，否则会引发错误
 print(girth(3))
-```
-运行结果为：
-```
+'''
 Traceback (most recent call last):
   File "C:\Users\mengma\Desktop\1.py", line 4, in <module>
     print(girth(3))
 TypeError: girth() missing 1 required positional argument: 'height'
+'''
 ```
-可以看到，抛出的异常类型为`TypeError`，具体是指`girth()`函数缺少一个必要的`height`参数。
-
 同样，多传参数也会抛出异常：
-```py
+```python
 def girth(width , height):
   return 2 * (width + height)
 #调用函数时，必须传递 2 个参数，否则会引发错误
 print(girth(3,2,4))
-```
-运行结果为：
-```
+'''
 Traceback (most recent call last):
   File "C:\Users\mengma\Desktop\1.py", line 4, in <module>
     print(girth(3,2,4))
 TypeError: girth() takes 2 positional arguments but 3 were given
+'''
 ```
-通过`TypeErroe`异常信息可以知道，`girth()`函数本只需要 2 个参数，但是却传入了 3 个参数。
 ## 实参和形参位置必须一致
 在调用函数时，传入实际参数的位置必须和形式参数位置一一对应，否则会产生以下 2 种结果：
-* 抛出`TypeError`异常
-* 当实际参数类型和形式参数类型不一致，并且在函数种，这两种类型之间不能正常转换，此时就会抛出`TypeError`异常。
-
+### 1. 抛出`TypeError`异常
+当实际参数类型和形式参数类型不一致，并且在函数中，这两种类型之间不能正常转换，此时就会抛出`TypeError`异常。
 ```py
 def area(height,width):
-  return height*width/2
-print(area("测试",3))
-```
-输出结果为：
-```
+  return height * width / 2
+print(area("测试", 3))
+'''
 Traceback (most recent call last):
   File "C:\Users\mengma\Desktop\1.py", line 3, in <module>
     print(area("测试",3))
   File "C:\Users\mengma\Desktop\1.py", line 2, in area
     return height*width/2
 TypeError: unsupported operand type(s) for /: 'str' and 'int'
+'''
 ```
 以上显示的异常信息，就是因为字符串类型和整形数值做除法运算。
-## 产生的结果和预期不符
+### 2. 产生的结果和预期不符
 调用函数时，如果指定的实际参数和形式参数的位置不一致，但它们的数据类型相同，那么程序将不会抛出异常，只不过导致运行结果和预期不符。
 
 例如，设计一个求梯形面积的函数，并利用此函数求上底为 4cm，下底为 3cm，高为 5cm 的梯形的面积。但如果交互高和下低参数的传入位置，计算结果将导致错误：
 ```py
-def area(upper_base,lower_bottom,height):
-  return (upper_base+lower_bottom)*height/2
-print("正确结果为：",area(4,3,5))
-print("错误结果为：",area(4,5,3))
+def area(upper_base, lower_bottom, height):
+  return (upper_base + lower_bottom) * height / 2
+print("正确结果为：",area(4, 3, 5)) # 正确结果为： 17.5
+print("错误结果为：",area(4, 5, 3)) # 错误结果为： 13.5
 ```
-运行结果为:
-```
-正确结果为： 17.5
-错误结果为： 13.5
-```
-因此，在调用函数时，一定要确定好位置，否则很有可能产生类似示例中的这类错误，还不容易发现。
-# 函数关键字参数
+# 关键字参数
 关键字参数是指使用形式参数的名字来确定输入的参数值。通过此方式指定函数实参时，不再需要与形参的位置完全一致，只要将参数名写正确即可。
-因此，Python 函数的参数名应该具有更好的语义，这样程序可以立刻明确传入函数的每个参数的含义。
-
-例如，在下面的程序中就使用到了关键字参数的形式给函数传参：
 ```py
-def dis_str(str1,str2):
-  print("str1:",str1)
-  print("str2:",str2)
+def dis_str(str1, str2):
+  print("str1:", str1)
+  print("str2:", str2)
 #位置参数
 dis_str("python", "shell")
 #关键字参数
-dis_str("python",str2="shell")
-dis_str(str2="python",str1="shell")
+dis_str("python", str2="shell")
+dis_str(str2="python", str1="shell")
 ```
 程序执行结果为：
 ```
@@ -227,29 +209,27 @@ str2: python
 ```
 可以看到，在调用有参函数时，既可以根据位置参数来调用，也可以使用关键字参数（程序中第 8 行）来调用。在使用关键字参数调用时，可以任意调换参数传参的位置。
 
-当然，还可以像第 7 行代码这样，使用位置参数和关键字参数混合传参的方式。但需要注意，混合传参时关键字参数必须位于所有的位置参数之后。也就是说，如下代码是错误的：
+当然，还可以像第 7 行代码这样，使用位置参数和关键字参数混合传参的方式。但需要注意，混合传参时关键字参数必须位于所有的位置参数之后。
 ```py
 # 位置参数必须放在关键字参数之前，下面代码错误
-dis_str(str1="python","shell")
+dis_str(str1="python", "shell")
 ```
 Python 解释器会报如下错误：
 ```
 SyntaxError: positional argument follows keyword argument
 ```
 # 默认参数
-我们知道，在调用函数时如果不指定某个参数，Python 解释器会抛出异常。为了解决这个问题，Python 允许为参数设置默认值，即在定义函数时，直接给形式参数指定一个默认值。这样的话，即便调用函数时没有给拥有默认值的形参传递参数，该参数可以直接使用定义函数时设置的默认值。
-
-Python 定义带有默认值参数的函数，其语法格式如下：
+在调用函数时如果不指定某个参数，Python 解释器会抛出异常。为了解决这个问题，Python 允许为参数设置默认值，即在定义函数时，直接给形式参数指定一个默认值。这样的话，即便调用函数时没有给拥有默认值的形参传递参数，该参数可以直接使用定义函数时设置的默认值。
 ```
-def 函数名(...，形参名，形参名=默认值)：
+def 函数名(..., 形参名，形参名=默认值)：
   代码块
 ```
 注意，在使用此格式定义函数时，指定有默认值的形式参数必须在所有没默认值参数的最后，否则会产生语法错误。
 ```py
 #str1没有默认参数，str2有默认参数
-def dis_str(str1,str2 = "python"):
-    print("str1:",str1)
-    print("str2:",str2)
+def dis_str(str1, str2 = "python"):
+  print("str1:",str1)
+  print("str2:",str2)
 dis_str("shell")
 dis_str("java","golang")
 ```
@@ -260,61 +240,61 @@ str2: python
 str1: java
 str2: golang
 ```
-上面程序中，dis_str() 函数有 2 个参数，其中第 2 个设有默认参数。这意味着，在调用 dis_str() 函数时，我们可以仅传入 1 个参数，此时该参数会传给 str1 参数，而 str2 会使用默认的参数，如程序中第 6 行代码所示。
+当然在调用`dis_str()`函数时，也可以给所有的参数传值，这时即便`str2`有默认值，它也会优先使用传递给它的新值。
 
-当然在调用 dis_str() 函数时，也可以给所有的参数传值（如第 7 行代码所示），这时即便 str2 有默认值，它也会优先使用传递给它的新值。
-
-同时，结合关键字参数，以下 3 种调用 dis_str() 函数的方式也是可以的：
+同时，结合关键字参数，以下 3 种调用`dis_str()`函数的方式也是可以的：
 ```py
-dis_str(str1 = "http://c.biancheng.net/shell/")
-dis_str("http://c.biancheng.net/java/",str2 = "http://c.biancheng.net/golang/")
-dis_str(str1 = "http://c.biancheng.net/java/",str2 = "http://c.biancheng.net/golang/")
+dis_str(str1 = "shell")
+dis_str("java", str2 = "golang")
+dis_str(str1 = "java", str2 = "golang")
 ```
 再次强调，当定义一个有默认值参数的函数时，有默认值的参数必须位于所有没默认值参数的后面。因此，下面例子中定义的函数是不正确的：
 ```py
 #语法错误
-def dis_str(str1="http://c.biancheng.net/python/",str2,str3):
+def dis_str(str1="python", str2, str3):
   pass
-```  
-显然，str1 设有默认值，而 str2 和 str3 没有默认值，因此 str1 必须位于 str2 和 str3 之后。
+```
+显然，`str1`设有默认值，而`str2`和`str3`没有默认值，因此`str1`必须位于`str2`和`str3`之后。
 
-有读者可能会问，对于自己自定义的函数，可以轻易知道哪个参数有默认值，但如果使用 Python 提供的内置函数，又或者其它第三方提供的函数，怎么知道哪些参数有默认值呢？
+对于自己自定义的函数，可以轻易知道哪个参数有默认值，但如果使用 Python 提供的内置函数，又或者其它第三方提供的函数，怎么知道哪些参数有默认值呢？
 
-Pyhton 中，可以使用“函数名.__defaults__”查看函数的默认值参数的当前值，其返回值是一个元组。以本节中的 dis_str() 函数为例，在其基础上，执行如下代码：
+Pyhton 中，可以使用`函数名.__defaults__`查看函数的默认值参数的当前值，其返回值是一个元组。
 ```
 print(dis_str.__defaults__)
 ```
 程序执行结果为：
-('http://c.biancheng.net/python/',)
+```
+('python',)
+```
 # None（空值）
-在 Python 中，有一个特殊的常量 None（N 必须大写）。和 False 不同，它不表示 0，也不表示空字符串，而表示没有值，也就是空值。
+在 Python 中，有一个特殊的常量`None`。和`False`不同，它不表示 0，也不表示空字符串，而表示没有值，也就是空值。
 
-这里的空值并不代表空对象，即 None 和 []、“” 不同：
+这里的空值并不代表空对象，即`None`和`[]、''`不同：
 ```py
 >>> None is []
 False
 >>> None is ""
 False
 ```
-None 有自己的数据类型，我们可以在 IDLE 中使用 type() 函数查看它的类型，执行代码如下：
+`None`有自己的数据类型，我们可以在 IDLE 中使用`type()`函数查看它的类型：
 ```py
 type(None)
 <class 'NoneType'>
 ```
 可以看到，它属于`NoneType`类型。
 
-需要注意的是，None 是 NoneType 数据类型的唯一值（其他编程语言可能称这个值为 null、nil 或 undefined），也就是说，我们不能再创建其它 NoneType 类型的变量，但是可以将 None 赋值给任何变量。如果希望变量中存储的东西不与任何其它值混淆，就可以使用 None。
+需要注意的是，`None`是`NoneType`数据类型的唯一值，也就是说，我们不能再创建其它`NoneType`类型的变量，但是可以将`None`赋值给任何变量。如果希望变量中存储的东西不与任何其它值混淆，就可以使用`None`。
 
-除此之外，None 常用于 assert、判断以及函数无返回值的情况。举个例子，在前面章节中我们一直使用 print() 函数输出数据，其实该函数的返回值就是 None。因为它的功能是在屏幕上显示文本，根本不需要返回任何值，所以 print() 就返回 None。
+除此之外，`None`常用于`assert`、判断以及函数无返回值的情况。`print()`函数返回值就是`None`。因为它的功能是在屏幕上显示文本，根本不需要返回任何值，所以`print()`就返回`None`。
 ```py
 >>> spam = print('Hello!')
 Hello!
 >>> None == spam
 True
 ```
-另外，对于所有没有 return 语句的函数定义，Python 都会在末尾加上 return None，使用不带值的 return 语句（也就是只有 return 关键字本身），那么就返回 None。
+另外，对于所有没有`return`语句的函数定义，Python 都会在末尾加上`return None`，使用不带值的`return`语句（也就是只有`return`关键字本身），那么就返回`None`。
 # return函数返回值
-Python中，用`def`语句创建函数时，可以用`return`语句指定应该返回的值，该返回值可以是任意类型。需要注意的是，`return`语句在同一函数中可以出现多次，但只要有一个得到执行，就会直接结束函数的执行。
+用`def`语句创建函数时，可以用`return`语句指定应该返回的值，该返回值可以是任意类型。需要注意的是，`return`语句在同一函数中可以出现多次，但只要有一个得到执行，就会直接结束函数的执行。
 ```
 return [返回值]
 ```
@@ -349,11 +329,9 @@ print(isGreater0(0)) # False
 
 变量的作用域由变量的定义位置决定，在不同位置定义的变量，它的作用域是不一样的。
 ## 局部变量
-在函数内部定义的变量，它的作用域也仅限于函数内部，出了函数就不能使用了，我们将这样的变量称为局部变量。
+在函数内部定义的变量，它的作用域也仅限于函数内部，出了函数就不能使用了，这样的变量称为局部变量。
 
-要知道，当函数被执行时，Python 会为其分配一块临时的存储空间，所有在函数内部定义的变量，都会存储在这块空间中。而在函数执行完毕后，这块临时存储空间随即会被释放并回收，该空间中存储的变量自然也就无法再被使用。
-
-举个例子：
+当函数被执行时，Python 会为其分配一块临时的存储空间，所有在函数内部定义的变量，都会存储在这块空间中。而在函数执行完毕后，这块临时存储空间随即会被释放并回收，该空间中存储的变量自然也就无法再被使用。
 ```py
 def demo():
   add = "python"
@@ -369,14 +347,13 @@ Traceback (most recent call last):
     print("函数外部 add =",add)
 NameError: name 'add' is not defined
 ```
+可以看到，如果试图在函数外部访问其内部定义的变量，Python 解释器会报`NameError`错误，并提示我们没有定义要访问的变量，这也证实了当函数执行完毕后，其内部定义的变量会被销毁并回收。
 
-可以看到，如果试图在函数外部访问其内部定义的变量，Python 解释器会报 NameError 错误，并提示我们没有定义要访问的变量，这也证实了当函数执行完毕后，其内部定义的变量会被销毁并回收。
-
-值得一提的是，函数的参数也属于局部变量，只能在函数内部使用。例如：
+值得一提的是，函数的参数也属于局部变量，只能在函数内部使用。
 ```py
 def demo(name,add):
-    print("函数内部 name =",name)
-    print("函数内部 add =",add)
+  print("函数内部 name =",name)
+  print("函数内部 add =",add)
 demo("Python教程","python")
 print("函数外部 name =",name)
 print("函数外部 add =",add)
@@ -390,18 +367,18 @@ Traceback (most recent call last):
     print("函数外部 name =",name)
 NameError: name 'name' is not defined
 ```
-由于 Python 解释器是逐行运行程序代码，由此这里仅提示给我“name 没有定义”，实际上在函数外部访问 add 变量也会报同样的错误。
+由于 Python 解释器是逐行运行程序代码，由此这里仅提示给我“name 没有定义”，实际上在函数外部访问`add`变量也会报同样的错误。
 ## 全局变量
 除了在函数内部定义变量，Python 还允许在所有函数的外部定义变量，这样的变量称为全局变量。
 
 和局部变量不同，全局变量的默认作用域是整个程序，即全局变量既可以在各个函数的外部使用，也可以在各函数内部使用。
 
 定义全局变量的方式有以下 2 种：
-在函数体外定义的变量，一定是全局变量，例如：
+* 在函数体外定义的变量，一定是全局变量：
 ```py
 add = "shell"
 def text():
-    print("函数体内访问：",add)
+  print("函数体内访问：",add)
 text()
 print('函数体外访问：',add)
 ```
@@ -410,64 +387,67 @@ print('函数体外访问：',add)
 函数体内访问： shell
 函数体外访问： shell
 ```
-在函数体内定义全局变量。即使用 global 关键字对变量进行修饰后，该变量就会变为全局变量。例如：
+* 在函数体内定义全局变量。即使用`global`关键字对变量进行修饰后，该变量就会变为全局变量。
 ```py
 def text():
-    global add
-    add= "java"
-    print("函数体内访问：",add)
+  global add
+  add= "java"
+  print("函数体内访问：", add)
 text()
-print('函数体外访问：',add)
+print('函数体外访问：', add)
 ```
 运行结果为：
 ```
 函数体内访问： java
 函数体外访问： java
 ```
-注意，在使用 global 关键字修饰变量名时，不能直接给变量赋初值，否则会引发语法错误。
+
+注意，在使用`global`关键字修饰变量名时，不能直接给变量赋初值，否则会引发语法错误。
 ## 获取指定作用域范围中的变量
 在一些特定场景中，我们可能需要获取某个作用域内（全局范围内或者局部范围内）所有的变量，Python 提供了以下 3 种方式：
-1) globals()函数
-globals() 函数为 Python 的内置函数，它可以返回一个包含全局范围内所有变量的字典，该字典中的每个键值对，键为变量名，值为该变量的值。
+#### 1) globals()函数
+`globals()`函数为 Python 的内置函数，它可以返回一个包含全局范围内所有变量的字典，该字典中的每个键值对，键为变量名，值为该变量的值。
 
 举个例子：
 ```py
 #全局变量
 Pyname = "Python教程"
-Pyadd = "http://c.biancheng.net/python/"
+Pyadd = "python"
 def text():
     #局部变量
     Shename = "shell教程"
-    Sheadd= "http://c.biancheng.net/shell/"
+    Sheadd= "shell"
 print(globals())
 ```
 程序执行结果为：
 ```
-{ ...... , 'Pyname': 'Python教程', 'Pyadd': 'http://c.biancheng.net/python/', ......}
+{ ...... , 'Pyname': 'Python教程', 'Pyadd': 'python', ......}
 ```
-注意，globals() 函数返回的字典中，会默认包含有很多变量，这些都是 Python 主程序内置的，读者暂时不用理会它们。
+注意，`globals()`函数返回的字典中，会默认包含有很多变量，这些都是 Python 主程序内置的。
 
-可以看到，通过调用 globals() 函数，我们可以得到一个包含所有全局变量的字典。并且，通过该字典，我们还可以访问指定变量，甚至如果需要，还可以修改它的值。例如，在上面程序的基础上，添加如下语句：
+可以看到，通过调用`globals()`函数，我们可以得到一个包含所有全局变量的字典。并且，通过该字典，我们还可以访问指定变量，甚至如果需要，还可以修改它的值。例如，在上面程序的基础上，添加如下语句：
+```python
 print(globals()['Pyname'])
 globals()['Pyname'] = "Python入门教程"
 print(Pyname)
+```
 程序执行结果为：
 ```
 Python教程
 Python入门教程
 ```
-2) locals()函数
-locals() 函数也是 Python 内置函数之一，通过调用该函数，我们可以得到一个包含当前作用域内所有变量的字典。这里所谓的“当前作用域”指的是，在函数内部调用 locals() 函数，会获得包含所有局部变量的字典；而在全局范文内调用 locals() 函数，其功能和 globals() 函数相同。
+#### 2) locals()函数
+`locals()`函数也是 Python 内置函数之一，通过调用该函数，我们可以得到一个包含当前作用域内所有变量的字典。这里所谓的“当前作用域”指的是，在函数内部调用`locals()`函数，会获得包含所有局部变量的字典；而在全局范文内调用`locals()`函数，其功能和`globals()`函数相同。
 
 举个例子：
 ```py
 #全局变量
 Pyname = "Python教程"
-Pyadd = "http://c.biancheng.net/python/"
+Pyadd = "python"
 def text():
   #局部变量
   Shename = "shell教程"
-  Sheadd= "http://c.biancheng.net/shell/"
+  Sheadd= "shell"
   print("函数内部的 locals:")
   print(locals())
 text()
@@ -475,13 +455,13 @@ print("函数外部的 locals:")
 print(locals())
 程序执行结果为：
 函数内部的 locals:
-{'Sheadd': 'http://c.biancheng.net/shell/', 'Shename': 'shell教程'}
+{'Sheadd': 'shell', 'Shename': 'shell教程'}
 函数外部的 locals:
-{...... , 'Pyname': 'Python教程', 'Pyadd': 'http://c.biancheng.net/python/', ...... }
+{...... , 'Pyname': 'Python教程', 'Pyadd': 'python', ...... }
 ```
-当使用 locals() 函数获取所有全局变量时，和 globals() 函数一样，其返回的字典中会默认包含有很多变量，这些都是 Python 主程序内置的，读者暂时不用理会它们。
+当使用`locals()`函数获取所有全局变量时，和`globals()`函数一样，其返回的字典中会默认包含有很多变量，这些都是 Python 主程序内置的，读者暂时不用理会它们。
 
-注意，当使用 locals() 函数获得所有局部变量组成的字典时，可以向 globals() 函数那样，通过指定键访问对应的变量值，但无法对变量值做修改。例如：
+注意，当使用`locals()`函数获得所有局部变量组成的字典时，可以向`globals()`函数那样，通过指定键访问对应的变量值，但无法对变量值做修改。例如：
 ```py
 #全局变量
 Pyname = "Python教程"
@@ -500,26 +480,25 @@ text()
 shell教程
 shell教程
 ```
-显然，locals() 返回的局部变量组成的字典，可以用来访问变量，但无法修改变量的值。
-3) vars(object)
-vars() 函数也是 Python 内置函数，其功能是返回一个指定 object 对象范围内所有变量组成的字典。如果不传入object 参数，vars() 和 locals() 的作用完全相同。
-举个例子：
+显然，`locals()`返回的局部变量组成的字典，可以用来访问变量，但无法修改变量的值。
+#### 3) vars(object)
+`vars()`函数也是 Python 内置函数，其功能是返回一个指定`object`对象范围内所有变量组成的字典。如果不传入`object`参数，`vars()`和`locals()`的作用完全相同。
 ```py
  #全局变量
 Pyname = "Python教程"
-Pyadd = "http://c.biancheng.net/python/"
+Pyadd = "python"
 class Demo:
     name = "Python 教程"
-    add = "http://c.biancheng.net/python/"
+    add = "python"
 print("有 object：")
 print(vars(Demo))
 print("无 object：")
 print(vars())
 程序执行结果为：
 有 object：
-{...... , 'name': 'Python 教程', 'add': 'http://c.biancheng.net/python/', ......}
+{...... , 'name': 'Python 教程', 'add': 'python', ......}
 无 object：
-{...... , 'Pyname': 'Python教程', 'Pyadd': 'http://c.biancheng.net/python/', ...... }
+{...... , 'Pyname': 'Python教程', 'Pyadd': 'python', ...... }
 ```
 # 局部函数
 Python 支持在函数内部定义函数，此类函数又称为局部函数。

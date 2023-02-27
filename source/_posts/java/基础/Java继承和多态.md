@@ -6,7 +6,7 @@ categories: java
 ---
 
 # 类的封装
-封装将类的某些信息隐藏在类内部，不允许外部程序直接访问，只能通过该类提供的方法来实现对隐藏信息的操作和访问。
+封装指将类的某些信息隐藏在类内部，不允许外部程序直接访问，只能通过该类提供的方法来实现对隐藏信息的操作和访问。
 
 封装的特点：
 * 只能通过规定的方法访问数据。
@@ -72,7 +72,7 @@ public class EmployeeTest {
 }
 ```
 # 继承（extends）
-Java 中的继承就是在已经存在类的基础上进行扩展，从而产生新的类。已经存在的类称为父类、基类或超类，而新产生的类称为子类或派生类。在子类中，不仅包含父类的属性和方法，还可以增加新的属性和方法。
+继承就是在已经存在类的基础上进行扩展，从而产生新的类。已经存在的类称为父类、基类或超类，而新产生的类称为子类或派生类。在子类中，不仅包含父类的属性和方法，还可以增加新的属性和方法。
 ```java
 修饰符 class class_name extends extend_class {
   // 类的主体
@@ -194,7 +194,7 @@ Java 不支持多继承，只允许一个类直接继承另一个类，即子类
 * 访问父类的成员方法和变量。
 
 ## super调用父类构造方法
-`super`关键字可以在子类的构造方法中显式地调用父类的构造方法，基本格式如下：
+`super`关键字可以在子类的构造方法中显式地调用父类的构造方法：
 ```
 super(parameter-list);
 ```
@@ -367,7 +367,7 @@ sonClass obj = (sonClass) fatherClass;
 Animal animal = new Dog();    // 向上转型，把Dog类型转换为Animal类型
 Dog dog = (Dog) animal; // 向下转型，把Animal类型转换为Dog类型
 ```
-下面通过具体的示例演示对象类型的转换。例如，父类`Animal`和子类`Cat`中都定义了实例变量`name`、静态变量`staticName`、实例方法`eat()`和静态方法`staticEat()`。此外，子类`Cat`中还定义了实例变量`str`和实例方法`eatMethod()`。
+例如，父类`Animal`和子类`Cat`中都定义了实例变量`name`、静态变量`staticName`、实例方法`eat()`和静态方法`staticEat()`。此外，子类`Cat`中还定义了实例变量`str`和实例方法`eatMethod()`。
 ```java
 // 父类 Animal 
 public class Animal {

@@ -1,8 +1,12 @@
-
-
+---
+title: Python字符串常用方法
+date: 2022-12-09 17:25:21
+tags: [python]
+categories: python
+---
 
 # 字符串拼接
-在 Python 中拼接（连接）字符串很简单，可以直接将两个字符串紧挨着写在一起：
+拼接（连接）字符串可以直接将两个字符串紧挨着写在一起：
 ```py
 strname = "str1" "str2"
 ```
@@ -14,7 +18,7 @@ strname = str1 + str2
 ```
 当然，`+`运算符也能拼接字符串常量。
 # 字符串和数字的拼接
-Python 不允许直接拼接数字和字符串，所以我们必须先将数字转换成字符串。可以借助`str()`和`repr()`函数将数字转换为字符串：
+Python 不允许直接拼接数字和字符串，所以必须先将数字转换成字符串。可以借助`str()`和`repr()`函数将数字转换为字符串：
 ```py
 str(obj)
 repr(obj)
@@ -111,7 +115,7 @@ len(a) # 19
 
 在 Python 中，不同的字符所占的字节数不同，数字、英文字母、小数点、下划线以及空格，各占一个字节，而一个汉字可能占 2~4 个字节，具体占多少个，取决于采用的编码方式。例如，汉字在 GBK/GB2312 编码中占用 2 个字节，而在 UTF-8 编码中一般占用 3 个字节。
 
-我们可以通过使用`encode()`方法，将字符串进行编码后再获取它的字节数。例如，采用 UTF-8 编码方式，计算“人生苦短，我用Python”的字节数，可以执行如下代码：
+我们可以通过使用`encode()`方法，将字符串进行编码后再获取它的字节数。
 ```py
 str1 = "人生苦短，我用Python"
 len(str1.encode()) # 27
@@ -186,9 +190,6 @@ str.count(sub[,start[,end]])
 ```py
 str = "www.baidu.com"
 str.count('.') # 2
-```
-```py
-str = "www.baidu.com"
 str.count('.', 3) # 2
 str.count('.', 4) # 1
 ```
@@ -196,14 +197,14 @@ str.count('.', 4) # 1
 ```py
 str = "www.baidu.com"
 str.count('.', 4, -3) # 1
->>> str.count('.', 4, -4) # 0
+str.count('.', 4, -4) # 0
 ```
 # find()方法
 `find()`方法用于检索字符串中是否包含目标字符串，如果包含，则返回第一次出现该字符串的索引；反之，则返回 -1。
 ```py
 str.find(sub[,start[,end]])
 ```
-各参数的含义如下：
+各参数的含义：
 * `str`：表示原字符串；
 * `sub`：表示要检索的目标字符串；
 * `start`：表示开始检索的起始位置。如果不指定，则默认从头开始检索；
@@ -212,18 +213,12 @@ str.find(sub[,start[,end]])
 ```py
 str = "www.baidu.com"
 str.find('.') # 3
-```
-```py
-str = "www.baidu.com"
 str.find('.', 4) # 9
-```
-```py
-str = "www.baidu.com"
 str.find('.', 4, -4) # -1
 ```
 位于索引`（4，-4）`之间的字符串为`baidu`，由于其不包含“.”，因此`find()`方法的返回值为 -1。
 
-注意，Python 还提供了`rfind()`方法，与`find()`方法最大的不同在于，`rfind()`是从字符串右边开始检索。
+Python 还提供了`rfind()`方法，`rfind()`是从字符串右边开始检索。
 ```py
 str = "www.baidu.com"
 str.rfind('.') # 9
@@ -242,16 +237,13 @@ str.index(sub[,start[,end]])
 ```py
 str = "www.baidu.com"
 str.index('.') # 3
-```
-```py
-str = "www.baidu.com"
 str.index('z')
 Traceback (most recent call last):
   File "<pyshell#49>", line 1, in <module>
     str.index('z')
 ValueError: substring not found
 ```
-同`find()`和`rfind()`一样，字符串变量还具有`rindex()`方法，其作用和`index()`方法类似，不同之处在于它是从右边开始检索：
+字符串变量还具有`rindex()`方法，其作用和`index()`方法类似，不同之处在于它是从右边开始检索：
 ```py
 str = "www.baidu.com"
 str.rindex('.') # 9
@@ -292,7 +284,7 @@ S = 'http://www.baidu.com/python/'
 addr = 'http://www.baidu.com'
 print(S.rjust(35)) # http://www.baidu.com/python/
 print(addr.rjust(35)) # http://www.baidu.com
-```          
+```
 可以看到，每行字符串都占用 35 个字节的位置，实现了整体的右对齐效果。
 ```py
 S = 'http://www.baidu.com/python/'
@@ -324,7 +316,7 @@ print(addr.center(35,'-')) # --------http://www.baidu.com--------
 ```py
 str.startswith(sub[,start[,end]])
 ```
-各个参数的具体含义：
+各个参数的含义：
 * `str`：表示原字符串；
 * `sub`：要检索的子串；
 * `start`：指定检索开始的起始位置索引，如果不指定，则默认从头开始检索；
@@ -332,25 +324,16 @@ str.startswith(sub[,start[,end]])
 
 ```py
 str = "www.baidu.com"
-str.startswith("w")
-True
-```
-```py
-str = "www.baidu.com"
-str.startswith("http")
-False
-```
-```py
-str = "www.baidu.com"
-str.startswith("w", 2)
-True
+str.startswith("w") # True
+str.startswith("http") # False
+str.startswith("w", 2) # True
 ```
 ## endswith()方法
 `endswith()`方法用于检索字符串是否以指定字符串结尾，如果是则返回`True`；反之则返回`False`。
 ```py
 str.endswith(sub[,start[,end]])
 ```
-此格式中各参数的含义如下：
+各参数的含义：
 * `str`：表示原字符串；
 * `sub`：表示要检索的字符串；
 * `start`：指定检索开始时的起始位置索引（字符串第一个字符对应的索引值为 0），如果不指定，默认从头开始检索。
@@ -358,11 +341,10 @@ str.endswith(sub[,start[,end]])
 
 ```py
 str = "www.baidu.com"
-str.endswith("com")
-True
+str.endswith("com") # True
 ```
 # 字符串大小写转换
-为了方便对字符串中的字母进行大小写转换，字符串变量提供了 3 种方法，分别是`title()、lower()`和`upper()`。
+字符串变量提供了 3 种对字符串中的字母进行大小写转换的方法，分别是`title()、lower()`和`upper()`。
 ## title()方法
 `title()`方法用于将字符串中每个单词的首字母转为大写，其他字母全部转为小写，转换完成后，此方法会返回转换得到的字符串。如果字符串中没有需要被转换的字符，此方法会将字符串原封不动地返回。
 ```
@@ -397,9 +379,7 @@ str.upper() # 'I LIKE C'
 ```
 需要注意的是，以上 3 个方法都仅限于将转换后的新字符串返回，而不会修改原字符串。
 # 去除字符串中空格
-用户输入数据时，很有可能会无意中输入多余的空格，或者在一些场景中，字符串前后不允许出现空格和特殊字符，此时就需要去除字符串中的空格和特殊字符。
-
-这里的特殊字符，指的是制表符（`\t`）、回车符（`\r`）、换行符（`\n`）等。
+在一些场景中，字符串前后不允许出现空格和特殊字符，此时就需要去除字符串中的空格和特殊字符。这里的特殊字符，指的是制表符（`\t`）、回车符（`\r`）、换行符（`\n`）等。
 
 字符串变量提供了 3 种方法来删除字符串中多余的空格和特殊字符：
 * `strip()`：删除字符串前后（左右两侧）的空格或特殊字符。
@@ -419,13 +399,12 @@ str.strip() # 'www.baidu.com'
 str.strip(" ,\r") # 'www.baidu.com \t\n'
 str # '  www.baidu.com \t\n\r'
 ```
-分析运行结果不难看出，通过`strip()`确实能够删除字符串左右两侧的空格和特殊字符，但并没有真正改变字符串本身。
+通过`strip()`确实能够删除字符串左右两侧的空格和特殊字符，但并没有真正改变字符串本身。
 ## lstrip()方法
 `lstrip()`方法用于去掉字符串左侧的空格和特殊字符：
 ```
 str.lstrip([chars])
 ```
-其中，`str`和`chars`参数的含义，分别同`strip()`语法格式中的`str`和`chars`完全相同。
 ```py
 str = "  www.baidu.com \t\n\r"
 str.lstrip() # 'www.baidu.com \t\n\r'
@@ -435,7 +414,6 @@ str.lstrip() # 'www.baidu.com \t\n\r'
 ```
 str.rstrip([chars])
 ```
-`str`和`chars`参数的含义和前面 2 种方法语法格式中的参数完全相同。
 ```py
 str = "  www.baidu.com \t\n\r"
 str.rstrip() # '  www.baidu.com'
@@ -445,7 +423,7 @@ str.rstrip() # '  www.baidu.com'
 ```
 str.format(args)
 ```
-此方法中，`str`用于指定字符串的显示样式；`args`用于指定要进行格式转换的项，如果有多项，之间有逗号进行分割。
+`str`用于指定字符串的显示样式；`args`用于指定要进行格式转换的项，如果有多项，之间有逗号进行分割。
 
 在创建显示样式模板时，需要使用`{}`和`:`来指定占位符，其完整的语法格式为：
 ```
@@ -454,23 +432,26 @@ str.format(args)
 注意，格式中用 [] 括起来的参数都是可选参数，即可以使用，也可以不使用。各个参数的含义如下：
 * `index`：指定：后边设置的格式要作用到`args`中第几个数据，数据的索引值从 0 开始。如果省略此选项，则会根据`args`中数据的先后顺序自动分配。
 * `fill`：指定空白处填充的字符。注意，当填充字符为逗号(,)且作用于整数或浮点数时，该整数（或浮点数）会以逗号分隔的形式输出，例如（1000000会输出 1,000,000）。
-* `align`：指定数据的对齐方式，具体的对齐方式如表。
+* `align`：指定数据的对齐方式。
+* `sign`：指定有无符号数。
+* `width`：指定输出数据时所占的宽度。
+* `.precision`：指定保留的小数位数。
+* `type`：指定输出数据的具体类型。
+
 | align	| 含义 |
 | :--: | :--: |
 | <	    | 数据左对齐。|
 | >	    | 数据右对齐。|
 | =	    | 数据右对齐，同时将符号放置在填充内容的最左侧，该选项只对数字类型有效。 |
 | ^	    | 数据居中，此选项需和 width 参数一起使用。 |
-* `sign`：指定有无符号数，此参数的值以及对应的含义如表。
+
 | sign参数	| 含义 |
 | :--: | :--: |
 | +	        | 正数前加正号，负数前加负号。 |
 | -	        | 正数前不加正号，负数前加负号。| 
 | 空格      |  正数前加空格，负数前加负号。 |
 | #         |  对于二进制数、八进制数和十六进制数，使用此参数，各进制数前会分别显示 0b、0o、0x前缀；反之则不显示前缀。|
-* `width`：指定输出数据时所占的宽度。
-* `.precision`：指定保留的小数位数。
-* `type`：指定输出数据的具体类型，`type`占位符类型及含义：
+
 | type类型值 | 含义 |
 | :--: | :--: |
 | s	| 对字符串类型格式化。 |

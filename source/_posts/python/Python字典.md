@@ -1,4 +1,9 @@
-
+---
+title: Python字典
+date: 2022-12-05 15:18:21
+tags: [python]
+categories: python
+---
 
 
 Python 字典（`dict`）是一种无序的、可变的序列，它的元素以“键值对（`key-value`）”的形式存储。相对地，列表（`list`）和元组（`tuple`）都是有序的序列，它们的元素在底层是挨着存放的。

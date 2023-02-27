@@ -68,7 +68,7 @@ const factorial = n =>
 factorial(6); // 720
 ```
 ## fibonacci
-生成一个包含 斐波纳契（`fibonacci`）数组，直到该数组有第`n`元素。
+生成一个包含斐波纳契数组，直到该数组有第`n`元素。
 创建一个指定长度的空数组，初始化前两个值( 0和1 )。使用`Array.reduce()`向数组中添加值，该值是最后两个值的和，前两个值除外。
 ```js
 const fibonacci = n =>

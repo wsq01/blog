@@ -1,5 +1,9 @@
-
-
+---
+title: Python元组
+date: 2022-12-04 15:18:21
+tags: [python]
+categories: python
+---
 
 
 元组（`tuple`）是 Python 中另一个重要的序列结构，和列表类似，元组也是由一系列按特定顺序排序的元素组成。
