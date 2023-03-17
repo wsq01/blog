@@ -293,3 +293,123 @@ server {
     rewrite ^(.*)$ https://www.xxx.com;  
 }
 ```
+隐藏 Nginx 版本信息
+```nginx
+http {
+  server_tokens  off;
+}
+```
+PC端和移动端使用不同的项目文件映射
+```nginx
+server {
+  ......
+  location / {
+    root /home/static/pc;
+    if ($http_user_agent ~* '(mobile|android|iphone|ipad|phone)') {
+      root /home/static/mobile;
+    }
+    index index.html;
+  }
+}
+```
+一个web服务，配置多个项目 (location 匹配路由区别)
+```
+server {
+  listen                80;
+  server_name           _;
+  
+  # 主应用
+  location / {
+    root          html/main;
+    index               index.html;
+    try_files           $uri $uri/ /index.html;
+  }
+  
+  # 子应用一
+  location ^~ /store/ {
+    proxy_pass          http://localhost:8001;
+    proxy_redirect      off;
+    proxy_set_header    Host $host;
+    proxy_set_header    X-Real-IP $remote_addr;
+    proxy_set_header    X-Forwarded-For
+    proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  
+  # 子应用二
+  location ^~ /school/ {
+    proxy_pass          http://localhost:8002;
+    proxy_redirect      off;
+    proxy_set_header    Host $host;
+    proxy_set_header    X-Real-IP $remote_addr;
+    proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+  
+  # 静态资源读取不到问题处理
+  rewrite ^/api/profile/(.*)$ /(替换成正确路径的文件的上一层目录)/$1 last;
+}
+
+# 子应用一服务
+server {
+  listen                8001;
+  server_name           _;
+  location / {
+    root          html/store;
+    index               index.html;
+    try_files           $uri $uri/ /index.html;
+  }
+  
+  location ^~ /store/ {
+    alias               html/store/;
+    index               index.html index.htm;
+    try_files           $uri /store/index.html;
+  }
+  
+  # 接口代理
+  location  /api {
+    proxy_pass          http://localhost:8089;
+  }
+}
+
+# 子应用二服务
+server {
+  listen                8002;
+  server_name           _;
+  location / {
+    root          html/school;
+    index               index.html;
+    try_files           $uri $uri/ /index.html;
+  }
+  
+  location ^~ /school/ {
+    alias               html/school/;
+    index               index.html index.htm;
+    try_files           $uri /school/index.html;
+  }
+  
+  # 接口代理
+  location  /api {
+    proxy_pass          http://localhost:10010;
+  }
+}
+
+```
+配置负载均衡
+```
+upstream my_upstream {
+  server                http://localhost:9001;
+  server                http://localhost:9002;
+  server                http://localhost:9003;
+}
+
+server {
+  listen                9000;
+  server_name           test.com;
+
+  location / {
+    proxy_pass          my_upstream;
+    proxy_set_header    Host $proxy_host;
+    proxy_set_header    X-Real-IP $remote_addr;
+    proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+}
+```

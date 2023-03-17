@@ -1,7 +1,7 @@
 ---
 title: git命令速查
 date: 2020-03-30 09:08:46
-tags:
+tags: git
 ---
 
 统一概念：
