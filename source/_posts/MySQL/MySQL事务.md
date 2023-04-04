@@ -164,7 +164,7 @@ SET autocommit = 0|1|ON|OFF;
 下面我们关闭事务自动提交，模拟银行转账。
 
 使用`SET autocommit`语句关闭事务自动提交，且张三转给李四 500 元：
-```
+```sql
 mysql> SET autocommit = 0;
 Query OK, 0 rows affected (0.00 sec)
 mysql> SELECT * FROM mybank.bank;
@@ -183,7 +183,7 @@ Query OK, 1 row affected (0.00 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
 ```
 这时重新打开一个 cmd 窗口，查看`bank`数据表中张三和李四的余额：
-```
+```sql
 mysql> SELECT * FROM mybank.bank;
 +--------------+--------------+
 | customerName | currentMoney |
@@ -195,7 +195,7 @@ mysql> SELECT * FROM mybank.bank;
 结果显示，张三和李四的余额是事务执行前的数据。
 
 下面在之前的窗口中使用`COMMIT`语句提交事务，并查询`bank`数据表的数据：
-```
+```sql
 mysql> COMMIT;
 Query OK, 0 rows affected (0.07 sec)
 mysql> SELECT * FROM mybank.bank;
@@ -254,14 +254,14 @@ MySQL 的事务的隔离级别由低到高分别为`READ UNCOMITTED、READ COMMI
 下例展示了在读未提交隔离级别中产生的脏读现象。
 
 1. 先在`test`数据库中创建`testnum`数据表，并插入数据。
-```
+```sql
 mysql> CREATE TABLE testnum(num INT(4));
 Query OK, 0 rows affected (0.57 sec)
 mysql> INSERT INTO test.testnum (num) VALUES(1),(2),(3),(4),(5);
 Query OK, 5 rows affected (0.09 sec)
  ```
 2. 在 A 窗口中修改事务隔离级别，因为 A 窗口和 B 窗口的事务隔离级别需要保持一致，所以我们使用`SET GLOBAL TRANSACTION`修改全局变量。
-```
+```sql
 mysql> SET GLOBAL TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 Query OK, 0 rows affected (0.04 sec)
 flush privileges;
@@ -549,7 +549,7 @@ mysql>  select @@global.tx_isolation;
 1 row in set, 1 warning (0.00 sec)
 ```
 还可以使用`set tx_isolation`命令直接修改当前`session`的事务隔离级别，SQL 语句和运行结果如下：
-```
+```sql
 mysql> set tx_isolation='READ-COMMITTED';
 Query OK, 0 rows affected, 1 warning (0.00 sec)
 

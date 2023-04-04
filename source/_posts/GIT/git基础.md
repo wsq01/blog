@@ -620,10 +620,8 @@ $ git tag
 v1
 ```
 # 撤销变更
-发现写错了要回退怎么办？看看下面几种后悔指令吧！
-* ❓还没提交的怎么撤销？`checkout、reset`
-还未提交的修改（工作区、暂存区）不想要了，用签出指令（`checkout`）进行撤销清除。
-或者用`checkout`的新版回滚指令`reset`。
+发现写错了要回退怎么办？
+* ❓还没提交的怎么撤销？`checkout、reset`还未提交的修改（工作区、暂存区）不想要了，用签出指令（`checkout`）进行撤销清除。或者用`checkout`的新版回滚指令`reset`。
 * ❓已提交但么有`push`的提交如何撤销？—— `reset、revert`
 * ❓已`push`的提交如何撤销？—— 同上，先本地撤销，然后强制推送`git push origin -f`，⚠️注意慎用！ 记得先`pull`获取更新。
 
@@ -657,7 +655,7 @@ $ git checkout HEAD .
 Updated 1 path from f951a96
 ```
 ## 回退版本reset
-`reset`是专门用来撤销修改、回退版本的指令，支持的场景比较多，多种撤销姿势，所以参数组合也比较多。简单理解就是移动master分支、HEAD的“指针”地址，理解这一点就基本掌握reset了。
+`reset`是专门用来撤销修改、回退版本的指令，支持的场景比较多，多种撤销姿势，所以参数组合也比较多。简单理解就是移动`master`分支、`HEAD`的“指针”地址。
 
 {% asset_img 22.png %}
 
@@ -717,7 +715,7 @@ $ git revert 41ea42 -m'撤销对***的修改'
 ```
 ## checkout/reset/revert总结
 | 标题/指令          | checkout                     | reset                       | revert |
-|  |
+| :--: | :--: | :--: | :--: |
 | 主要作用（撤销）    | 撤销工作区、暂存区未提交修改	| 回退版本，重置工作区、暂存区	| 撤销某一次提交 |
 | 撤销工作区          | git checkout [file]         | git reset HEAD [file]	 || 
 | 撤销工作区、暂存区  | git checkout HEAD [file]     | git reset --hard HEAD [file]	 || 
@@ -787,7 +785,7 @@ $ git stash pop
 
 🪧当然这里先提交到本地也是可以的，只是提交不是一个完整的功能代码，而是残缺的一部分，影响也不大。
 ## 拣选提交cherry-pick
-当有一个紧急bug，在dev上修复完，我们需要把`dev`上的这个`bug`修复所做的修改“复制”到`master`分支，但不想把整个`dev`合并过去。为了方便操作，Git 专门提供了一个`cherry-pick`命令，让我们能复制一个特定的提交到当前分支，而不管这个提交在哪个分支。
+当有一个紧急bug，在`dev`上修复完，我们需要把`dev`上的这个`bug`修复所做的修改“复制”到`master`分支，但不想把整个`dev`合并过去。为了方便操作，Git 专门提供了一个`cherry-pick`命令，让我们能复制一个特定的提交到当前分支，而不管这个提交在哪个分支。
 
 {% asset_img 27.png %}
 
