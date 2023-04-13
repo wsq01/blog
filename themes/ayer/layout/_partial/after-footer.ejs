@@ -1,75 +1,57 @@
-<%- js('/js/jquery-2.0.3.min') %>
-<%- js('/js/share') %>
-<%- js('/js/lazyload.min') %>
-<% if (theme.subtitle.enable){ %>
+<%- js('/js/jquery-3.6.0.min') %> <%- js('/js/lazyload.min') %>
+<!-- Tocbot -->
+<% if (theme.toc && is_post() && !page.no_toc){ %> <%- js('/js/tocbot.min') %>
 <script>
-  try {
-    var typed = new Typed("#subtitle", {
-      strings: ['<%= theme.subtitle.text %>', '<%= theme.subtitle.text2 %>', '<%= theme.subtitle.text3 %>'],
-      startDelay: <%= theme.subtitle.startDelay %>,
-      typeSpeed: <%= theme.subtitle.typeSpeed %>,
-      loop: <%= theme.subtitle.loop %>,
-      backSpeed: <%= theme.subtitle.backSpeed %>,
-      showCursor: <%= theme.subtitle.showCursor %>
-    });
-  } catch (err) {
-  }
-
-</script>
-<% } %>
-
-<% if (theme.toc && is_post()){ %>
-<%- js('/js/tocbot.min') %>
-<script>
-  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
   tocbot.init({
-    tocSelector: '.tocbot',
-    contentSelector: '.article-entry',
-    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
     hasInnerContainers: true,
     scrollSmooth: true,
-    scrollContainer: 'main',
-    positionFixedSelector: '.tocbot',
-    positionFixedClass: 'is-position-fixed',
-    fixedSidebarOffset: 'auto',
-    onClick: (e) => {
-      $('.toc-link').removeClass('is-active-link');
-      $(`a[href=${e.target.hash}]`).addClass('is-active-link');
-      $(e.target.hash).scrollIntoView();
-      return false;
-    }
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
   });
 </script>
 <% } %>
-
-<script src="https://cdn.bootcdn.net/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js"></script>
-<link href="https://cdn.bootcdn.net/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css" rel="stylesheet">
-<script src="https://cdn.bootcdn.net/ajax/libs/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
-<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script> -->
-<%- js('js/ayer') %>
-
-<% if (theme.image_viewer){ %>
-<%- partial('viewer') %>
-<% } %>
-<% if (theme.mathjax){ %>
-<%- partial('mathjax') %>
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+<%- js('dist/main') %>
+<!-- ImageViewer -->
+<% if (theme.image_viewer){ %> <%- partial('viewer') %> <% } %>
+<!-- MathJax -->
+<% if (theme.mathjax){ %> <%- partial('mathjax') %>
 <script>
   var ayerConfig = {
-    mathjax: true
-  }
+    mathjax: true,
+  };
 </script>
 <% } %>
-<% if (theme.busuanzi && theme.busuanzi.enable){ %>
-<%- js('/js/busuanzi-2.3.pure.min') %>
-<% } %>
-
-<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
-
-<% if (theme.fancybox){ %>
-<link href="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" rel="stylesheet">
-<script src="https://cdn.bootcdn.net/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
-<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.2/dist/jquery.fancybox.min.js"></script> -->
-<% } %>
+<!-- Katex -->
+<% if (theme.katex.enable){ %> <%- partial('katex') %> <% } %>
+<!-- busuanzi  -->
+<% if (theme.busuanzi && theme.busuanzi.enable){ %> <%-
+js('/js/busuanzi-2.3.pure.min') %> <% } %>
+<!-- ClickLove -->
+<% if (theme.click_effect===1){ %> <%- js('/js/clickLove') %> <% } %>
+<!-- ClickBoom1 -->
+<% if (theme.click_effect===2){ %>
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+<%- js('/js/clickBoom1') %> <% } %>
+<!-- ClickBoom2 -->
+<% if (theme.click_effect===3){ %> <%- js('/js/clickBoom2') %> <% } %>
+<!-- CodeCopy -->
+<% if (theme.copy_btn == true) { %> <%- css('/css/clipboard') %> <%-
+partial('post/clipboard') %> <% } %>
+<!-- CanvasBackground -->
+<% if (theme.canvas_bg == 1) { %> <%- js('/js/dz') %> <% } %>
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "<%= theme.mermaid.theme %>" });
+  }
+</script>

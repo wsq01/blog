@@ -2,7 +2,9 @@
 title: CSS 变量
 date: 2020-04-10 18:01:52
 tags: [CSS]
-categories: CSS
+categories: 
+ - 前端
+ - CSS
 ---
 
 # 变量的声明

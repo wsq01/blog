@@ -2,6 +2,7 @@
 title: CSS代码片段
 date: 2020-04-04 20:27:31
 tags: CSS
+type: "categories"
 categories: 
   - 前端
   - CSS

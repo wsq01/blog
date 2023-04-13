@@ -2,7 +2,9 @@
 title: axios基础
 date: 2020-03-16 10:25:55
 tags: axios
-categories: axios
+categories: 
+ - 前端
+ - axios
 ---
 
 # 什么是 axios

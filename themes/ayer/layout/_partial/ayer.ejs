@@ -1,6 +1,6 @@
 <% if (theme.cover.enable) { %>
 <section class="cover">
-    <% if (theme.github && theme.github.url){ %>
+    <% if (theme.github.enable && theme.github.url){ %>
       <%# "GitHub Ribbons" %>
       <a class="forkMe" href="<%=theme.github.url%>"
         target="_blank"><img width="149" height="149" src="<%- url_for('images/forkme.png') %>"
@@ -37,6 +37,23 @@
 <% } %>
 
 <% if (theme.subtitle.enable){ %>
-  <script src="https://cdn.bootcdn.net/ajax/libs/typed.js/2.0.12/typed.min.js"></script>
-<!-- <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.11/lib/typed.min.js"></script> -->
+<script src="https://cdn.staticfile.org/typed.js/2.0.12/typed.min.js"></script>
 <% } %>
+
+<!-- Subtitle -->
+<% if (theme.subtitle.enable){ %>
+  <script>
+    try {
+      var typed = new Typed("#subtitle", {
+        strings: ['<%= theme.subtitle.text %>', '<%= theme.subtitle.text2 %>', '<%= theme.subtitle.text3 %>'],
+        startDelay: <%= theme.subtitle.startDelay %>,
+        typeSpeed: <%= theme.subtitle.typeSpeed %>,
+        loop: <%= theme.subtitle.loop %>,
+        backSpeed: <%= theme.subtitle.backSpeed %>,
+        showCursor: <%= theme.subtitle.showCursor %>
+      });
+    } catch (err) {
+      console.log(err)
+    }
+  </script>
+  <% } %>

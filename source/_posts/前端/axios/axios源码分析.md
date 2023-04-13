@@ -2,9 +2,11 @@
 title: axios源码分析
 date: 2020-03-19 09:50:05
 tags: axios
-categories: axios
+categories: 
+ - 前端
+ - axios
 ---
-看源码第一步，先看package.json。一般都会申明 main 主入口文件。
+看源码第一步，先看`package.json`。一般都会申明`main`主入口文件。
 ```js
 // package.json
 {
@@ -20,9 +22,9 @@ module.exports = require("./lib/axios");
 ```
 # lib/axios.js主文件
 axios.js文件代码可分为三部分。
-1. 第一部分：引入一些工具函数utils、Axios构造函数、默认配置defaults等。
-2. 第二部分：是生成实例对象 axios、axios.Axios、axios.create等。
-3. 第三部分：取消相关 API 实现，还有all、spread、导出等实现。
+1. 第一部分：引入一些工具函数`utils、Axios`构造函数、默认配置`defaults`等。
+2. 第二部分：是生成实例对象`axios、axios.Axios、axios.create`等。
+3. 第三部分：取消相关 API 实现，还有`all、spread`、导出等实现。
 
 ## 第一部分
 引入一些工具函数utils、Axios构造函数、默认配置defaults等。
@@ -39,7 +41,7 @@ var mergeConfig = require("./core/mergeConfig");
 var defaults = require("./defaults");
 ```
 ## 第二部分
-生成实例对象 axios、axios.Axios、axios.create等。
+生成实例对象`axios、axios.Axios、axios.create`等。
 ```js
 function createInstance(defaultConfig) {
   // new 一个 Axios 生成实例对象
@@ -134,7 +136,7 @@ function forEach(obj, fn) {
 }
 ```
 ## 第三部分
-取消相关 API 实现，还有all、spread、导出等实现。
+取消相关 API 实现，还有`all、spread`、导出等实现。
 ```js
 // 导出 Cancel 和 CancelToken
 axios.Cancel = require("./cancel/Cancel");
@@ -197,7 +199,8 @@ module.exports = Axios;
 ```
 # 拦截器管理构造函数 InterceptorManager
 请求前拦截，和请求后拦截。
-构造函数，handles 用于存储拦截器函数。
+
+构造函数，`handles`用于存储拦截器函数。
 ```js
 function InterceptorManager() {
   this.handlers = [];
@@ -205,7 +208,7 @@ function InterceptorManager() {
 ```
 接下来声明了三个方法：使用、移除、遍历。
 ## InterceptorManager.prototype.use 使用
-传递两个函数作为参数，数组中的一项存储的是{fulfilled: function(){}, rejected: function(){}}。返回数字 ID，用于移除拦截器。
+传递两个函数作为参数，数组中的一项存储的是`{fulfilled: function(){}, rejected: function(){}}`。返回数字 ID，用于移除拦截器。
 ```js
 /**
  * Add a new interceptor to the stack
@@ -224,7 +227,7 @@ InterceptorManager.prototype.use = function use(fulfilled, rejected) {
 };
 ```
 ## InterceptorManager.prototype.eject 移除
-根据 use 返回的 ID 移除拦截器。
+根据`use`返回的 ID 移除拦截器。
 ```js
 InterceptorManager.prototype.eject = function eject(id) {
   if (this.handlers[id]) {
@@ -245,10 +248,10 @@ InterceptorManager.prototype.forEach = function forEach(fn) {
 ```
 # Axios.prototype.request 请求核心方法
 这个函数是核心函数。主要做了这几件事：
-1. 判断第一个参数是字符串，则设置 url,也就是支持axios("example/url", [, config])，也支持axios({})。
+1. 判断第一个参数是字符串，则设置`url`,也就是支持`axios("example/url", [, config])`，也支持`axios({})`。
 2. 合并默认参数和用户传递的参数
-3. 设置请求的方法，默认是是get方法
-4. 将用户设置的请求和响应拦截器、发送请求的dispatchRequest组成Promise链，最后返回还是Promise实例。
+3. 设置请求的方法，默认是是`get`方法
+4. 将用户设置的请求和响应拦截器、发送请求的`dispatchRequest`组成`Promise`链，最后返回还是`Promise`实例。
 
 ```js
 Axios.prototype.request = function request(config) {
@@ -273,7 +276,7 @@ Axios.prototype.request = function request(config) {
   }
 ```
 ## 组成Promise链，返回Promise实例
-这部分：用户设置的请求和响应拦截器、发送请求的dispatchRequest组成Promise链。也就是保证了请求前拦截器先执行，然后发送请求，再响应拦截器执行这样的顺序。
+这部分：用户设置的请求和响应拦截器、发送请求的`dispatchRequest`组成`Promise`链。也就是保证了请求前拦截器先执行，然后发送请求，再响应拦截器执行这样的顺序。
 ```js
   // 组成`Promise`链
   // 把 xhr 请求的 dispatchRequest 和 undefined 放在一个数组里
@@ -299,12 +302,12 @@ Axios.prototype.request = function request(config) {
 ```
 # dispatchRequest 最终派发请求
 这个函数主要做了如下几件事情：
-1. 如果已经取消，则 throw 原因报错，使Promise走向rejected。
-2. 确保 config.header 存在。
+1. 如果已经取消，则`throw`原因报错，使`Promise`走向`rejected`。
+2. 确保`config.header`存在。
 3. 利用用户设置的和默认的请求转换器转换数据。
-4. 拍平 config.header。
-5. 删除一些 config.header。
-6. 返回适配器adapter（Promise实例）执行后 then执行后的 Promise实例。返回结果传递给响应拦截器处理。
+4. 拍平`config.header`。
+5. 删除一些`config.header`。
+6. 返回适配器`adapter`（`Promise`实例）执行后 then执行后的`Promise`实例。返回结果传递给响应拦截器处理。
 
 ```js
 var utils = require('./../utils');

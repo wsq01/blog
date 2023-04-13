@@ -8,13 +8,12 @@ subtitle: ''
 description: ''
 keywords:
 author: WSQ
-language: zh
+language: zh-CN
 timezone: ''
 
 # URL
-## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
-root: /
+## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
+url: http://example.com
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -41,22 +40,21 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: true
+post_asset_folder: false
 relative_link: false
 future: true
-# 代码高亮
 highlight:
-  enable: false
-  # line_number: true
-  # auto_detect: false
-  # tab_replace: ''
-  # wrap: true
-  # hljs: false
-prismjs:
   enable: true
-# prism_plugin:
-#   mode: 'preprocess' # realtime/preprocess
-#   theme: 'vsc-dark-plus'
+  line_number: true
+  auto_detect: false
+  tab_replace: ''
+  wrap: true
+  hljs: false
+prismjs:
+  enable: false
+  preprocess: true
+  line_number: true
+  tab_replace: ''
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')
@@ -82,8 +80,8 @@ meta_generator: true
 ## http://momentjs.com/docs/#/displaying/format/
 date_format: YYYY-MM-DD
 time_format: HH:mm:ss
-## Use post's date for updated date unless set in front-matter
-use_date_for_updated: false
+## updated_option supports 'mtime', 'date', 'empty'
+updated_option: 'mtime'
 
 # Pagination
 ## Set per_page to 0 to disable pagination
@@ -98,12 +96,11 @@ ignore:
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/
-
 ## Themes: https://hexo.io/themes/
 theme: ayer
 
 # Deployment
-## Docs: https://hexo.io/docs/deployment.html
+## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: git
   repo: git@github.com:wsq01/wsq01.github.io.git
@@ -114,63 +111,3 @@ search:
   path: search.xml
   field: post
   format: html
-
-  feed:
-    type: atom
-    path: atom.xml
-    limit: 20
-    hub:
-    content:
-    content_limit: 140
-    content_limit_delim: ' '
-    order_by: -date
-
-markdown:
-  preset: "default"
-  render:
-    html: true
-    xhtmlOut: false
-    langPrefix: "language-"
-    breaks: true
-    linkify: true
-    typographer: true
-    quotes: "“”‘’"
-  enable_rules:
-  disable_rules:
-  plugins:
-    - markdown-it-abbr
-    - markdown-it-cjk-breaks
-    - markdown-it-deflist
-    - markdown-it-emoji
-    - markdown-it-footnote
-    - markdown-it-ins
-    - markdown-it-mark
-    - markdown-it-sub
-    - markdown-it-sup
-    - markdown-it-imsize
-    - name: markdown-it-container
-      options: success
-    - name: markdown-it-container
-      options: tips
-    - name: markdown-it-container
-      options: warning
-    - name: markdown-it-container
-      options: danger
-  anchors:
-    level: 2
-    collisionSuffix: ""
-    permalink: false
-    permalinkClass: "header-anchor"
-    permalinkSide: "left"
-    permalinkSymbol: "¶"
-    case: 0
-    separator: "-"
-
-# Katex数学公式(allpost设置为false时只有头部设置math:true的文章才开启)
-# 需要更换hexo渲染器，npm un hexo-renderer-marked -S && npm i hexo-renderer-markdown-it-katex -S
-katex:
-  enable: true # true
-  allpost: true
-  copy_tex: false
-# Mathjax数学公式
-mathjax: true
