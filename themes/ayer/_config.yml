@@ -116,7 +116,7 @@ click_effect: 2
 
 # 页面宽度自定义（不建议修改，可能造成布局混乱），article_width文章宽度，sidebar_width侧边栏宽度
 layout:
-  article_width: 86rem
+  article_width: 85rem
   sidebar_width: 8rem
 
 # GitHub Ribbons-封面右上角的forkme，换样式直接在source/images目录下替换forkme图片

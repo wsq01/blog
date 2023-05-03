@@ -1,9 +1,4 @@
----
-title: 应用层——DNS
-date: 2020-10-19 11:08:41
-tags: 计算机网络
-categories: 计算机网络
----
+
  
 互联网采用层次结构的命名树作为主机的名字，并使用分布式的域名系统 DNS(`Domain Name System`)。
 
