@@ -663,7 +663,7 @@ uniqueElements([1, 2, 2, 3, 4, 4, 5]); // [1, 2, 3, 4, 5]
 ## without
 从数组中排除给定值。
 使用`Array.filter()`创建一个不包括所有给定值的数组。
-```
+```js
 const without = (arr, ...args) => arr.filter(v => !args.includes(v));
 
 without([2, 1, 2, 3], 1, 2); // [3]
