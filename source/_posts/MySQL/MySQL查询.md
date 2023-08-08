@@ -2,7 +2,7 @@
 title: MySQL查询
 date: 2020-04-24 17:16:51
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 
@@ -12,15 +12,15 @@ categories: [MySQL]
 SELECT
 {* | <字段列名>}
 [
-FROM <表 1>, <表 2>…
-[WHERE <表达式>
-[GROUP BY <group by definition>
-[HAVING <expression> [{<operator> <expression>}…]]
-[ORDER BY <order by definition>]
-[LIMIT[<offset>,] <row count>]
+  FROM <表 1>, <表 2>…
+  [WHERE <表达式>
+  [GROUP BY <group by definition>
+  [HAVING <expression> [{<operator> <expression>}…]]
+  [ORDER BY <order by definition>]
+  [LIMIT[<offset>,] <row count>]
 ]
 ```
-其中，各条子句的含义如下：
+各条子句的含义如下：
 * `{*|<字段列名>}`包含星号通配符的字段列表，表示所要查询字段的名称。
 * <表 1>，<表 2>…，表 1 和表 2 表示查询数据的来源，可以是单个或多个。
 * `WHERE <表达式>`是可选项，如果选择该项，将限定查询数据必须满足该查询条件。
@@ -45,7 +45,7 @@ SELECT * FROM 表名;
 ### 列出表的所有字段
 `SELECT`关键字后面的字段名为需要查找的字段，因此可以将表中所有字段的名称跟在`SELECT`关键字后面。如果忘记了字段名称，可以使用`DESC`命令查看表的结构。
 ```sql
-SELECT id,name,dept_id,age,sex,height,login_date FROM tb_students_info;
+SELECT id, name, dept_id, age,sex, height, login_date FROM tb_students_info;
 ```
 这种查询方式比较灵活，如果需要改变字段显示的顺序，只需调整`SELECT`关键字后面的字段列表顺序即可。
 ## 查询表中指定的字段
@@ -70,7 +70,7 @@ mysql> SELECT name FROM tb_students_info;
 SELECT <字段名1>, <字段名2>, …, <字段名n> FROM <表名>;
 ```
 ```sql
-mysql> SELECT id,name,height FROM tb_students_info;
+mysql> SELECT id, name, height FROM tb_students_info;
 +----+--------+--------+
 | id | name   | height |
 +----+--------+--------+
@@ -117,7 +117,7 @@ mysql> SELECT DISTINCT age FROM student;
 |   20 |
 +------+
 
-mysql> SELECT DISTINCT name,age FROM student;
+mysql> SELECT DISTINCT name, age FROM student;
 +----------+------+
 | name     | age  |
 +----------+------+
@@ -142,9 +142,9 @@ mysql> SELECT DISTINCT * FROM student;
 ```
 因为`DISTINCT`只能返回它的目标字段，而无法返回其它字段，所以在实际情况中，我们经常使用`DISTINCT`关键字来返回不重复字段的条数。
 
-查询`student`表中对`name`和`age`字段去重之后记录的条数，SQL 语句和运行结果如下：
+查询`student`表中对`name`和`age`字段去重之后记录的条数：
 ```sql
-mysql> SELECT COUNT(DISTINCT name,age) FROM student;
+mysql> SELECT COUNT(DISTINCT name, age) FROM student;
 +--------------------------+
 | COUNT(DISTINCT name,age) |
 +--------------------------+
@@ -180,7 +180,7 @@ mysql> SELECT stu.name,stu.height FROM tb_students_info AS stu;
 <字段名> [AS] <别名>
 ```
 `AS`关键字可以省略，省略后需要将字段名和别名用空格隔开。
-```
+```sql
 mysql> SELECT name AS student_name, age AS student_age FROM tb_students_info;
 +--------------+-------------+
 | student_name | student_age |
@@ -194,7 +194,7 @@ mysql> SELECT name AS student_name, age AS student_age FROM tb_students_info;
 ```
 注意：表别名只在执行查询时使用，并不在返回结果中显示。而字段定义别名之后，会返回给客户端显示，显示的字段为字段的别名。
 # LIMIT：限制查询结果的条数
-`LIMIT`是 MySQL 中的一个特殊关键字，用于指定查询结果从哪条记录开始显示，一共显示多少条记录。
+`LIMIT`用于指定查询结果从哪条记录开始显示，一共显示多少条记录。
 
 `LIMIT`关键字有 3 种使用方式，即指定初始位置、不指定初始位置以及与`OFFSET`组合使用。
 ## 指定初始位置
@@ -217,7 +217,7 @@ mysql> SELECT * FROM tb_students_info LIMIT 3,5;
 |  8 | Susan |       4 |   23 | F    |    170 | 2015-10-01 |
 +----+-------+---------+------+------+--------+------------+
 ```
-由结果可以看到，该语句返回的是从第 4 条记录开始的之后的 5 条记录。`LIMIT`关键字后的第一个数字“3”表示从第 4 行开始（记录的位置从 0 开始，第 4 行的位置为 3），第二个数字 5 表示返回的行数。
+由结果可以看到，该语句返回的是从第 4 条记录开始的之后的 5 条记录。`LIMIT`关键字后的第一个数字 3 表示从第 4 行开始（记录的位置从 0 开始，第 4 行的位置为 3），第二个数字 5 表示返回的行数。
 ## 不指定初始位置
 `LIMIT`关键字不指定初始位置时，记录从第一条记录开始显示。显示记录的条数由`LIMIT`关键字指定。
 ```sql
@@ -235,7 +235,7 @@ mysql> SELECT * FROM tb_students_info LIMIT 4;
 |  4 | Jane  |       1 |   22 | F    |    162 | 2016-12-20 |
 +----+-------+---------+------+------+--------+------------+
 ```
-带一个参数的`LIMIT`指定从查询结果的首行开始，唯一的参数表示返回的行数，即`LIMIT n`与`LIMIT 0，n`返回结果相同。带两个参数的`LIMIT`可返回从任何位置开始指定行数的数据。
+带一个参数的`LIMIT`指定从查询结果的首行开始，唯一的参数表示返回的行数，即`LIMIT n`与`LIMIT 0, n`返回结果相同。带两个参数的`LIMIT`可返回从任何位置开始指定行数的数据。
 ## LIMIT和OFFSET组合使用
 `LIMIT`可以和`OFFSET`组合使用：
 ```sql
@@ -287,7 +287,7 @@ mysql> SELECT * FROM tb_students_info ORDER BY height;
 由结果可以看到，MySQL 对查询的`height`字段的数据按数值的大小进行了升序排序。
 ## 多字段排序
 ```sql
-mysql> SELECT name,height FROM tb_students_info ORDER BY height,name;
+mysql> SELECT name, height FROM tb_students_info ORDER BY height, name;
 +--------+--------+
 | name   | height |
 +--------+--------+
@@ -302,7 +302,7 @@ mysql> SELECT name,height FROM tb_students_info ORDER BY height,name;
 
 默认情况下，查询数据按字母升序进行排序（A～Z），但数据的排序并不仅限于此，还可以使用`ORDER BY`中的`DESC`对查询结果进行降序排序（Z～A）。
 ```sql
-mysql> SELECT name,height FROM tb_student_info ORDER BY height DESC,name ASC;
+mysql> SELECT name, height FROM tb_student_info ORDER BY height DESC, name ASC;
 +--------+--------+
 | name   | height |
 +--------+--------+
@@ -329,7 +329,7 @@ WHERE 查询条件
 ## 单一条件的查询语句
 单一条件指的是在`WHERE`关键字后只有一个查询条件。
 ```sql
-mysql> SELECT name,height FROM tb_students_info WHERE height=170;
+mysql> SELECT name, height FROM tb_students_info WHERE height=170;
 +-------+--------+
 | name  | height |
 +-------+--------+
@@ -338,14 +338,13 @@ mysql> SELECT name,height FROM tb_students_info WHERE height=170;
 ```
 可以看到，查询结果中记录的`height`字段的值等于 170。如果根据指定的条件进行查询时，数据表中没有符合查询条件的记录，系统会提示`Empty set(0.00sec)`。
 ## 多条件的查询语句
-在`WHERE`关键词后可以有多个查询条件，这样能够使查询结果更加精确。多个查询条件时用逻辑运算符`AND（&&）、OR（||）`或`XOR`隔开。
+在`WHERE`关键词后可以有多个查询条件。多个查询条件时用逻辑运算符`AND（&&）、OR（||）`或`XOR`隔开。
 * `AND`：记录满足所有查询条件时，才会被查询出来。
 * `OR`：记录满足任意一个查询条件时，才会被查询出来。
 * `XOR`：记录满足其中一个条件，并且不满足另一个条件时，才会被查询出来。
 
 ```sql
-mysql> SELECT name,age,height FROM tb_students_info 
-    -> WHERE age>21 AND height>=175;
+mysql> SELECT name, age, height FROM tb_students_info WHERE age>21 AND height>=175;
 +--------+------+--------+
 | name   | age  | height |
 +--------+------+--------+
@@ -354,10 +353,8 @@ mysql> SELECT name,age,height FROM tb_students_info
 | Thomas |   22 |    178 |
 +--------+------+--------+
 ```
-可以看到，查询结果中所有记录的`age`字段都大于 21 且`height`字段都大于等于 175。
 ```sql
-mysql> SELECT name,age,height FROM tb_students_info 
-    -> WHERE age>21 OR height>=175;
+mysql> SELECT name, age, height FROM tb_students_info WHERE age>21 OR height>=175;
 +--------+------+--------+
 | name   | age  | height |
 +--------+------+--------+
@@ -372,10 +369,8 @@ mysql> SELECT name,age,height FROM tb_students_info
 | Tom    |   23 |    165 |
 +--------+------+--------+
 ```
-可以看到，查询结果中所有记录的`age`字段都大于 21 或者`height`字段都大于等于 175。
 ```sql
-mysql> SELECT name,age,height FROM tb_students_info 
-    -> WHERE age>21 XOR height>=175;
+mysql> SELECT name, age, height FROM tb_students_info WHERE age>21 XOR height>=175;
 +-------+------+--------+
 | name  | age  | height |
 +-------+------+--------+
@@ -387,8 +382,6 @@ mysql> SELECT name,age,height FROM tb_students_info
 | Tom   |   23 |    165 |
 +-------+------+--------+
 ```
-可以看到，查询结果中所有记录的`age`字段都大于 21 且`height`字段都小于 175。`tb_students_info`数据表中没有`age`字段小于 21 且`height`字段大于等于 175 的记录。
-
 `OR、AND`和`XOR`可以一起使用，但是在使用时要注意运算符的优先级。
 # LIKE：模糊查询
 `LIKE`关键字主要用于搜索匹配字段中的指定内容。
@@ -399,10 +392,9 @@ mysql> SELECT name,age,height FROM tb_students_info
 * `NOT`：可选参数，字段中的内容与指定的字符串不匹配时满足条件。
 * 字符串：指定用来匹配的字符串。“字符串”可以是一个很完整的字符串，也可以包含通配符。
 
-`LIKE`关键字支持百分号“%”和下划线“_”通配符。
+`LIKE`关键字支持百分号`%`和下划线`_`通配符。
 
-通配符是一种特殊语句，主要用来模糊查询。当不知道真正字符或者懒得输入完整名称时，可以使用通配符来代替一个或多个真正的字符。 
-
+通配符是一种特殊语句，主要用来模糊查询。当不知道真正字符或者懒得输入完整名称时，可以使用通配符来代替一个或多个真正的字符。
 ## 带有 % 通配符的查询
 `%`代表任何长度的字符串，字符串的长度可以为 0。例如，`a%b`表示以字母`a`开头，以字母`b`结尾的任意长度的字符串。该字符串可以代表`ab、acb、accb、accrb`等字符串。
 ```sql
@@ -433,9 +425,9 @@ mysql> SELECT NAME FROM tb_students_info WHERE NAME NOT LIKE 'T%';
 +-------+
 ```
 ## 带有“_”通配符的查询
-“_”只能代表单个字符，字符的长度不能为 0。例如，`a_b`可以代表`acb、adb、aub`等字符串。
+`_`只能代表单个字符，字符的长度不能为 0。例如，`a_b`可以代表`acb、adb、aub`等字符串。
 
-在`tb_students_info`表中，查找所有以字母`y`结尾，且`y`前面只有 4 个字母的学生姓名，SQL 语句和运行结果如下。
+在`tb_students_info`表中，查找所有以字母`y`结尾，且`y`前面只有 4 个字母的学生姓名：
 ```sql
 mysql> SELECT name FROM tb_students_info WHERE name LIKE '____y';
 +-------+
@@ -462,14 +454,14 @@ Empty set (0.01 sec)
 下面是使用通配符的一些注意事项：
 * 注意大小写。MySQL 默认是不区分大小写的。如果区分大小写，像`Tom`这样的数据就不能被`t%`所匹配到。
 * 注意尾部空格，尾部空格会干扰通配符的匹配。例如，`T% `就不能匹配到`Tom`。
-* 注意`NULL`。`%`通配符可以到匹配任意字符，但是不能匹配`NULL`。也就是说`%`匹配不到数据表中值为 NULL 的记录。
+* 注意`NULL`。`%`通配符可以到匹配任意字符，但是不能匹配`NULL`。也就是说`%`匹配不到数据表中值为`NULL`的记录。
 
 下面是一些使用通配符要记住的技巧。
 * 不要过度使用通配符，如果其它操作符能达到相同的目的，应该使用其它操作符。因为 MySQL 对通配符的处理一般会比其他操作符花费更长的时间。
 * 在确定使用通配符后，除非绝对有必要，否则不要把它们用在字符串的开始处。把通配符置于搜索模式的开始处，搜索起来是最慢的。
 * 仔细注意通配符的位置。如果放错地方，可能不会返回想要的数据。
 
-如果查询内容中包含通配符，可以使用`\`转义符。例如，在`tb_students_info`表中，将学生姓名`Dany`修改为`Dany%`后，查询以`%`结尾的学生姓名，SQL 语句和运行结果如下：
+如果查询内容中包含通配符，可以使用`\`转义符。例如，在`tb_students_info`表中，将学生姓名`Dany`修改为`Dany%`后，查询以`%`结尾的学生姓名：
 ```sql
 mysql> SELECT NAME FROM test.`tb_students_info` WHERE NAME LIKE '%\%';
 +-------+
@@ -491,7 +483,7 @@ mysql> SELECT NAME FROM test.`tb_students_info` WHERE NAME LIKE '%\%';
 * 取值2：表示范围的终止值。
 
 ```sql
-mysql> SELECT name,age FROM tb_students_info WHERE age BETWEEN 20 AND 23;
+mysql> SELECT name, age FROM tb_students_info WHERE age BETWEEN 20 AND 23;
 +--------+------+
 | name   | age  |
 +--------+------+
@@ -503,7 +495,7 @@ mysql> SELECT name,age FROM tb_students_info WHERE age BETWEEN 20 AND 23;
 ```
 查询结果中包含学生年龄为 20 和 23 的记录，这就说明，在 MySQL 中，`BETWEEN AND`能匹配指定范围内的所有值，包括起始值和终止值。
 ```sql
-mysql> SELECT name,age FROM tb_students_info WHERE age NOT BETWEEN 20 AND 23;
+mysql> SELECT name, age FROM tb_students_info WHERE age NOT BETWEEN 20 AND 23;
 +------+------+
 | name | age  |
 +------+------+
@@ -513,7 +505,7 @@ mysql> SELECT name,age FROM tb_students_info WHERE age NOT BETWEEN 20 AND 23;
 ```
 在表`tb_students_info`中查询注册日期在`2015-10-01`和`2016-05-01`之间的学生信息。SQL 语句和运行结果如下。
 ```sql
-mysql> SELECT name,login_date FROM tb_students_info
+mysql> SELECT name, login_date FROM tb_students_info
     -> WHERE login_date BETWEEN '2015-10-01' AND '2016-05-01';
 +-------+------------+
 | name  | login_date |
@@ -533,7 +525,7 @@ IS [NOT] NULL
 ```
 其中，`NOT`是可选参数，表示字段值不是空值时满足条件。
 ```sql
-mysql> SELECT `name`,`login_date` FROM tb_students_info WHERE login_date IS NULL;
+mysql> SELECT `name`, `login_date` FROM tb_students_info WHERE login_date IS NULL;
 +--------+------------+
 | NAME   | login_date |
 +--------+------------+
@@ -547,7 +539,7 @@ mysql> SELECT `name`,`login_date` FROM tb_students_info WHERE login_date IS NULL
 ```
 `IS NOT NULL`表示查询字段值不为空的记录。
 ```sql
-mysql> SELECT `name`,login_date FROM tb_students_info WHERE login_date IS NOT NULL;
+mysql> SELECT `name`, login_date FROM tb_students_info WHERE login_date IS NOT NULL;
 +-------+------------+
 | name  | login_date |
 +-------+------------+
@@ -566,7 +558,7 @@ GROUP BY  <字段名>
 ## GROUP BY单独使用
 单独使用`GROUP BY`关键字时，查询结果会只显示每个分组的第一条记录。
 ```sql
-mysql> SELECT `name`,`sex` FROM tb_students_info GROUP BY sex;
+mysql> SELECT `name`, `sex` FROM tb_students_info GROUP BY sex;
 +-------+------+
 | name  | sex  |
 +-------+------+
@@ -588,7 +580,7 @@ mysql> SELECT `sex`, GROUP_CONCAT(name) FROM tb_students_info GROUP BY sex;
 ```
 由结果可以看到，查询结果分为两组，`sex`字段值为“女”的是一组，值为“男”的是一组，且每组的学生姓名都显示出来了。
 ```sql
-mysql> SELECT age,sex,GROUP_CONCAT(name) FROM tb_students_info GROUP BY age,sex;
+mysql> SELECT age, sex, GROUP_CONCAT(name) FROM tb_students_info GROUP BY age, sex;
 +------+------+--------------------+
 | age  | sex  | GROUP_CONCAT(name) |
 +------+------+--------------------+
@@ -607,7 +599,7 @@ mysql> SELECT age,sex,GROUP_CONCAT(name) FROM tb_students_info GROUP BY age,sex;
 ## GROUP BY 与聚合函数
 在数据统计时，`GROUP BY`关键字经常和聚合函数一起使用。
 ```sql
-mysql> SELECT sex,COUNT(sex) FROM tb_students_info GROUP BY sex;
+mysql> SELECT sex, COUNT(sex) FROM tb_students_info GROUP BY sex;
 +------+------------+
 | sex  | COUNT(sex) |
 +------+------------+
@@ -618,8 +610,7 @@ mysql> SELECT sex,COUNT(sex) FROM tb_students_info GROUP BY sex;
 ## GROUP BY 与 WITH ROLLUP
 `WITH POLLUP`关键字用来在所有记录的最后加上一条记录，这条记录是上面所有记录的总和，即统计记录数量。
 ```sql
-mysql> SELECT sex,GROUP_CONCAT(name) FROM tb_students_info 
-    -> GROUP BY sex WITH ROLLUP;
+mysql> SELECT sex,GROUP_CONCAT(name) FROM tb_students_info GROUP BY sex WITH ROLLUP;
 +------+------------------------------------------------------+
 | sex  | GROUP_CONCAT(name)                                   |
 +------+------------------------------------------------------+
@@ -644,7 +635,7 @@ HAVING <查询条件>
 * `WHERE`查询条件中不可以使用字段别名，而`HAVING`查询条件中可以使用字段别名。
 
 ```sql
-mysql> SELECT name,sex,height FROM tb_students_info HAVING height>150;
+mysql> SELECT name, sex, height FROM tb_students_info HAVING height>150;
 +--------+------+--------+
 | name   | sex  | height |
 +--------+------+--------+
@@ -660,7 +651,7 @@ mysql> SELECT name,sex,height FROM tb_students_info HAVING height>150;
 | Tom    | 女   |    165 |
 +--------+------+--------+
 
-mysql> SELECT name,sex,height FROM tb_students_info WHERE height>150;
+mysql> SELECT name, sex, height FROM tb_students_info WHERE height>150;
 +--------+------+--------+
 | name   | sex  | height |
 +--------+------+--------+
@@ -678,7 +669,7 @@ mysql> SELECT name,sex,height FROM tb_students_info WHERE height>150;
 ```
 上述实例中，因为在`SELECT`关键字后已经查询出了`height`字段，所以`HAVING`和`WHERE`都可以使用。但是如果`SELECT`关键字后没有查询出`height`字段，MySQL 就会报错。
 ```sql
-mysql> SELECT name,sex FROM tb_students_info WHERE height>150;
+mysql> SELECT name, sex FROM tb_students_info WHERE height>150;
 +--------+------+
 | name   | sex  |
 +--------+------+
@@ -694,14 +685,13 @@ mysql> SELECT name,sex FROM tb_students_info WHERE height>150;
 | Tom    | 女   |
 +--------+------+
 
-mysql> SELECT name,sex FROM tb_students_info HAVING height>150;
+mysql> SELECT name, sex FROM tb_students_info HAVING height>150;
 ERROR 1054 (42S22): Unknown column 'height' in 'having clause'
 ```
 由结果可以看出，如果`SELECT`关键字后没有查询出`HAVING`查询条件中使用的`height`字段，MySQL 会提示错误信息：`having`子句中的列`height`未知”。
 ```sql
-mysql> SELECT GROUP_CONCAT(name),sex,height FROM tb_students_info 
-    -> GROUP BY height 
-    -> HAVING AVG(height)>170;
+mysql> SELECT GROUP_CONCAT(name), sex, height FROM tb_students_info 
+    -> GROUP BY height HAVING AVG(height)>170;
 +--------------------+------+--------+
 | GROUP_CONCAT(name) | sex  | height |
 +--------------------+------+--------+
@@ -711,7 +701,7 @@ mysql> SELECT GROUP_CONCAT(name),sex,height FROM tb_students_info
 | Henry              | 女   |    185 |
 +--------------------+------+--------+
 
-mysql> SELECT GROUP_CONCAT(name),sex,height FROM tb_students_info WHERE AVG(height)>170 GROUP BY height;
+mysql> SELECT GROUP_CONCAT(name), sex, height FROM tb_students_info WHERE AVG(height)>170 GROUP BY height;
 ERROR 1111 (HY000): Invalid use of group function
 ```
 由结果可以看出，如果在`WHERE`查询条件中使用聚合函数，MySQL 会提示错误信息：无效使用组函数。

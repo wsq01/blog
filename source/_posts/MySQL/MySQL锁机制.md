@@ -2,7 +2,7 @@
 title: MySQL 锁机制
 date: 2020-05-19 21:09:17
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 

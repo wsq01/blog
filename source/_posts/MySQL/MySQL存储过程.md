@@ -2,7 +2,7 @@
 title: MySQL 存储过程
 date: 2020-05-08 16:44:13
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 

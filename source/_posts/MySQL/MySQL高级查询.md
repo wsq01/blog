@@ -2,7 +2,7 @@
 title: MySQL 高级查询
 date: 2020-05-10 11:42:54
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 <!-- MySQL必知必会 -->
 

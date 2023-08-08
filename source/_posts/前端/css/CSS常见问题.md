@@ -84,15 +84,6 @@ categories:
 # outline:none 删除输入状态线
 当输入框被选中时，它默认会有一条蓝色的状态线，可以通过使用`outline: none`来移除它。
 
-# 隐藏滚动条
-
-{% asset_img 3.gif %}
-
-```css
-.box-hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome Safari */
-}
-```
 # 不允许选择文本
 ```css
 .box p:last-child {
@@ -153,19 +144,6 @@ img {
 overflow: auto;
 -webkit-overflow-scrolling: touch;
 ```
-# 修改滚动条样式
-```css
-div::-webkit-scrollbar {
-  display: none;
-}
-```
-* `div::-webkit-scrollbar`滚动条整体部分
-* `div::-webkit-scrollbar-thumb`滚动条里面的小方块，能向上向下移动或往左往右移动，取决于是垂直滚动条还是水平滚动条
-* `div::-webkit-scrollbar-track`滚动条的轨道（里面装有 Thumb
-* `div::-webkit-scrollbar-button`滚动条的轨道的两端按钮，允许通过点击微调小方块的位置
-* `div::-webkit-scrollbar-track-piece`内层轨道，滚动条中间部分（除去
-* `div::-webkit-scrollbar-corner`边角，即两个滚动条的交汇处
-* `div::-webkit-resizer`两个滚动条的交汇处上用于通过拖动调整元素大小的小控件注意此方案有兼容性问题，一般需要隐藏滚动条时我都是用一个色块通过定位盖上去，或者将子级元素调大，父级元素使用`overflow-hidden`截掉滚动条部分。暴力且直接。
 
 # 平滑滚动
 ```css

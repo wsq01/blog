@@ -1,4 +1,9 @@
-
+---
+title: SQL 事务处理
+date: 2020-03-06 14:12:04
+tags: [SQL]
+categories: [数据库, SQL]
+---
 
 
 在 MySQL 5.5 版本之前，默认的存储引擎是 MyISAM，在 5.5 版本之后默认存储引擎是 InnoDB。InnoDB 和 MyISAM 区别之一就是 InnoDB 支持事务，也可以说这是 InnoDB 取代 MyISAM 的重要原因。那么什么是事务呢？事务是进行一次处理的基本单元，要么完全执行，要么都不执行。

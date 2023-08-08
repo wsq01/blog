@@ -2,7 +2,7 @@
 title: MySQL 用户管理
 date: 2020-05-31 11:48:16
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 MySQL 是一个多用户数据库，具有功能强大的访问控制系统，可以为不同用户指定不同权限。

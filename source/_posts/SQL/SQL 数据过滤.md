@@ -2,7 +2,7 @@
 title: SQL 数据过滤
 date: 2020-02-06 16:23:03
 tags: [SQL]
-categories: [SQL]
+categories: [数据库, SQL]
 ---
 
 

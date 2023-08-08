@@ -2,7 +2,7 @@
 title: SQL 子查询
 date: 2020-02-08 15:14:53
 tags: [SQL]
-categories: [SQL]
+categories: [数据库, SQL]
 ---
 
 # 什么是关联子查询，什么是非关联子查询

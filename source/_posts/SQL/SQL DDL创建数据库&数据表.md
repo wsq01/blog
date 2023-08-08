@@ -2,7 +2,7 @@
 title: SQL DDL创建数据库&数据表
 date: 2020-02-04 11:22:14
 tags: [SQL]
-categories: [SQL]
+categories: [数据库, SQL]
 ---
 
 DDL 是 DBMS 的核心组件，也是 SQL 的重要组成部分，DDL 的正确性和稳定性是整个 SQL 运行的重要基础。

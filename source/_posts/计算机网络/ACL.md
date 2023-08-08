@@ -145,3 +145,77 @@ rule 15 permit source 1.1.1.0 0.0.0.255 //表示允许源IP地址为1.1.1.0网�
 试想一下，如果这条 ACL 规则之间间隔不是 5，而是 1（`rule 1、rule 2、rule 3…`），这时再想插入新的规则，只能先删除已有的规则，然后再配置新规则，最后将之前删除的规则重新配置回来。如果这样做，那付出的代价可真是太大了！
 
 所以，通过设置 ACL 步长，为规则之间留下一定的空间，后续再想插入新的规则，就非常轻松了。
+
+## VLAN与VLANIF的区别
+通俗的说，VLAN 就是一个二层的接口。
+
+`VLANIF`就是创建三层接口，可以在上面配置 IP，通常这个接口地址作为 vlan 下面用户的网关。
+# 实战
+某公司通过交换机实现各部门之间的互连。要求只允许公司内网用户可以访问内网中的财务服务器，外网用户不允许访问。
+
+{% asset_img 5.png %}
+
+## 1、配置接口加入 VLAN，并配置 VLANIF 接口的 IP 地址
+将GE1/0/1～GE1/0/3分别加入VLAN10、20、30，这三个vlan中，也就是给公司三个部门各分配一个vlan。
+
+GE2/0/1加入VLAN100，并配置各VLANIF接口的IP地址，也就是内网财务服务器的端口单独加一个vlan。
+```
+<HUAWEI>system-view
+[HUAWEI]sysname Switch
+[Switch]vlan batch 10 20 30 100
+[Switch]interface gigabitethernet 1/0/1
+[Switch-gigabitethernet-1/0/1]port link-type trunk
+[Switch-gigabitethernet-1/0/1]port trunk allow-pass vlan 10
+[Switch-gigabitethernet-1/0/1]quit
+[Switch]interface vlanif 10
+[Switch-Vlanif10]ip address 10.164.1.1 255.255.255.0
+```
+```
+[Switch]interface gigabitethernet 1/0/2
+[Switch-gigabitethernet-1/0/2]port link-type trunk
+[Switch-gigabitethernet-1/0/2]port trunk allow-pass vlan 20
+[Switch-gigabitethernet-1/0/2]quit
+[Switch]interface vlanif 20
+[Switch-Vlanif20]ip address 10.164.2.1 255.255.255.0
+```
+```
+[Switch]interface gigabitethernet 2/0/1
+[Switch-gigabitethernet-2/0/1]port link-type trunk
+[Switch-gigabitethernet-2/0/1]port trunk allow-pass vlan 100
+[Switch-gigabitethernet-2/0/1]quit
+[Switch]interface vlanif 100
+[Switch-Vlanif100]ip address 10.164.4.1 255.255.255.0
+```
+## 2、配置ACL
+创建高级 ACL 3002 并配置 ACL 规则，允许位于内网的总裁办公室、市场部和研发部访问财务服务器的报文通过，拒绝外网用户访问财务服务器的报文通过。
+```
+[Switch]acl 30002
+[Switch-acl-adv-3002]rule permit ip source 10.164.1.0 0.0.0.255 destination 10.164.4.4 0.0.0.0 //允许总裁办公室访问务服务器
+[Switch-acl-adv-3002]rule permit ip source 10.164.2.0 0.0.0.255 destination 10.164.4.4 0.0.0.0 //允许市场部访问务服务器
+[Switch-acl-adv-3002]rule permit ip source 10.164.3.0 0.0.0.255 destination 10.164.4.4 0.0.0.0 //允许研发部访问务服务器
+[Switch-acl-adv-3002]rule deny ip destination 10.164.4.4 0.0.0.0 //禁止其他用户访问财务服务器
+[Switch-acl-adv-3002]quit
+```
+## 3、配置基于ACL的流分类
+配置流分类`c_network`，对匹配 ACL 3002 的报文进行分类。
+```
+[Switch]traffic classifier c_network // 创建流分类
+[Switch-classifier-c_network]if-match acl 3002 // 将 acl 与流分类关联
+```
+## 4、配置流行为
+配置流行为`b_network`，动作为允许报文通过（缺省值，不需配置）。
+```
+[Switch]traffic behavior b_network // 创建流行为
+```
+## 5、配置流策略
+```
+[Switch]traffic policy p_network // 创建流策略
+// 配置流策略p_network，将流分类c_network与流行为b_network关联。
+[Switch-trafficpolicy-p_network]classifier c_network behavior b_network
+```
+## 6、应用流策略
+由于内外网访问服务器的流量均从接口`GE2/0/1`出口流向服务器，所以可以在`GE2/0/1`接口的出方向应用流策略`p_network`。
+```
+[Switch]interface gigabitethernet 2/0/1
+[Switch-gigabitethernet-2/0/1]traffic-policy p_network outbound
+```

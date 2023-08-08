@@ -2,7 +2,7 @@
 title: MySQL 日志
 date: 2020-06-05 18:25:14
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 

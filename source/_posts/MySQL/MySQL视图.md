@@ -2,7 +2,7 @@
 title: MySQL 视图
 date: 2020-04-27 18:21:41
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 

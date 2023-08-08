@@ -2,7 +2,7 @@
 title: MySQL 触发器
 date: 2020-05-08 17:57:08
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 # 触发器到底是什么

@@ -128,7 +128,7 @@ Filesystem            Size  Used Avail Use% Mounted on
 /dev/hdc2             9.5G  3.7G  5.4G  41% /
 ```
 这里在`df`命令后添加了目录名，在这种情况下，`df`命令会自动分析该目录所在的分区，并将所在分区的有关信息显示出来。由此，我们就可以知道，该目录下还可以使用多少容量。
-```
+```bash
 [root@localhost ~]# df -aT
 Filesystem    Type 1K-blocks    Used Available Use% Mounted on
 /dev/hdc2     ext3   9920624 3823112   5585444  41% /
@@ -271,19 +271,19 @@ echo "hello!!"
 另外，这样也可以减少挂载的硬盘分区数量，相应地，也就可以减少系统维护文件的规模，当然也就减少了系统的开销，即提高了系统的效率。
 
 # Linux挂载光盘（使用mount命令）
-在 Windows 中，如果我们想要使用光盘，只需要将光盘放入光驱即可。但在Linux 系统中，将光盘放入光驱后，还需要将光盘中的文件系统手动挂载到 Linux 系统中，还可以使用。
+在 Windows 中，如果我们想要使用光盘，只需要将光盘放入光驱即可。但在Linux 系统中，将光盘放入光驱后，还需要将光盘中的文件系统手动挂载到 Linux 系统中，才可以使用。
 
 同样，用完光盘后，Windows 系统可以直接弹出光驱并取出光盘，但 Linux 系统不行，必须先卸载才能取出光盘，这确实不如 Windows 方便，不过这也只是一个操作习惯，习惯了就好。
 
 将光盘放入光驱之后，需执行如下挂载命令：
-```
+```bash
 [root@localhost ~]# mkdir/mnt/cdrom/
 \#建立挂载点
 [root@localhost ~]# mount -t iso9660 /dev/cdrom /mnt/cdrom/
 \#挂载光盘
 ```
 光盘的文件系统是 iso9660，不过这个文件系统可以省略不写，系统会自动检测。因此，挂在命令也可以写为如下的方式：
-```
+```bash
 [root@localhost ~]# mount /dev/cdrom /mnt/cdrom/
 \#挂载光盘。两个挂载光盘的命令使用一个就可以了
 [root@localhost ~]# mount
@@ -292,17 +292,17 @@ echo "hello!!"
 /dev/srO on /mnt/cdrom type iso9660 (ro)
 \#光盘已经挂载了，但是挂载的设备文件名是/dev/sr0
 ```
-我们知道，挂载就是把光驱的设备文件和挂载点连接起来。挂载点`/mnt/cdrom`是我们手工建立的空目录，我个人习惯把挂载点建立在 /mnt/ 目录中，因为我们在学习 Linux 的时候是没有`/media/`目录的，大家要是愿意也可以建立`/media/cdrom`作为挂载点，只要是已经建立的空目录都可以作为挂载点。那么`/dev/cdrom`就是光驱的设备文件名，不过注意`/dev/cdrom`只是一个软链接（如同 Windows 系统中的文件快捷方式）。 命令如下：
-```
+我们知道，挂载就是把光驱的设备文件和挂载点连接起来。挂载点`/mnt/cdrom`是我们手工建立的空目录，我个人习惯把挂载点建立在`/mnt/`目录中，因为我们在学习 Linux 的时候是没有`/media/`目录的，大家要是愿意也可以建立`/media/cdrom`作为挂载点，只要是已经建立的空目录都可以作为挂载点。那么`/dev/cdrom`就是光驱的设备文件名，不过注意`/dev/cdrom`只是一个软链接（如同 Windows 系统中的文件快捷方式）。 命令如下：
+```bash
 [root@localhost ~]#ll /dev/cdrom
 lrwxrwxrwx 1 root root 3 1月31 01:13/dev/cdrom ->sr0
 ```
 `/dev/cdrom`的源文件是`/dev/sr0`。`/dev/sr0`是光驱的真正设备文件名，代表 SCSI 接口或 SATA 接口的光驱，所以刚刚查询挂载时看到的光驱设备文件命令是`/dev/sr0`。也就是说，挂载命令也可以写成这样：
-```
+```bash
 [root@localhost ~]# mount /dev/sr0 /mnt/cdrom/
 ```
 其实光驱的真正设备文件名是保存在`/proc/sys/dev/cdrom/info`文件中的，所以可以通过查看这个文件来查询光盘的真正设备文件名：
-```
+```bash
 [root@localhost ~]# cat /proc/sys/dev/cdrom/info
 CD-ROM information, ld: cdrom.c 3.20 2003/12/17
 drive name: sr0
@@ -316,7 +316,7 @@ drive name: sr0
 U 盘的设备文件名是系统自动分配的，我们只要查找出来然后挂载可以了。首先把 U 盘插入 Linux 系统中，这里需要注意的是，如果是虚拟机，则需要先把鼠标点入虚拟机再插入 U 盘。
 
 通过使用`fdisk`命令，即可查看到 U 盘的设备文件名，执行命令如下：
-```
+```bash
 [root@localhost ~]# fdisk -l
 Disk /dev/sda: 21.5GB, 21474836480 bytes
 \#系统硬盘
@@ -333,11 +333,11 @@ Device Boot Start End Blocks Id System
 \#系统给U盘分配的设备文件名
 ```
 查看到 U 盘的设备文件名，接下来就要创建挂载点了。
-```
+```bash
 [root@localhost ~]# mkdir /mnt/usb
 ```
 然后就是挂载了：
-```
+```bash
 [root@localhost ~]# mount -t vfat /dev/sdb1 /mnt/usb/
 挂载U盘。因为是Windows分区，所以是vfat文件系统格式
 [root@localhost ~]# cd /mnt/usb/
@@ -347,7 +347,7 @@ Device Boot Start End Blocks Id System
 \#之所以出现乱码，是因为编码格式不同
 ```
 之所以出现乱码，是因为 U 盘是 Windows 中保存的数据，而 Windows 中的中文编码格式和 Linux 中的不一致，只需在挂载的时候指定正确的编码格式就可以解决乱码问题，命令如下：
-```
+```bash
 [root@localhost ~]# mount -t vfat -o iocharset=utf8 /dev/sdb1 /mnt/usb/
 \#挂载U盘，指定中文编码格式为UTF-8
 [root@localhost ~]# cd /mnt/usb/
@@ -357,7 +357,7 @@ Device Boot Start End Blocks Id System
 \#可以正确地查看中文了
 ```
 因为我们的 Linux 在安装时采用的是 UTF-8 编码格式，所以要让 U 盘在挂载时也指定为 UTF-8 编码格式，才能正确显示。
-```
+```bash
 [root@localhost ~]# echo $LANG
 zh_CN.UTF-8
 \#查看一下Linux默认的编码格式
@@ -370,7 +370,7 @@ zh_CN.UTF-8
 
 # Linux开机自动挂载硬件设备（配置etcfatab文件）
 Linux 通过`/etc/fstab`配置文件来实现开机自动挂载某个硬件设备，这个配置文件对所有用户可读，但只有`root`用户有权修改此文件。
-```
+```bash
 [root@localhost ~]# vi /etc/fstab
 UUID=c2ca6f57-b15c-43ea-bca0-f239083d8bd2 / ext4 defaults 1 1
 UUID=0b23d315-33a7-48a4-bd37-9248e5c44345 /boot ext4 defaults 1 2
@@ -397,7 +397,7 @@ proc /proc proc defaults 0 0
 这个字段在 CentOS 5.5 系统中是写入分区的卷标名或分区设备文件名的，现在变成了硬盘的 UUID。这样做的好处是当硬盘増加了新的分区，或者分区的顺序改变，或者内核升级后，仍然能够保证分区能够正确地加载，而不至于造成启动障碍。
 
 那么，每个分区的 UUID 到底是什么呢？用 dumpe2fs 命令就可以查看到，具体执行命令如下：
-```
+```bash
 [root@localhost ~]# dumpe2fs /dev/sdb5
 dumpe2fs 1.41.12 (17-May-2010)
 Filesystem volume name: test_label
@@ -407,7 +407,7 @@ Filesystem UUID: 63f238f0-a715-4821-8ed1-b3d18756a3ef
 ...省略部分输出...
 ```
 另外，也可以通过查看每个硬盘UUID的链接文件名来确定UUID：
-```
+```bash
 [root@localhost ~]# ls -l /dev/disk/by-uuid/
 总用量 0
 Irwxrwxrwx. 1 root root 10 4 月 11 00:17 0b23d315-33a7-48a4-bd37-9248e5c44345
@@ -433,7 +433,7 @@ Irwxrwxrwx. 1 root root 10 4月 11 00:17 c2ca6f57-b15c-43ea-bca0-f239083d8bd2
 
 配置 /etc/fatab 文件
 能看懂这个文件了吧？我们把 /dev/sdb5 和 /dev/sdb6 两个分区加入 /etc/fstab 文件，执行命令如下：
-```
+```bash
 [root@localhost ~]# vi /etc/fstab
 UUID=c2ca6f57-b15c-43ea-bca0-t239083d8bd2 ext4 defaults 1 1
 UUID=0b23d315-33a7-48a4-bd37-9248e5c44345 I boot ext4 defaults 1 2
@@ -452,7 +452,7 @@ proc /proc proc defaults 0 0
 至此，分区就建立完成了，接下来只要重新启动，测试一下系统是否可以正常启动就可以了。只要 /etc/fstab 文件修改正确，就不会出现任何问题。
 # 修改etcfstab文件出错导致Linux不能启动，该怎么办
 如果把`/etc/fstab`文件修改错了，也重启了，系统崩溃启动不了了，那该怎么办？比如：
-```
+```bash
 [root@localhost ~]# vi /etc/fstab
 UUID=c2ca6f57-b15c-43ea-bca0-f239083d8bd2 ext4 defaults 1 1
 UUID=0b23d315-33a7-48a4-bd37-9248e5c44345 boot ext4 defaults 12
@@ -473,7 +473,7 @@ proc /proc proc defaults 0 0
 我们又看到了系统提示符，赶快把 /etc/fstab 文件修改回来吧。又报错了，如图 3 所示。
 
 别慌，分析一下原因提示是没有写权限，那么只要把 / 分区重新挂载上读写权限不就可以修改了吗？命令如下：
-```
+```bash
 [root@localhost ~]#mount-oremount, rw/
 ```
 再去修改 /etc/fstab 文件，把它改回来就可以正常启动了。
@@ -483,11 +483,11 @@ proc /proc proc defaults 0 0
 前面介绍了如何将光盘和 U 盘挂载在系统中，而在使用完成后，需要先将其与挂载点取消关联，然后才能成功卸载。不过，硬盘分区是否需要卸载，取决于你下次是否还需要使用，一般不对硬盘分区执行卸载操作。
 
 `umount`命令用于卸载已经挂载的硬件设备：
-```
+```bash
 [root@localhost ~]# umount 设备文件名或挂载点
 ```
 注意，卸载命令后面既可以加设备文件名，也可以加挂载点，不过只能二选一，比如：
-```
+```bash
 [root@localhost ~]# umount /mnt/usb
 #卸载U盘
 [root@localhost ~]# umount /mnt/cdrom
@@ -497,12 +497,12 @@ proc /proc proc defaults 0 0
 ```
 
 如果加了两个（如下所示），从理论上分析，会对光驱卸载两次，当然，卸载第二次的时候就会报错。
-```
+```bash
 [root@localhost ~]# mount /dev/sr0 /mnt/cdrom/
 ```
 
 另外，我们在卸载时有可能会出现以下情况：
-```
+```bash
 [root@localhost ~]# cd /mnt/cdrom/
 #进入光盘挂载点
 [root@localhost cdrom]# umount /mnt/cdrom/
@@ -553,7 +553,7 @@ fsck 命令在执行时，如果发现存在没有文件系统依赖的文件或
 -h 选项的含义是仅列出 superblock（超级块）的数据信息；
 
 例如，通过 df 命令找到根目录硬盘的文件名，然后使用 dump2fs 命令观察文件系统的详细信息，执行命令如下：
-```
+```bash
 [root@localhost ~]# df   <==这个命令可以叫出目前挂载的装置
 Filesystem    1K-blocks      Used Available Use% Mounted on
 /dev/hdc2       9920624   3822848   5585708  41% /
@@ -613,7 +613,7 @@ fdisk 命令的格式如下：
 #给硬盘分区
 ```
 注意，千万不要在当前的硬盘上尝试使用`fdisk`，这会完整删除整个系统，一定要再找一块硬盘，或者使用虚拟机。这里给大家举个例子：
-```
+```bash
 [root@localhost ~]# fdisk -l
 #查询本机可以识别的硬盘和分区
 Disk /dev/sda:32.2 GB, 32212254720 bytes
@@ -655,7 +655,7 @@ I/O size (minimum/optimal): 512 bytes/512 bytes Disk identifier: 0x00000000
 如果这个分区并没有占满整块硬盘，就会提示 "Partition 1 does not end on cyl inder boundary"，表示第一个分区没有到硬盘的结束柱面。大家发现了吗？/dev/sda 已经分配完了分区，没有空闲空间了。而第二块硬盘`/dev/sdb`已经可以被识别了，但是没有可分区。
 
 我们以硬盘`/dev/sdb`为例来做练习:
-```
+```bash
 [root@localhost ~]# fdisk /dev/sdb
 #给/dev/sdb分区
 Device contains neither a valid DOS partition table, nor Sun, SGI or OSF disklabel
@@ -709,7 +709,7 @@ X	附加功能（仅专家）
 
 # Linux fdisk创建分区（主分区、扩展分区和逻辑分区）过程详解
 我们实际建立一个主分区，看看过程是什么样子的。
-```
+```bash
 [root@localhost ~]# fdisk /dev/sdb
 …省略部分输出…
 Command (m for help): p
@@ -758,7 +758,7 @@ Device Boot Start End Blocks id System
 主分区和扩展分区加起来最多只能建立 4 个，而扩展分区最多只能建立 1 个。
 
 扩展分区的建立命令如下：
-```
+```bash
 [root@localhost ~]# fdisk /dev/sdb
 …省略部分输出…
 Command (m for help): n
@@ -783,7 +783,7 @@ Using default value 2610
 扩展分区是不能被格式化和直接使用的，所以还要在扩展分区内部再建立逻辑分区。
 
 我们来看看逻辑分区的建立过程：
-```
+```bash
 [root@localhost ~]# fdisk /dev/sdb
 …省略部分输出…
 Command (m for help): n
@@ -838,7 +838,7 @@ Syncing disks.
 \#退回到提示符界面
 ```
 所有的分区立过程中如果不保存并退出是不会生效的，所以建立错了也没有关系，使用 q 命令不保存退出即可。如果使用了 w 命令，就会保存退出。有时因为系统的分区表正忙，所以需要重新启动系统才能使新的分区表生效。命令如下：
-```
+```bash
 Command (m for help): w
 \#保存并退出
 The partition table has been altered!
@@ -851,7 +851,7 @@ The new table will be used at the next reboot.
 Syncing disks.
 ```
 看到了吗？必须重新启动！可是重新启动很浪费时间。如果不想重新启动，则可以使用 partprobe 命令。这个命令的作用是让系统内核重新读取分区表信息，这样就可以不用重新启动了。命令如下：
-```
+```bash
 [root@localhost ~]# partprobe
 ```
 如果这个命令不存在，则请安装 parted-2.1-18.el6.i686 这个软件包。partprobe 命令不是必需的，如果没有提示重启系统，则直接格式化即可。
@@ -859,7 +859,7 @@ Syncing disks.
 虽然我们可以使用 fdisk命令对硬盘进行快速的分区，但对高于 2TB 的硬盘分区，此命令却无能为力，此时就需要使用`parted`命令。
 
 `parted`命令是可以在命令行直接分区和格式化的，不过`parted`交互模式才是更加常用的命令方式，进入交互模式的方法如下：
-```
+```bash
 [root@localhost ~]# parted 硬盘设备文件名
 #进入交互模式
 ```
@@ -896,8 +896,9 @@ set NUMBER FLAG STATE	改变分区标记
 toggle [NUMBER [FLAG]]	切换分区表的状态
 unit UNIT	设置默认的单位
 Version	显示版本
+
 【例 1】查看分区表
-```
+```bash
 (parted) print
 #进入print指令
 Model: VMware, VMware Virtual S (scsi)
@@ -925,7 +926,7 @@ Filesystem：文件系统类型；
 标志：分区的标记。
 
 【例 2】修改成 GPT 分区表
-```
+```bash
 (partcd) mklabel gpt
 #修改分区表命令
 警告：正在使用/dev/sdb上的分区。由于/dev/sdb分区已经挂载，所以有警告。注意，如果强制修改，那么原有分区及数据会消失
@@ -954,7 +955,7 @@ Number Start End Size File system Name 标志
 
 【例 3】建立分区
 因为修改过了分区表，所以/dev/sdb硬盘中的所有数据都消失了，我们就可以重新对这块硬盘分区了。不过，在建立分区时，默认文件系统就只能是 ext2 了。命令如下：
-```
+```bash
 (parted)mkpart
 #输入创建分区命令，后面不要参数，全部靠交互
 指定
@@ -979,7 +980,7 @@ Number Start End Size Rle system Name 标志
 
 【例 4】建立文件系统
 分区分完后，还需要进行格式化。我们知道，如果使用 parted 交互命令格式化，则只能格式化成 ext2 文件系统。我们在这里要演示一下 parted 命令的格式化方法，所以就格式化成 ext2 文件系统。命令如下：
-```
+```bash
 (parted) mkfs
 #格式化命令（很奇怪，也是mkfs，但是这只是parted的交互命令）
 WARNING: you are attempting to use parted to operate on (mkfs) a file system.
@@ -1033,7 +1034,7 @@ Number Start End Size File system Name标志
 删除分区
 
 命令如下：
-```
+```bash
 (parted) rm
 #删除分区命令
 分区编号？ 1
@@ -1061,7 +1062,7 @@ mkfs 命令格式如下：
 前面章节中，我们建立了 /dev/sdb1（主分区）、/dev/sdb2（扩展分区）、/dev/sdb5（逻辑分区）和 /dev/sdb6（逻辑分区）这几个分区，其中 /dev/sdb2 不能被格式化。剩余的三个分区都需要格式化之后使用，这里我们以格式化 /dev/sdb6 分区作为演示，其余分区的格式化方法一样。
 
 格式化 /dev/sdb6 分区的执行命令如下：
-```
+```bash
 [root@localhost ~]# mkfs -t ext4 /dev/sdb6
 mke2fs 1.41.12 (17-May-2010)
 Filesystem label=  <--这里指的是卷标名，我们没有设置卷标
@@ -1088,7 +1089,7 @@ This filesystem will be automatically checked every 39 mounts or 180 days, which
 `mkfs`命令为硬盘分区写入文件系统时，无法手动调整分区的默认参数（比如块大小是 4096 Bytes），如果想要调整，就需要使用`mke2fs`命令。
 
 mke2fs 命令的基本格式如下：
-```
+```bash
 [root@localhost ~]# mke2fs [选项] 分区设备文件名
 ```
 表 1 罗列出了 mke2fs 命令常用的几个选项及各自的功能。
@@ -1101,7 +1102,7 @@ mke2fs 命令的基本格式如下：
 -j	建立带有 ext3 日志功能的文件系统；
 -L 卷标名	给文件系统设置卷标名，就不使用 e2label 命令设定了；
 为了更好的对比 mkfs 命令，这里我们依旧以格式化 /dev/sdb6 为例，不过，这次使用的是 mke2fs 命令，执行命令如下：
-```
+```bash
 [root@localhost ~]# mke2fs -t ext4 -b 2048 /dev/sdb6
 #格式化分区，并指定block的大小为2048 Bytes
 mke2fe 1.41.12 (17-May-2010)
@@ -1163,7 +1164,7 @@ swap 分区通常被称为交换分区，这是一块特殊的硬盘空间，即
 
 下面我们来逐一实现。
 ## 建立swap分区第一步：分区
-```
+```bash
 [root@localhost ~]# fdisk /dev/sdb
 \#以/dev/sdb分区为例
 WARNING: DOS-compatible mode is deprecated.It's strongly recommended to switch off the mode (command 'c') and change display units to sectors (command 'u').
@@ -1214,14 +1215,14 @@ Syncing disks.
 仍以 /dev/sdb 分区作为实验对象。不过，如果分区刚刚使用 parted 命令转变为 GPT 分区表，则记得转换回 MBR 分区表，fdisk 命令才能识别，否则干脆新添加一块硬盘做实验。
 ## 建立 swap 分区第二步：格式化
 因为要格式化成 swap 分区，所以格式化命令是 mkswap。
-```
+```bash
 [root@localhost ~]# mkswap /dev/sdb1
 Setting up swapspace version 1, size = 522076 KiB
 no label, UUID=c3351 dc3-f403-419a-9666-c24615e170fb
 ```
 ## 使用swap分区
 在使用 swap 分区之前，我们先来说说 free 命令。
-```
+```bash
 [root@localhost ~]#free
 total used free shared buffers cached
 Mem: 1030796 130792 900004 0 15292 55420
@@ -1239,10 +1240,10 @@ cached：是指缓存内存数，单位是KB；
 我们需要解释一下 buffers（缓冲）和 cached（缓存）的区别。简单来讲，cached 是给读取数据时加速的，buffers 是给写入数据加速的。cached 是指把读取出来的数据保存在内存中，当再次读取时，不用读取硬盘而直接从内存中读取，加速了数据的读取过程；buffers 是指在写入数据时，先把分散的写入操作保存到内存中，当达到一定程度后再集中写入硬盘，减少了磁盘碎片和硬盘的反复寻道，加速了数据的写入过程。
 
 我们已经看到，在加载进新的`swap`分区之前，`swap`分区的大小是 2000MB，接下来只要加入`swap`分区就可以了，使用命令`swapon`。命令格式如下：
-```
+```bash
 [root@localhost ~]# swapon 分区设备文件名
 ```
-```
+```bash
 [root@localhost ~]# swapon /dev/sdb1
 swap分区已加入，我们查看一下。
 [root@localhost ~]#free
@@ -1252,11 +1253,11 @@ Mem: 1030796 131264 899532 0 15520 55500
 Swap: 2570064 0 2570064
 ```
 swap 分区的大小变成了 2500MB，加载成功了。如果要取消新加入的 swap 分区，则也很简单，命令如下：
-```
+```bash
 [root@localhost ~]# swapoff /dev/sdb1
 ```
 如果想让`swap`分区开机之后自动挂载，就需要修改`/etc/fstab`文件，命令如下：
-```
+```bash
 [root@localhost ~]#vi /etc/fstab
 UUID=c2ca6f57-b15c-43ea-bca0-f239083d8bd2 / ext4 defaults 1 1
 UUID=0b23d315-33a7-48a4-bd37-9248e5c443451 boot ext4 defaults 1 2

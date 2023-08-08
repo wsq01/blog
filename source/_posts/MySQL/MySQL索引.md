@@ -2,7 +2,7 @@
 title: MySQL 索引
 date: 2020-05-06 17:35:51
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 

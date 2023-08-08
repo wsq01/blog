@@ -2,7 +2,7 @@
 title: SQL 范式设计
 date: 2020-03-02 16:24:06
 tags: [SQL]
-categories: [SQL]
+categories: [数据库, SQL]
 ---
 
 

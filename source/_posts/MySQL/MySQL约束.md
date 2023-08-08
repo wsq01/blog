@@ -2,7 +2,7 @@
 title: MySQL约束
 date: 2020-04-15 18:21:53
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 
@@ -93,7 +93,7 @@ mysql> DESC tb_emp4;
 实际上设计学生选课表，要限定的是一个学生只能选择同一课程一次。因此，学生编号和课程编号可以放在一起共同作为主键，这也就是联合主键了。
 
 主键由多个字段联合组成：
-```
+```sql
 PRIMARY KEY [字段1，字段2，…,字段n]
 ```
 注意：当主键是由多个字段组成时，不能直接在字段名后面声明主键约束。
@@ -116,7 +116,7 @@ mysql> DESC tb_emp5;
 +--------+-------------+------+-----+---------+-------+
 ```
 ## 在修改表时添加主键约束
-主键约束不仅可以在创建表的同时创建，也可以在修改表时添加。但是需要注意的是，设置成主键约束的字段中不允许有空值。
+主键约束不仅可以在创建表的同时创建，也可以在修改表时添加。但是需要注意的是，设置成主键约束的每个字段都不允许有空值。
 ```sql
 ALTER TABLE <数据表名> ADD PRIMARY KEY(<字段名>);
 ```
@@ -184,10 +184,10 @@ mysql> CREATE TABLE tb_student2 (
     -> id INT NOT NULL AUTO_INCREMENT,
     -> name VARCHAR(20) NOT NULL,
     -> PRIMARY KEY(ID)
-    -> )AUTO_INCREMENT=100;
+    -> ) AUTO_INCREMENT=100;
 Query OK, 0 rows affected (0.03 sec)
 
-mysql> INSERT INTO tb_student2 (name)VALUES('Java');
+mysql> INSERT INTO tb_student2 (name) VALUES('Java');
 Query OK, 1 row affected (0.07 sec)
 
 mysql> SELECT * FROM tb_student2;
@@ -209,7 +209,7 @@ mysql> CREATE TABLE tb_student3(
 ```sql
 INSERT INTO tb_student3 VALUES(1,1,1);
 ```
-此时，表`tb_student3`中已经有了`（1,1,1）`这条记录，这时再执行一条插入数据命令：
+此时，表`tb_student3`中已经有了`(1,1,1)`这条记录，这时再执行一条插入数据命令：
 ```sql
 mysql> INSERT INTO tb_student3 VALUES(null,1,1);
 ERROR 1062 (23000): Duplicate entry '1' for key 'name'
@@ -218,7 +218,7 @@ ERROR 1062 (23000): Duplicate entry '1' for key 'name'
 # 外键约束
 MySQL 外键约束（`FOREIGN KEY`）是表的一个特殊字段，经常与主键约束一起使用。对于两个具有关联关系的表而言，相关联字段中主键所在的表就是主表（父表），外键所在的表就是从表（子表）。
 
-外键用来建立主表与从表的关联关系，为两个表的数据建立连接，约束两个表中数据的一致性和完整性。比如，一个水果摊，只有苹果、桃子、李子、西瓜等 4 种水果，那么，你来到水果摊要买水果就只能选择苹果、桃子、李子和西瓜，其它的水果都是不能购买的。
+外键用来建立主表与从表的关联关系，为两个表的数据建立连接，约束两个表中数据的一致性和完整性。
 
 主表删除某条记录时，从表中与之对应的记录也必须有相应的改变。一个表可以有一个或多个外键，外键可以为空值，若不为空值，则每一个外键的值必须等于主表中主键的某个值。
 
@@ -233,8 +233,8 @@ MySQL 外键约束（`FOREIGN KEY`）是表的一个特殊字段，经常与主�
 ## 在创建表时设置外键约束
 在`CREATE TABLE`语句中，通过`FOREIGN KEY`关键字来指定外键：
 ```sql
-[CONSTRAINT <外键名>] FOREIGN KEY 字段名 [，字段名2，…]
-REFERENCES <主表名> 主键列1 [，主键列2，…]
+[CONSTRAINT <外键名>] FOREIGN KEY 字段名 [,字段名2,…]
+REFERENCES <主表名> 主键列1 [,主键列2,…]
 ```
 为了展现表与表之间的外键关系，在`test_db`数据库中创建一个部门表`tb_dept1`，表结构如下表所示。
 
@@ -336,13 +336,16 @@ Create Table: CREATE TABLE `tb_emp2` (
 # 唯一约束
 MySQL 唯一约束（`Unique Key`）是指所有记录中字段的值不能重复出现。例如，为`id`字段加上唯一性约束后，每条记录的`id`值都是唯一的，不能出现重复的情况。
 
-唯一约束与主键约束相似的是它们都可以确保列的唯一性。不同的是，唯一约束在一个表中可有多个，并且设置唯一约束的列允许有空值，但是只能有一个空值。而主键约束在一个表中只能有一个，且不允许有空值。比如，在用户信息表中，为了避免表中用户名重名，可以把用户名设置为唯一约束。
+唯一约束与主键约束相似的是它们都可以确保列的唯一性。不同的是，唯一约束在一个表中可有多个，并且设置唯一约束的列允许有空值(`NULL`)，且可以有**多个空值**。而主键约束在一个表中只能有一个，且不允许有空值。比如，在用户信息表中，为了避免表中用户名重名，可以把用户名设置为唯一约束。
 ## 在创建表时设置唯一约束
 唯一约束可以在创建表时直接设置，通常设置在除了主键以外的其它列上。
 
 在定义完列之后直接使用`UNIQUE`关键字指定唯一约束：
 ```sql
+# 行级约束设置方法
 <字段名> <数据类型> UNIQUE
+# 表级约束设置方法
+[CONSTRAINT <唯一约束名>] UNIQUE(<列名>)
 ```
 ```sql
 mysql> CREATE TABLE tb_dept2
@@ -351,6 +354,15 @@ mysql> CREATE TABLE tb_dept2
     -> name VARCHAR(22) UNIQUE,
     -> location VARCHAR(50)
     -> );
+# 或者
+mysql> CREATE TABLE tb_dept2
+    -> (
+    -> id INT(11) PRIMARY KEY,
+    -> name VARCHAR(22),
+    -> location VARCHAR(50),
+    -> CONSTRAINT uk_dept UNIQUE(name)
+    -> );
+
 Query OK, 0 rows affected (0.37 sec)
 
 mysql> DESC tb_dept2;
@@ -364,7 +376,7 @@ mysql> DESC tb_dept2;
 ```
 ## 在修改表时添加唯一约束
 ```sql
-ALTER TABLE <数据表名> ADD CONSTRAINT <唯一约束名> UNIQUE(<列名>);
+ALTER TABLE <数据表名> ADD [CONSTRAINT <唯一约束名>] UNIQUE(<列名>);
 ```
 ```sql
 mysql> ALTER TABLE tb_dept1 ADD CONSTRAINT unique_name UNIQUE(name);
@@ -487,7 +499,8 @@ mysql> DESC tb_dept3;
 ## 在修改表时添加默认值约束
 ```sql
 ALTER TABLE <数据表名>
-CHANGE COLUMN <字段名> <数据类型> DEFAULT <默认值>;
+CHANGE COLUMN <字段名>
+<字段名> <数据类型> DEFAULT <默认值>;
 ```
 ```sql
 mysql> ALTER TABLE tb_dept3
@@ -531,6 +544,9 @@ mysql> DESC tb_dept3;
 ```
 # 非空约束
 MySQL 非空约束（`NOT NULL`）指字段的值不能为空。对于使用了非空约束的字段，如果用户在添加数据时没有指定值，数据库系统就会报错。可以通过`CREATE TABLE`或`ALTER TABLE`语句实现。在表中某个列的定义后加上关键字`NOT NULL`作为限定词，来约束该列的取值不能为空。
+
+> 注意：空字符串`''`不等于`NULL`，0 也不等于`NULL`。
+
 ## 在创建表时设置非空约束
 创建表时可以使用`NOT NULL`关键字设置非空约束：
 ```sql

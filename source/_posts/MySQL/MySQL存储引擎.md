@@ -2,7 +2,7 @@
 title: MySQL存储引擎
 date: 2020-04-09 14:33:26
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 

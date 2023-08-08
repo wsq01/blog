@@ -2,7 +2,7 @@
 title: SQL入门
 date: 2020-02-03 11:02:21
 tags: [SQL]
-categories: [SQL]
+categories: [数据库, SQL]
 ---
 
 我们可以把 SQL 语言按照功能划分成 4 个部分：

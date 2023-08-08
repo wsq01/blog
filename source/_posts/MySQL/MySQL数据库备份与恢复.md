@@ -2,7 +2,7 @@
 title: MySQL数据库备份与恢复
 date: 2020-06-03 17:11:23
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 # 备份类型

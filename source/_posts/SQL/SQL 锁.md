@@ -2,7 +2,7 @@
 title: SQL 查询优化器工作原理
 date: 2020-03-06 16:15:08
 tags: [SQL]
-categories: [SQL]
+categories: [数据库, SQL]
 ---
 
 

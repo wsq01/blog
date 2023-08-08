@@ -2,7 +2,7 @@
 title: SQL 检索数据
 date: 2020-02-05 15:15:09
 tags: [SQL]
-categories: [SQL]
+categories: [数据库, SQL]
 ---
 
 

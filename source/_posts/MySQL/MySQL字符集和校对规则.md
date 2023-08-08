@@ -1,4 +1,9 @@
-
+---
+title: MySQL 字符集和校对规则
+date: 2021-04-16 14:59:13
+tags: [MySQL]
+categories: [数据库, MySQL]
+---
 
 
 

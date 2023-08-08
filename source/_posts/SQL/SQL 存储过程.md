@@ -2,7 +2,7 @@
 title: SQL 存储过程
 date: 2020-02-13 15:14:27
 tags: [SQL]
-categories: [SQL]
+categories: [数据库, SQL]
 ---
 
 

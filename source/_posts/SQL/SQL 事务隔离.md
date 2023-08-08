@@ -2,7 +2,7 @@
 title: SQL 事务隔离
 date: 2020-03-05 14:12:04
 tags: [SQL]
-categories: [SQL]
+categories: [数据库, SQL]
 ---
 
 

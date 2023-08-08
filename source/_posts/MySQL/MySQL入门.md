@@ -2,7 +2,7 @@
 title: MySQL入门
 date: 2020-04-01 17:12:01
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 

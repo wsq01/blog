@@ -2,7 +2,7 @@
 title: MySQL 事务
 date: 2020-05-15 19:32:08
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 

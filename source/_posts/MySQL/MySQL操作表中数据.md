@@ -2,7 +2,7 @@
 title: MySQL 操作表中的数据
 date: 2020-04-25 17:16:51
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 
@@ -21,7 +21,6 @@ VALUES (值1) [… , (值n) ];
 * `VALUES`或`VALUE`子句：该子句包含要插入的数据清单。数据清单中数据的顺序要和列的顺序相对应。
 
 #### INSERT…SET语句
-语法格式为：
 ```sql
 INSERT INTO <表名>
 SET <列名1> = <值1>,
@@ -220,7 +219,7 @@ mysql> SELECT * FROM tb_courses_new;
 # DELETE：删除数据
 在 MySQL 中，可以使用`DELETE`语句来删除表的一行或者多行数据。
 ## 删除单个表中的数据
-使用`DELETE`语句从单个表中删除数据，语法格式为：
+使用`DELETE`语句从单个表中删除数据：
 ```sql
 DELETE FROM <表名> [WHERE 子句] [ORDER BY 子句] [LIMIT 子句]
 ```

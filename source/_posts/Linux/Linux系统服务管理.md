@@ -103,18 +103,18 @@ time-stream：关闭
 既然每个网络服务对应的端口是固定的，那么就可以通过查询服务器中开启的端口，来判断当前服务器开启了哪些服务。
 
 虽然判断服务器中开启的服务还有其他方法（如通过`ps`命令），但是通过端口的方法查看最为准确。命令格式如下：
-```
+```bash
 [root@localhost ~]# netstat 选项
 ```
 选项：
 * `-a`：列出系统中所有网络连接，包括已经连接的网络服务、监听的网络服务和 Socket 套接字；
 * `-t`：列出 TCP 数据；
-* `-u`：列出 UDF 数据；
+* `-u`：列出 UDP 数据；
 * `-l`：列出正在监听的网络服务（不包含已经连接的网络服务）；
 * `-n`：用端口号来显示而不用服务名；
 * `-p`：列出该服务的进程 ID (PID)；
 
-```
+```bash
 [root@localhost ~]# netstat -tlunp
 #列出系统中所有已经启动的服务（已经监听的端口），但不包含已经连接的网络服务
 Active Internet connections (only servers)
@@ -134,58 +134,11 @@ udp6       0      0 ::1:323                 :::*                                
 命令的执行结果：
 * `Proto`：数据包的协议。分为 TCP 和 UDP 数据包；
 * `Recv-Q`：表示收到的数据已经在本地接收缓冲，但是还没有被进程取走的数据包数量；
-* `Send-Q`：对方没有收到的数据包数量；或者没有 Ack 回复的，还在本地缓冲区的数据包数量；
-* `Local Address`：本地 IP : 端口。通过端口可以知道本机开启了哪些服务；
+* `Send-Q`：对方没有收到的数据包数量；或者没有`Ack`回复的，还在本地缓冲区的数据包数量；
+* `Local Address`：本地 IP: 端口。通过端口可以知道本机开启了哪些服务；
 * `Foreign Address`：远程主机：端口。也就是远程是哪个 IP、使用哪个端口连接到本机。由于这条命令只能查看监听端口，所以没有 IP 连接到到本机；
 * `State`：连接状态。主要有已经建立连接（`ESTABLISED`）和监听（`LISTEN`）两种状态，当前只能查看监听状态；
 * `PID/Program name`：进程 ID 和进程命令；
-
-```
-[root@localhost ~]# netstat -an
-#查看所有的网络连接，包括已连接的网络服务、监听的网络服务和Socket套接字
-Active Internet connections (only servers)
-Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
-tcp        0      0 127.0.0.1:6379          0.0.0.0:*               LISTEN      1204/redis-server 1 
-tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      1257/nginx: master  
-tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      1191/sshd           
-tcp6       0      0 :::3306                 :::*                    LISTEN      1606/mysqld         
-tcp6       0      0 ::1:6379                :::*                    LISTEN      1204/redis-server 1 
-tcp6       0      0 :::8080                 :::*                    LISTEN      1253/java           
-tcp6       0      0 :::22                   :::*                    LISTEN      1191/sshd           
-udp        0      0 127.0.0.1:323           0.0.0.0:*                           898/chronyd         
-udp6       0      0 ::1:323                 :::*                                898/chronyd         
-
-[root@localhost ~]# netstat -an
-Active Internet connections (servers and established)
-Proto Recv-Q Send-Q Local Address           Foreign Address         State      
-tcp        0      0 127.0.0.1:6379          0.0.0.0:*               LISTEN     
-tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN     
-tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN     
-tcp        0    244 192.168.10.10:22        192.168.10.2:55812      ESTABLISHED
-tcp        0      0 127.0.0.1:6379          127.0.0.1:53630         ESTABLISHED
-tcp6       0      0 :::3306                 :::*                    LISTEN     
-tcp6       0      0 ::1:6379                :::*                    LISTEN     
-tcp6       0      0 :::8080                 :::*                    LISTEN     
-tcp6       0      0 :::22                   :::*                    LISTEN     
-tcp6       0      0 127.0.0.1:3306          127.0.0.1:60784         ESTABLISHED
-tcp6       0      0 127.0.0.1:3306          127.0.0.1:60782         ESTABLISHED
-tcp6       0      0 127.0.0.1:60780         127.0.0.1:3306          ESTABLISHED
-...省略部分输出...
-```
-执行`netstat -an`命令能査看更多的信息，在`Stated`中也看到了已经建立的连接（`ESTABLISED`）。这是`ssh`远程管理命令产生的连接，`ssh`对应的端口是 22。
-
-而且我们还看到了`Socket`套接字。在服务器上，除网络服务可以绑定端口，用端口来接收客户端的请求数据外，系统中的网络程序或我们自己开发的网络程序也可以绑定端口，用端口来接收客户端的请求数据。这些网络程序就是通过`Socket`套接字来绑定端口的。也就是说，网络服务或网络程序要想在网络中传递数据，必须利用`Socket`套接字绑定端口，并进行数据传递。
-
-使用`netstat -an`命令查看到的这些`Socket`套接字虽然不是网络服务，但是同样会占用端口，并在网络中传递数据。
-
-解释一下`Socket`套接字的输出：
-* `Proto`：协议，一般是unix；
-* `RefCnt`：连接到此`Socket`的进程数量；
-* `Flags`：连接标识；
-* `Type`：Socket访问类型；
-* `State`：状态，`LISTENING`表示监听，`CONNECTED`表示已经建立连接；
-* `I-Node`：程序文件的`i`节点号；
-* `Path`：`Socket`程序的路径，或者相关数据的输出路径；
 
 # 独立服务管理（RPM包的启动与自启动）
 RPM 包默认安装的服务分为独立的服务和基于 xinetd 的服务。

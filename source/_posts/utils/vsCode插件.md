@@ -68,3 +68,24 @@ VSCode文件夹&文件图标
 使用：安装插件后，ctrl+shift+p输入active Echars即可开启智能提示
 功能：提示各种Echart中Option 的属性
 
+### Live Server
+在工作环境中的任何 HTML 文件或项目上运行服务器。
+### Turbo Console Log
+无需手动添加日志语句即可调试您的代码。Turbo Console Log 扩展让您只需单击一下即可将控制台日志语句添加到您的代码中。
+### CSS Peek
+使用 CSS Peek VS Code 扩展，您只需将鼠标悬停在 HTML 元素上即可显示一个显示应用于该元素的 CSS 样式的查看窗口。然后，您可以通过单击查看窗口跳转到 CSS 代码，从而轻松编辑样式。此功能使您免于每次都手动搜索 CSS 代码的麻烦。
+### Tabnine AI
+Tabnine VS Code 扩展是关于生产力的。它是一个人工智能代码助手，可以加速您的开发过程，实时自动完成您的代码。它支持所有流行的编码语言和 IDE。
+
+Tabnine 具有类似于 IntelliSense 的 AI 辅助代码完成功能。此扩展可以根据上下文和语法预测和建议您的下一行代码，从而帮助您更快地编写代码。
+
+### Color Highlight
+简单而强大的扩展，可以实时为所有文件以实际颜色边框或背景突出显示颜色。
+
+### CodeSnap
+按下Ctrl + Shift + P，搜索CodeSnap，选择您想要捕捉的代码，然后您的快照就可以分享了！
+### SVG Preview
+此扩展为VS Code添加了对SVG的实时预览和实时编辑的支持。
+
+### TypeScript Error Translator
+TypeScript的错误有时可能会令人困惑和沮丧，但是这个扩展将错误转化为可直接从IDE阅读的人类可读形式。

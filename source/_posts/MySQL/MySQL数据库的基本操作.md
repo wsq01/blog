@@ -2,13 +2,11 @@
 title: MySQL数据库的基本操作
 date: 2020-04-05 16:52:01
 tags: [MySQL]
-categories: [MySQL]
+categories: [数据库, MySQL]
 ---
 
 # 查看数据库
-数据库可以看作是一个专门存储数据对象的容器，每一个数据库都有唯一的名称，并且数据库的名称都是有实际意义的，这样就可以清晰的看出每个数据库用来存放什么数据。在 MySQL 数据库中存在系统数据库和自定义数据库，系统数据库是在安装 MySQL 后系统自带的数据库，自定义数据库是由用户定义创建的数据库。
-
-在 MySQL 中，可使用`SHOW DATABASES`语句来查看或显示当前用户权限范围以内的数据库。
+可使用`SHOW DATABASES`语句来查看或显示当前用户权限范围内的数据库。
 ```sql
 SHOW DATABASES [LIKE '数据库名'];
 ```
@@ -91,14 +89,14 @@ mysql> SHOW DATABASES LIKE '%db';
 ```
 
 # 创建数据库
-在 MySQL 中，可以使用`CREATE DATABASE`语句创建数据库：
+可以使用`CREATE DATABASE`语句创建数据库：
 ```sql
 CREATE DATABASE [IF NOT EXISTS] <数据库名>
 [[DEFAULT] CHARACTER SET <字符集名>] 
 [[DEFAULT] COLLATE <校对规则名>];
 ```
 `[ ]`中的内容是可选的。语法说明如下：
-* <数据库名>：创建数据库的名称。MySQL 的数据存储区将以目录方式表示 MySQL 数据库，因此数据库名称必须符合操作系统的文件夹命名规则，不能以数字开头，尽量要有实际意义。注意在 MySQL 中不区分大小写。
+* `<数据库名>`：创建数据库的名称。MySQL 的数据存储区将以目录方式表示 MySQL 数据库，因此数据库名称必须符合操作系统的文件夹命名规则，不能以数字开头，尽量要有实际意义。注意在 MySQL 中不区分大小写。
 * `IF NOT EXISTS`：在创建数据库之前进行判断，只有该数据库目前尚不存在时才能执行操作。此选项可以用来避免数据库已经存在而重复创建的错误。
 * `[DEFAULT] CHARACTER SET`：指定数据库的字符集。指定字符集的目的是为了避免在数据库中存储的数据出现乱码的情况。如果在创建数据库时不指定字符集，那么就使用系统的默认字符集。
 * `[DEFAULT] COLLATE`：指定字符集的默认校对规则。
@@ -109,7 +107,6 @@ MySQL 的字符集（`CHARACTER`）和校对规则（`COLLATION`）是两个不�
 mysql> CREATE DATABASE test_db;
 Query OK, 1 row affected (0.12 sec);
 ```
-
 若再次输入`CREATE DATABASE test_db;`语句，则系统会给出错误提示信息：
 ```sql
 mysql> CREATE DATABASE test_db;
@@ -123,7 +120,7 @@ mysql> CREATE DATABASE IF NOT EXISTS test_db;
 Query OK, 1 row affected (0.12 sec)
 ```
 ## 实例2：创建 MySQL 数据库时指定字符集和校对规则
-```
+```sql
 mysql> CREATE DATABASE IF NOT EXISTS test_db_char
     -> DEFAULT CHARACTER SET utf8
     -> DEFAULT COLLATE utf8_chinese_ci;
@@ -144,9 +141,9 @@ mysql> SHOW CREATE DATABASE test_db_char;
 
 在 MySQL 中，可以使用`ALTER DATABASE`来修改已经被创建或者存在的数据库的相关参数。
 ```sql
-ALTER DATABASE [数据库名] { 
+ALTER DATABASE [数据库名] [
 [ DEFAULT ] CHARACTER SET <字符集名> |
-[ DEFAULT ] COLLATE <校对规则名>}
+[ DEFAULT ] COLLATE <校对规则名>]
 ```
 语法说明如下：
 * `ALTER DATABASE`用于更改数据库的全局特性。
@@ -177,12 +174,12 @@ mysql> SHOW CREATE DATABASE test_db;
 # 删除数据库
 删除数据库是将已经存在的数据库从磁盘空间上清除，清除之后，数据库中的所有数据也将一同被删除。
 
-在 MySQL 中，当需要删除已创建的数据库时，可以使用`DROP DATABASE`语句。
+当需要删除已创建的数据库时，可以使用`DROP DATABASE`语句。
 ```sql
-DROP DATABASE [ IF EXISTS ] <数据库名>
+DROP DATABASE [IF EXISTS] <数据库名>
 ```
 语法说明如下：
-* <数据库名>：指定要删除的数据库名。
+* `<数据库名>`：指定要删除的数据库名。
 * `IF EXISTS`：用于防止当数据库不存在时发生错误。
 * `DROP DATABASE`：删除数据库中的所有表格并同时删除数据库。使用此语句时要非常小心，以免错误删除。如果要使用`DROP DATABASE`，需要获得数据库`DROP `权限。
 
@@ -227,7 +224,7 @@ mysql> SHOW DATABASES;
 mysql> DROP DATABASE test_db_del;
 ERROR 1008 (HY000): Can't drop database 'test_db_del'; database doesn't exist
 ```
-如果使用`IF EXISTS`从句，可以防止系统报此类错误，如下所示：
+如果使用`IF EXISTS`从句，可以防止系统报此类错误：
 ```sql
 mysql> DROP DATABASE IF EXISTS test_db_del;
 Query OK, 0 rows affected, 1 warning (0.00 sec)
@@ -236,13 +233,13 @@ Query OK, 0 rows affected, 1 warning (0.00 sec)
 # 选择数据库
 在 MySQL 中就有很多系统自带的数据库，那么在操作数据库之前就必须要确定是哪一个数据库。
 
-在 MySQL 中，`USE`语句用来完成一个数据库到另一个数据库的跳转。
+`USE`语句用来完成一个数据库到另一个数据库的跳转。
 
 当用`CREATE DATABASE`语句创建数据库之后，该数据库不会自动成为当前数据库，需要用`USE`来指定当前数据库。
 ```
-USE <数据库名>
+USE <数据库名>;
 ```
-该语句可以通知 MySQL 把<数据库名>所指示的数据库作为当前数据库。该数据库保持为默认数据库，直到语段的结尾，或者直到遇见一个不同的`USE`语句。 只有使用`USE`语句来指定某个数据库作为当前数据库之后，才能对该数据库及其存储的数据对象执行操作。
+该语句可以通知 MySQL 把`<数据库名>`所指示的数据库作为当前数据库。该数据库保持为默认数据库，直到语段的结尾，或者直到遇见一个不同的`USE`语句。只有使用`USE`语句来指定某个数据库作为当前数据库之后，才能对该数据库及其存储的数据对象执行操作。
 ```sql
 mysql> USE test_db;
 Database changed

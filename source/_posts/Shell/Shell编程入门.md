@@ -4,48 +4,7 @@
 在 Bash shell 中，每一个变量的值都是字符串，无论你给变量赋值时有没有使用引号，值都会以字符串的形式存储。
 
 这意味着，Bash shell 在默认情况下不会区分变量类型，即使你将整数和小数赋值给变量，它们也会被视为字符串。
-## 定义变量
-Shell 支持以下三种定义变量的方式：
-```sh
-variable=value
-variable='value'
-variable="value"
-```
-`variable`是变量名，`value`是赋给变量的值。如果`value`不包含任何空白符（例如空格、Tab 缩进等），那么可以不使用引号；如果`value`包含了空白符，那么就必须使用引号包围起来。使用单引号和使用双引号也是有区别的。
 
-> 注意，赋值号=的周围不能有空格。
-
-Shell 变量的命名规范和大部分编程语言都一样：
-* 变量名由数字、字母、下划线组成；
-* 必须以字母或者下划线开头；
-* 不能使用 Shell 里的关键字（通过`help`命令可以查看保留关键字）。
-
-```
-url=http://www.baidu.com/shell/
-echo $url
-```
-## 使用变量
-使用一个定义过的变量，只要在变量名前面加美元符号`$`即可。
-```sh
-author="zhangsan"
-echo $author
-echo ${author}
-```
-变量名外面的花括号`{}`是可选的，加不加都行，加花括号是为了帮助解释器识别变量的边界，比如下面这种情况：
-```sh
-skill="Java"
-echo "I am good at ${skill}Script"
-```
-如果不给`skill`变量加花括号，写成`echo "I am good at $skillScript"`，解释器就会把`$skillScript`当成一个变量（其值为空），代码执行结果就不是我们期望的样子了。
-## 修改变量的值
-已定义的变量，可以被重新赋值。
-```sh
-url="http://www.baidu.com"
-echo ${url}
-url="http://www.baidu.com/shell/"
-echo ${url}
-```
-第二次对变量赋值时不能在变量名前加`$`，只有在使用变量时才能加`$`。
 ## 单引号和双引号的区别
 ```sh
 #!/bin/bash
