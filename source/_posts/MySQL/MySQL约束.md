@@ -233,8 +233,8 @@ MySQL 外键约束（`FOREIGN KEY`）是表的一个特殊字段，经常与主�
 ## 在创建表时设置外键约束
 在`CREATE TABLE`语句中，通过`FOREIGN KEY`关键字来指定外键：
 ```sql
-[CONSTRAINT <外键名>] FOREIGN KEY 字段名 [,字段名2,…]
-REFERENCES <主表名> 主键列1 [,主键列2,…]
+[CONSTRAINT <外键名>] FOREIGN KEY(字段名[,字段名2,…])
+REFERENCES <主表名>(主键列1[,主键列2,…])
 ```
 为了展现表与表之间的外键关系，在`test_db`数据库中创建一个部门表`tb_dept1`，表结构如下表所示。
 
@@ -283,7 +283,7 @@ mysql> DESC tb_emp6;
 外键约束也可以在修改表时添加，但是添加外键约束的前提是：从表中外键列中的数据必须与主表中主键列中的数据一致或者是没有数据。
 ```sql
 ALTER TABLE <数据表名> ADD CONSTRAINT <外键名>
-FOREIGN KEY(<列名>) REFERENCES <主表名> (<列名>);
+FOREIGN KEY(<列名>) REFERENCES <主表名>(<列名>);
 ```
 修改数据表`tb_emp2`，将字段`deptId`设置为外键，与数据表`tb_dept1`的主键`id`进行关联，SQL 语句和运行结果如下所示。
 ```sql
@@ -334,7 +334,7 @@ Create Table: CREATE TABLE `tb_emp2` (
 ```
 可以看到，`tb_emp2`中已经不存在`FOREIGN KEY`，原有的名称为`fk_emp_dept`的外键约束删除成功。
 # 唯一约束
-MySQL 唯一约束（`Unique Key`）是指所有记录中字段的值不能重复出现。例如，为`id`字段加上唯一性约束后，每条记录的`id`值都是唯一的，不能出现重复的情况。
+MySQL 唯一约束是指所有记录中字段的值不能重复出现。例如，为`id`字段加上唯一性约束后，每条记录的`id`值都是唯一的，不能出现重复的情况。
 
 唯一约束与主键约束相似的是它们都可以确保列的唯一性。不同的是，唯一约束在一个表中可有多个，并且设置唯一约束的列允许有空值(`NULL`)，且可以有**多个空值**。而主键约束在一个表中只能有一个，且不允许有空值。比如，在用户信息表中，为了避免表中用户名重名，可以把用户名设置为唯一约束。
 ## 在创建表时设置唯一约束
@@ -498,9 +498,9 @@ mysql> DESC tb_dept3;
 注意：在创建表时为列添加默认值，可以一次为多个列添加默认值，需要注意不同列的数据类型。
 ## 在修改表时添加默认值约束
 ```sql
-ALTER TABLE <数据表名>
-CHANGE COLUMN <字段名>
-<字段名> <数据类型> DEFAULT <默认值>;
+ALTER TABLE <数据表名> CHANGE COLUMN <字段名> <字段名> <数据类型> DEFAULT <默认值>;
+# 或
+ALTER TABLE <数据表名> MODIFY COLUMN <字段名> <数据类型> DEFAULT <默认值>;
 ```
 ```sql
 mysql> ALTER TABLE tb_dept3
@@ -523,8 +523,9 @@ mysql> DESC tb_dept3;
 
 修改表时删除默认值约束：
 ```sql
-ALTER TABLE <数据表名>
-CHANGE COLUMN <字段名> <字段名> <数据类型> DEFAULT NULL;
+ALTER TABLE <数据表名> CHANGE COLUMN <字段名> <字段名> <数据类型> DEFAULT NULL;
+# 或
+ALTER TABLE <数据表名> MODIFY COLUMN <字段名> <数据类型> DEFAULT NULL;
 ```
 ```sql
 mysql> ALTER TABLE tb_dept3
@@ -573,9 +574,9 @@ mysql> DESC tb_dept3;
 ## 在修改表时添加非空约束
 如果在创建表时忘记了为字段设置非空约束，也可以通过修改表进行非空约束的添加。
 ```sql
-ALTER TABLE <数据表名>
-CHANGE COLUMN <字段名>
-<字段名> <数据类型> NOT NULL;
+ALTER TABLE <数据表名> CHANGE COLUMN <字段名> <字段名> <数据类型> NOT NULL;
+# 或
+ALTER TABLE <数据表名> MODIFY COLUMN <字段名> <数据类型> NOT NULL;
 ```
 ```sql
 mysql> ALTER TABLE tb_dept4
@@ -596,8 +597,9 @@ mysql> DESC tb_dept4;
 ## 删除非空约束
 修改表时删除非空约束：
 ```sql
-ALTER TABLE <数据表名>
-CHANGE COLUMN <字段名> <字段名> <数据类型> NULL;
+ALTER TABLE <数据表名> CHANGE COLUMN <字段名> <字段名> <数据类型> NULL;
+# 或
+ALTER TABLE <数据表名> MODIFY COLUMN <字段名> <数据类型> NULL;
 ```
 ```sql
 mysql> ALTER TABLE tb_dept4

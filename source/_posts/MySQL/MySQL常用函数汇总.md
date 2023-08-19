@@ -486,9 +486,9 @@ mysql> select now(), sysdate(), sleep(3), now(), sysdate();
 ```
 由运行结果可以看出，`NOW()`函数始终获取的是 SQL 语句开始执行的时间，而`SYSDATE()`函数则是动态获取的实时时间。
 ## UNIX_TIMESTAMP函数：获取UNIX时间戳
-`UNIX_TIMESTAMP(date)`若无参数调用，返回一个无符号整数类型的`UNIX`时间戳（'1970-01-01 00:00:00'GMT之后的秒数）。
+`UNIX_TIMESTAMP(date)`若无参数调用，返回一个无符号整数类型的`UNIX`时间戳（`1970-01-01 00:00:00 GMT`之后的秒数）。
 
-若用`date`来调用`UNIX_TIMESTAMP()`，它会将参数值以'1970-01-01 00:00:00'GMT后的秒数的形式返回。
+若用`date`来调用`UNIX_TIMESTAMP()`，它会将参数值以`1970-01-01 00:00:00 GMT`后的秒数的形式返回。
 ```sql
 mysql> SELECT UNIX_TIMESTAMP(), UNIX_TIMESTAMP(NOW()), NOW();
 +------------------+-----------------------+---------------------+
@@ -555,7 +555,7 @@ mysql> SELECT DAYOFWEEK('2017-12-15');
 ```
 由运行结果可知，2017 年 12 月 15 日为周五，因此返回其对应的索引值为 6。
 ## WEEK函数：获取指定日期是一年中的第几周
-`WEEK()`函数计算日期`date`是一年中的第几周。`WEEK(date,mode)`函数允许指定星期是否起始于周日或周一，以及返回值的范围是否为 0～52 或 1～53。
+`WEEK()`函数计算日期`date`是一年中的第几周。`WEEK(date,mode)`函数允许指定星期是否起始于周日或周一，以及返回值的范围是否为 0~52 或 1~53。
 
 `WEEK`函数接受两个参数：
 * `date`是要获取周数的日期。
@@ -582,7 +582,7 @@ mysql> SELECT WEEK('2018-10-25',1);
 ```
 由运行结果可知，2018-10-25 是一年中的第 43 周。
 ## DAYOFYEAR函数：获取指定日期在一年中的位置
-`DAYOFYEAR(d)`函数返回`d`是一年中的第几天，范围为 1～366。
+`DAYOFYEAR(d)`函数返回`d`是一年中的第几天，范围为 1~366。
 ```sql
 mysql> SELECT DAYOFYEAR('2017-12-15');
 +-------------------------+
@@ -593,7 +593,7 @@ mysql> SELECT DAYOFYEAR('2017-12-15');
 1 row in set (0.00 sec)
 ```
 ## DAYOFMONTH函数：获取指定日期在一个月的位置
-`DAYOFMONTH(d)`函数返回`d`是一个月中的第几天，范围为 1～31。
+`DAYOFMONTH(d)`函数返回`d`是一个月中的第几天，范围为 1~31。
 ```sql
 mysql> SELECT DAYOFMONTH('2017-12-15');
 +--------------------------+

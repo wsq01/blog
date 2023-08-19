@@ -283,7 +283,7 @@ SELECT course+0 as num ... ORDER BY num;
 ## 日期和时间类型
 MySQL 对于不同种类的日期和时间都提供了数据类型，比如`YEAR`和`TIME`。如果只需要记录年份，则使用`YEAR`类型即可；如果只记录时间，可以使用`TIME`类型。
  
-如果同时需要记录日期和时间，则可以使用`TIMESTAMP`或者`DATETIME`类型。由于TIMESTAMP 列的取值范围小于`DATETIME`的取值范围，因此存储较大的日期最好使用`DATETIME`。
+如果同时需要记录日期和时间，则可以使用`TIMESTAMP`或者`DATETIME`类型。由于`TIMESTAMP`列的取值范围小于`DATETIME`的取值范围，因此存储较大的日期最好使用`DATETIME`。
  
 `TIMESTAMP`也有一个`DATETIME`不具备的属性。默认情况下，当插入一条记录但并没有指定`TIMESTAMP`这个列值时，MySQL 会把`TIMESTAMP`列设为当前的时间。因此当需要插入记录和当前时间时，使用`TIMESTAMP`是方便的，另外`TIMESTAMP`在空间上比`DATETIME`更有效。
  
