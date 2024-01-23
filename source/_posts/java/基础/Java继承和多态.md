@@ -796,7 +796,7 @@ public class ShapeTest {
   [public] [abstract] returnType method_name(parameter_list);    // 声明方法
 }
 ```
-对以上语法的说明如下：
+说明：
 * `public`表示接口的修饰符，当没有修饰符时，则使用默认的修饰符，此时该接口的访问权限仅局限于所属的包；
 * `interface_name`表示接口的名称。接口名只要是合法的标识符即可。
 * `extends`表示接口的继承关系；
@@ -829,13 +829,13 @@ public interface MyInterface {    // 接口myInterface
 }
 ```
 ## 实现接口
-接口的主要用途就是被实现类实现，一个类可以实现一个或多个接口，继承使用`extends`关键字，实现接口则使用`implements`关键字。类实现接口的语法格式如下：
+接口的主要用途就是被实现类实现，一个类可以实现一个或多个接口，继承使用`extends`关键字，实现接口则使用`implements`关键字。类实现接口的语法格式：
 ```java
 <public> class <class_name> [extends superclass_name] [implements interface1_name[, interface2_name…]] {
   // 主体
 }
 ```
-对以上语法的说明如下：
+说明：
 * `public`：类的修饰符；
 * `superclass_name`：需要继承的父类名称；
 * `interface1_name`：要实现的接口名称。
@@ -886,7 +886,7 @@ public class NumTest {
   }
 }
 ```
-程序运行结果如下所示。
+运行结果：
 ```
 100 和 300 相加结果是：400
 100 比较 300，哪个大：300

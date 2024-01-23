@@ -8,7 +8,7 @@ categories: [MyBatis]
 
 使用 MyBatis 的主要 Java 接口就是`SqlSession`。可以通过这个接口来执行命令，获取映射器实例和管理事务。
 
-`SqlSessions`是由`SqlSessionFactory`实例创建的。`SqlSessionFactory`对象包含创建`SqlSession`实例的各种方法。而`SqlSessionFactory`本身是由`SqlSessionFactoryBuilder`创建的，它可以从 XML、注解或 Java 配置代码来创建`SqlSessionFactory`。
+`SqlSession`是由`SqlSessionFactory`实例创建的。`SqlSessionFactory`对象包含创建`SqlSession`实例的各种方法。而`SqlSessionFactory`本身是由`SqlSessionFactoryBuilder`创建的，它可以从 XML、注解或 Java 配置代码来创建`SqlSessionFactory`。
 
 {% asset_img 1.png %}
 

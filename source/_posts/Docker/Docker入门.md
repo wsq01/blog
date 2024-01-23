@@ -214,9 +214,9 @@ RUN echo '<h1>Hello, Docker!</h1>' > /usr/share/nginx/html/index.html
 ```
 这个 Dockerfile 很简单，一共就两行。涉及到了两条指令，`FROM`和`RUN`。
 ### FROM 指定基础镜像
-所谓定制镜像，那一定是以一个镜像为基础，在其上进行定制。就像我们之前运行了一个`nginx`镜像的容器，再进行修改一样，基础镜像是必须指定的。而`FROM`就是指定 基础镜像，因此一个 Dockerfile 中`FROM`是必备的指令，并且必须是第一条指令。
+所谓定制镜像，那一定是以一个镜像为基础，在其上进行定制。就像我们之前运行了一个`nginx`镜像的容器，再进行修改一样，基础镜像是必须指定的。而`FROM`就是指定基础镜像，因此一个 Dockerfile 中`FROM`是必备的指令，并且必须是第一条指令。
 
-在 Docker Hub 上有非常多的高质量的官方镜像，有可以直接拿来使用的服务类的镜像，如`nginx、redis、mongo、mysql、httpd、php、tomcat`等；也有一些方便开发、构建、运行各种语言应用的镜像，如`node、openjdk、python、ruby、golang`等。可以在其中寻找一个最符合我们最终目标的镜像为基础镜像进行定制。
+在 Docker Hub 上有非常多的高质量的官方镜像，有可以直接拿来使用的服务类的镜像，如`nginx、redis、mongo、mysql、httpd、php、tomcat`等。可以在其中寻找一个最符合我们最终目标的镜像为基础镜像进行定制。
 
 如果没有找到对应服务的镜像，官方镜像中还提供了一些更为基础的操作系统镜像，如`ubuntu、debian、centos、fedora、alpine`等，这些操作系统的软件库为我们提供了更广阔的扩展空间。
 

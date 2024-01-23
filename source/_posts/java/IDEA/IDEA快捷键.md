@@ -23,6 +23,14 @@ categories: java
 | Ctrl + 光标定位 | 按 Ctrl 不要松开，会显示光标所在的类信息摘要 |
 | Ctrl + / | 注释光标所在行代码，会根据当前不同文件类型使用不同的注释符号 |
 
+### Ctrl + X：剪切
+剪切选中文本，若未选中则剪切当前行。
+{% asset_img cx.gif %}
+### Ctrl + Left：左移一个单词
+{% asset_img cl.gif %}
+### Ctrl + Right：右移一个单词
+{% asset_img cr.gif %}
+
 ## Alt
 | 快捷键 | 介绍 |
 | :--: | :--: |
@@ -31,12 +39,26 @@ categories: java
 | Alt + 左方向键 | 按左方向切换当前已打开的文件视图 |
 | Alt + 右方向键 | 按右方向切换当前已打开的文件视图 |
 
+### Alt + Up：上一个方法
+### Alt + Down：下一个方法
+{% asset_img au.gif %}
+
+## Shift
+### Shift + Enter：开始新行
+无论光标是否在行尾，都开始新的行。
+{% asset_img se.gif %}
+
 
 ## Ctrl + Alt
 | 快捷键 | 介绍 |
 | :--: | :--: |
 | Ctrl + Alt + S | 打开 IDEA 系统设置 |
 | Ctrl + Alt + L | 格式化代码，可以对当前文件和整个包目录使用 |
+| Ctrl + Alt + V | 代码自动补全 |
+
+### Ctrl + Alt + I：自动缩进行
+自动缩进至规范位置。
+{% asset_img cai.gif %}
 
 ## Ctrl + Shift
 | 快捷键 | 介绍 |
@@ -48,6 +70,10 @@ categories: java
 | Ctrl + Shift + A | Find Action |
 | Ctrl + Shift + / | 代码块注释 |
 | Ctrl + Shift + E | 显示最近修改的文件列表的弹出层 |
+
+### Ctrl + Shift + V：从历史选择粘贴
+从历史剪粘版中选择要粘贴的内容。
+{% asset_img csv.gif %}
 
 ## Ctrl + Shift + Alt
 | Ctrl + Shift + Alt + J | 列操作 | 

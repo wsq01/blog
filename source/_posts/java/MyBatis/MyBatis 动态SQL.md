@@ -7,7 +7,7 @@ categories: [MyBatis]
 
 开发人员通常根据需求手动拼接 SQL 语句，这是一个极其麻烦的工作，而 MyBatis 提供了对 SQL 语句动态组装的功能，恰能解决这一问题。
 
-MyBatis 的动态 SQL 元素与 JSTL 或 XML 文本处理器相似，常用`<if>、<choose>、<when>、<otherwise>、<trim>、<where>、<set>、<foreach>`和`<bind>`等元素。
+MyBatis 的动态 SQL 元素常用`<if>、<choose>、<when>、<otherwise>、<trim>、<where>、<set>、<foreach>`和`<bind>`等元素。
 # if
 使用动态 SQL 最常见情景是根据条件包含`where`子句的一部分。
 ```xml
@@ -230,9 +230,6 @@ SELECT id,name,url,age,country FROM website AND name LIKE CONCAT('%',#{name},'%'
 |  1 | 百度           | https://www.baidu.com/     |  18 | CN      | 2021-03-08 11:23:53 |
 |  2 | 淘宝           | https://www.taobao.com/    |  17 | CN      | 2021-03-10 10:33:54 |
 |  3 | Google         | https://www.google.com/    |  23 | US      | 2021-03-10 10:34:34 |
-|  4 | GitHub         | https://github.com/        |  13 | US      | 2021-03-10 10:34:34 |
-|  5 | Stack Overflow | https://stackoverflow.com/ |  16 | US      | 2021-03-10 10:34:34 |
-|  6 | Yandex         | http://www.yandex.ru/      |  11 | RU      | 2021-03-10 10:34:34 |
 +----+----------------+----------------------------+-----+---------+---------------------+
 ```
 `WebsiteMapper.xml`中代码如下。

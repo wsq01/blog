@@ -30,19 +30,16 @@ MyBatis 配置文件的所有元素：
 > MyBatis 配置项的顺序不能颠倒。如果颠倒了它们的顺序，那么在 MyBatis 启动阶段就会发生异常，导致程序无法运行。
 
 # properties元素
-`properties`属性可以给系统配置一些运行参数，可以放在 XML 文件或者 properties 文件中。一般而言，MyBatis 提供了 3 种方式让我们使用`properties`：`property`子元素、`properties`文件、程序代码传递。
+`properties`属性可以给系统配置一些运行参数，可以放在 XML 文件或者`properties`文件中。MyBatis 提供了 3 种方式让我们使用`properties`：`property`子元素、`properties`文件、程序代码传递。
 ## property 子元素
 通过`properties`子元素`property`配置变量，然后在`environments`节点中引用这些变量。
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
   <properties>
     <property name="driver" value="com.mysql.jdbc.Driver" />
     <property name="url" value="jdbc:mysql://localhost:3306/mybatis?characterEncoding=utf8" />
     <property name="username" value="root" />
-    <property name="password" value="1128" />
+    <property name="password" value="123456" />
   </properties>
   <typeAliases>
     <typeAlias alias="role" type="com.mybatis.po.Role"/>
@@ -65,14 +62,13 @@ MyBatis 配置文件的所有元素：
   </mappers>
 </configuration>
 ```
-这里使用了元素`<properties>`下的子元素`<property>`定义，用字符串`username`定义数据库用户名，然后就可以在数据库定义中引入这个已经定义好的属性参数，如`${username}`，这样定义一次就可以到处引用了。但是如果属性参数有成百上千个，显然使用这样的方式不是一个很好的选择，这个时候可以使用`properties`文件。
 ## 使用 properties 文件
 创建一个文件`jdbc.properties`放到`classpath`的路径下。
 ```js
 database.driver=com.mysql.jdbc.Driver
 database.url=jdbc:mysql://localhost:3306/mybatis
 database.username=root
-database.password=1128
+database.password=123456
 ```
 通过`<properties>`的属性`resource`来引入`properties`文件。
 ```xml
@@ -172,7 +168,7 @@ MyBatis 也提供了用户自定义别名的规则。我们可以通过`TypeAlia
 ```xml
 <typeAliases><!--别名-->
   <typeAlias alias="role" type="com.mybatis.po.Role"/>
-  <typeAlias alias="role" type="com.mybatis.po.User"/>
+  <typeAlias alias="user" type="com.mybatis.po.User"/>
 </typeAliases>
 ```
 MyBatis 还支持扫描别名。比如上面的两个类都在包`com.mybatis.po`之下，那么就可以定义为：
@@ -218,7 +214,7 @@ MyBatis 支持自定义处理类型，在自定义处理类型时，需要实现
 </environments>
 ```
 ## transactionManager（事务管理器）
-在 MyBatis 中，`transactionManager`提供了两个实现类，它需要实现接口`Transaction（org.apache.ibatis.transaction.Transaction）`，它的定义代码如下所示。
+`transactionManager`提供了两个实现类，它需要实现接口`Transaction（org.apache.ibatis.transaction.Transaction）`，它的定义代码如下所示。
 ```java
 public interface Transaction {
   Connection getConnection() throws SQLException;
@@ -311,9 +307,9 @@ public class DbcpDataSourceFactory implements DataSourceFactory {
 ```
 这样 MyBatis 就会采用配置的数据源工厂来生成数据源了。
 # 映射器（mappers）
-`mappers`标签用于指定 MyBatis SQL 映射文件的路径。
+`mappers`标签用于指定 SQL 映射文件的路径。
 
-`mapper`是`mappers`的子标签，`mapper`中的`resource`属性用于指定 SQL 映射文件的路径（类资源路径）
+`mapper`是`mappers`的子标签，`mapper`中的`resource`属性用于指定 SQL 映射文件的路径（类资源路径）。
 ```xml
 <!-- 使用相对于类路径的资源引用 -->
 <mappers>
