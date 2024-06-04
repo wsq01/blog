@@ -134,9 +134,9 @@ public class UserProfile {
 
 </project>
 ```
-具体每个依赖的作用，胖友自己认真看下艿艿添加的所有注释噢。
-spring-boot-starter-web 依赖里，已经默认引入 hibernate-validator 依赖，所以本示例使用的是 Hibernate Validator 作为 Bean Validation 的实现框架。
-在 Spring Boot 体系中，也提供了 spring-boot-starter-validation 依赖。在这里，我们并没有引入。为什么呢？该依赖的目的，重点也是引入 hibernate-validator 依赖，这在 spring-boot-starter-web 已经引入，所以无需重复引入。
+
+`spring-boot-starter-web`依赖里，已经默认引入`hibernate-validator`依赖，所以本示例使用的是 Hibernate Validator 作为 Bean Validation 的实现框架。
+在 Spring Boot 体系中，也提供了 spring-boot-starter-validation 依赖。该依赖的目的，重点也是引入 hibernate-validator 依赖，这在 spring-boot-starter-web 已经引入，所以无需重复引入。
 ## Application
 创建`Application.java`类，配置`@SpringBootApplication`注解即可。代码如下：
 ```java
@@ -150,9 +150,9 @@ public class Application {
 
 }
 ```
-添加 @EnableAspectJAutoProxy 注解，重点是配置 exposeProxy = true ，因为我们希望 Spring AOP 能将当前代理对象设置到 AopContext 中。具体用途，我们会在下文看到。想要提前看的胖友，可以看看 《Spring AOP 通过获取代理对象实现事务切换》 文章。
+添加`@EnableAspectJAutoProxy`注解，重点是配置`exposeProxy = true`，因为我们希望 Spring AOP 能将当前代理对象设置到`AopContext`中。具体用途，我们会在下文看到。
 ## UserAddDTO
-在 cn.iocoder.springboot.lab22.validation.dto 包路径下，创建 UserAddDTO 类，为用户添加 DTO 类。代码如下：
+在`cn.iocoder.springboot.lab22.validation.dto`包路径下，创建`UserAddDTO`类，为用户添加 DTO 类。代码如下：
 ```java
 // UserAddDTO.java
 
@@ -175,9 +175,8 @@ public class UserAddDTO {
     // ... 省略 setting/getting 方法
 }
 ```
-每个字段上的约束注解，胖友仔细瞅瞅。
 ## UserController
-创建 UserController 类，提供用户 API 接口。代码如下：
+创建`UserController`类，提供用户 API 接口。代码如下：
 ```java
 // UserController.java
 
@@ -200,9 +199,9 @@ public class UserController {
 
 }
 ```
-在类上，添加 @Validated 注解，表示 UserController 是所有接口都需要进行参数校验。
+在类上，添加`@Validated`注解，表示`UserController`是所有接口都需要进行参数校验。
 
-对于 #get(id) 方法，我们在 id 参数上，添加了 @Min 注解，校验 id 必须大于 0 。校验不通过示例如下图：
+对于 #get(id) 方法，我们在 id 参数上，添加了 @Min 注解，校验 id 必须大于 0。校验不通过示例如下图：
 
 
 对于 #add(addDTO) 方法，我们在 addDTO 参数上，添加了 @Valid 注解，实现对该参数的校验。校验不通过示例如下图：
@@ -210,9 +209,8 @@ public class UserController {
 
 
 errors 字段，参数错误明细数组。每一个数组元素，对应一个参数错误明细。这里，username 违背了长度不满足 [5, 16] 。
-示例我们是已经成功跑通了，但是呢，这里有几点差异性，我们要来理解下。
 
-也可以不理解，就按照这么使用即可。
+示例我们是已经成功跑通了，但是呢，这里有几点差异性，我们要来理解下。
 
 第一点，#get(id) 方法上，我们并没有给 id 添加 @Valid 注解，而 #add(addDTO) 方法上，我们给 addDTO 添加 @Valid 注解。这个差异，是为什么呢？
 
@@ -268,7 +266,6 @@ public class UserService {
     private UserService self() {
         return (UserService) AopContext.currentProxy();
     }
-
 }
 ```
 和 UserController 的方法是一致的，包括注解。
@@ -340,3 +337,373 @@ java.lang.IllegalStateException: Cannot find current proxy: Set 'exposeProxy' pr
 显然，这里并没有将当前的代理对象，设置到 AopContext 中，所以抛出 IllegalStateException 异常。目前猜测，可能是 BUG 。😈 暂时木有心情去调试，嘿嘿。
 
 # 处理校验异常
+# 自定义约束
+开发自定义约束一共只要两步：1）编写自定义约束的注解；2）编写自定义的校验器 ConstraintValidator 。
+
+下面，就让我们一起来实现一个自定义约束，用于校验参数必须在枚举值的范围内。
+
+5.1 IntArrayValuable
+在 cn.iocoder.springboot.lab22.validation.core.validator 包路径下，创建 IntArrayValuable 接口，用于返回值数组。代码如下：
+
+// IntArrayValuable.java
+
+public interface IntArrayValuable {
+
+    /**
+     * @return int 数组
+     */
+    int[] array();
+
+}
+因为对于一个枚举类来说，我们无法获得它具体有那些值。所以，我们会要求这个枚举类实现该接口，返回它拥有的所有枚举值。
+
+5.2 GenderEnum
+在 cn.iocoder.springboot.lab22.validation.constants 包路径下，创建 GenderEnum 枚举类，枚举性别。代码如下：
+
+// GenderEnum.java
+
+public enum GenderEnum implements IntArrayValuable {
+
+    MALE(1, "男"),
+    FEMALE(2, "女");
+
+    /**
+     * 值数组
+     */
+    public static final int[] ARRAYS = Arrays.stream(values()).mapToInt(GenderEnum::getValue).toArray();
+
+    /**
+     * 性别值
+     */
+    private final Integer value;
+    /**
+     * 性别名
+     */
+    private final String name;
+
+    GenderEnum(Integer value, String name) {
+        this.value = value;
+        this.name = name;
+    }
+
+    public Integer getValue() {
+        return value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public int[] array() {
+        return ARRAYS;
+    }
+
+}
+实现 IntArrayValuable 接口，返回值数组 ARRAYS 。
+5.3 @InEnum
+在 cn.iocoder.springboot.lab22.validation.core.validator 包路径下，创建 @InEnum 自定义约束的注解。代码如下：
+
+// InEnum.java
+
+@Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Constraint(validatedBy = InEnumValidator.class)
+public @interface InEnum {
+
+    /**
+     * @return 实现 IntArrayValuable 接口的
+     */
+    Class<? extends IntArrayValuable> value();
+
+    /**
+     * @return 提示内容
+     */
+    String message() default "必须在指定范围 {value}";
+
+    /**
+     * @return 分组
+     */
+    Class<?>[] groups() default {};
+
+    /**
+     * @return Payload 数组
+     */
+    Class<? extends Payload>[] payload() default {};
+
+    /**
+     *  Defines several {@code @InEnum} constraints on the same element.
+     */
+    @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    @interface List {
+
+        InEnum[] value();
+
+    }
+
+}
+在类上，添加 @@Constraint(validatedBy = InEnumValidator.class) 注解，设置使用的自定义约束的校验器。
+value() 属性，设置实现 IntArrayValuable 接口的类。这样，我们就能获得参数需要校验的值数组。
+message() 属性，设置提示内容。默认为 "必须在指定范围 {value}" 。
+其它属性，复制粘贴即可，都可以忽略不用理解。
+5.4 InEnumValidator
+在 cn.iocoder.springboot.lab22.validation.core.validator 包路径下，创建 InEnumValidator 自定义约束的校验器。代码如下：
+
+// InEnumValidator.java
+
+public class InEnumValidator implements ConstraintValidator<InEnum, Integer> {
+
+    /**
+     * 值数组
+     */
+    private Set<Integer> values;
+
+    @Override
+    public void initialize(InEnum annotation) {
+        IntArrayValuable[] values = annotation.value().getEnumConstants();
+        if (values.length == 0) {
+            this.values = Collections.emptySet();
+        } else {
+            this.values = Arrays.stream(values[0].array()).boxed().collect(Collectors.toSet());
+        }
+    }
+
+    @Override
+    public boolean isValid(Integer value, ConstraintValidatorContext context) {
+        // <2.1> 校验通过
+        if (values.contains(value)) {
+            return true;
+        }
+        // <2.2.1>校验不通过，自定义提示语句（因为，注解上的 value 是枚举类，无法获得枚举类的实际值）
+        context.disableDefaultConstraintViolation(); // 禁用默认的 message 的值
+        context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate()
+                .replaceAll("\\{value}", values.toString())).addConstraintViolation(); // 重新添加错误提示语句      
+        return false; // <2.2.2.>
+    }
+
+}
+实现 ConstraintValidator 接口。
+第一个泛型为 A extends Annotation ，设置对应的自定义约束的注解。例如说，这里我们设置了 @InEnum 注解。
+第二个泛型为 T ，设置对应的参数值的类型。例如说，这里我们设置了 Integer 类型。
+实现 #initialize(annotation) 方法，获得 @InEnum 注解的 values() 属性，获得值数组，设置到 values 属性种。
+实现 #isValid(value, context) 方法，实现校验参数值，是否在 values 范围内。
+<2.1> 处，校验参数值在范围内，直接返回 true ，校验通过。
+<2.2.1> 处，校验不通过，自定义提示语句。
+<2.2.2> 处，校验不通过，所以返回 false 。
+至此，我们已经完成了自定义约束的实现。下面，我们来进行下测试。
+
+5.5 UserUpdateGenderDTO
+在 cn.iocoder.springboot.lab22.validation.dto 包路径下，创建 UserUpdateGenderDTO 类，为用户更新性别 DTO。代码如下：
+
+// UserUpdateGenderDTO.java
+
+public class UserUpdateGenderDTO {
+
+    /**
+     * 用户编号
+     */
+    @NotNull(message = "用户编号不能为空")
+    private Integer id;
+
+    /**
+     * 性别
+     */
+    @NotNull(message = "性别不能为空")
+    @InEnum(value = GenderEnum.class, message = "性别必须是 {value}")
+    private Integer gender;
+    
+    // ... 省略 set/get 方法
+}
+在 gender 字段上，添加 @InEnum(value = GenderEnum.class, message = "性别必须是 {value}") 注解，限制传入的参数值，必须在 GenderEnum 枚举范围内。
+5.6 UserController
+修改 UserController 类，增加修改性别 API 接口。代码如下：
+
+// UserController.java
+
+@PostMapping("/update_gender")
+public void updateGender(@Valid UserUpdateGenderDTO updateGenderDTO) {
+    logger.info("[updateGender][updateGenderDTO: {}]", updateGenderDTO);
+}
+模拟请求该 API 接口，响应结果如下：响应结果
+
+因为我们传入的请求参数 gender 的值为 null ，显然不在 GenderEnum 范围内，所以校验不通过，输出 "性别必须是 [1, 2]" 。
+
+6. 分组校验
+示例代码对应仓库：lab-22-validation-01 。
+
+在一些业务场景下，我们需要使用分组校验，即相同的 Bean 对象，根据校验分组，使用不同的校验规则。咳咳咳，貌似我们暂时没有这方面的诉求。即使有，也是拆分不同的 Bean 类。当然，作为一篇入门的文章，艿艿还是提供下分组校验的示例。
+
+6.1 UserUpdateStatusDTO
+在 cn.iocoder.springboot.lab22.validation.dto 包路径下，创建 UserUpdateStatusDTO 类，为用户更新状态 DTO 。代码如下：
+
+// UserUpdateStatusDTO.java
+
+public class UserUpdateStatusDTO {
+
+    /**
+     * 分组 01 ，要求状态必须为 true
+     */
+    public interface Group01 {}
+
+    /**
+     * 状态 02 ，要求状态必须为 false
+     */
+    public interface Group02 {}
+    
+    /**
+     * 状态
+     */
+    @AssertTrue(message = "状态必须为 true", groups = Group01.class)
+    @AssertFalse(message = "状态必须为 false", groups = Group02.class)
+    private Boolean status;
+
+    // ... 省略 set/get 方法
+}
+创建了 Group01 和 Group02 接口，作为两个校验分组。不一定要定义在 UserUpdateStatusDTO 类中，这里仅仅是为了方便。
+status 字段，在 Group01 校验分组时，必须为 true ；在 Group02 校验分组时，必须为 false 。
+6.2 UserController
+修改 UserController 类，增加两个修改状态的 API 接口。代码如下：
+
+// UserController.java
+
+@PostMapping("/update_status_true")
+public void updateStatusTrue(@Validated(UserUpdateStatusDTO.Group01.class) UserUpdateStatusDTO updateStatusDTO) {
+    logger.info("[updateStatusTrue][updateStatusDTO: {}]", updateStatusDTO);
+}
+
+@PostMapping("/update_status_false")
+public void updateStatusFalse(@Validated(UserUpdateStatusDTO.Group02.class) UserUpdateStatusDTO updateStatusDTO) {
+    logger.info("[updateStatusFalse][updateStatusDTO: {}]", updateStatusDTO);
+}
+对于 #updateStatusTrue(updateStatusDTO) 方法，我们在 updateStatusDTO 参数上，添加了 @Validated 注解，并且设置校验分组为 Group01 。校验不通过示例如下图：不通过示例 1
+对于 #updateStatusFalse(updateStatusDTO) 方法，我们在 updateStatusDTO 参数上，添加了 @Validated 注解，并且设置校验分组为 Group02 。校验不通过示例如下图：不通过示例 2
+所以，使用分组校验，核心在于添加上 @Validated 注解，并设置对应的校验分组。
+
+7. 手动校验
+示例代码对应仓库：lab-22-validation-01 。
+
+在上面的示例中，我们使用的主要是 Spring Validation 的声明式注解。然而在少数业务场景下，我们可能需要手动使用 Bean Validation API ，进行参数校验。
+
+修改 UserServiceTest 测试类，增加手动参数校验的示例。代码如下：
+
+// UserServiceTest.java
+
+@Autowired // <1.1>
+private Validator validator;
+
+@Test
+public void testValidator() {
+    // 打印，查看 validator 的类型 // <1.2>
+    System.out.println(validator);
+
+    // 创建 UserAddDTO 对象 // <2>
+    UserAddDTO addDTO = new UserAddDTO();
+    // 校验 // <3>
+    Set<ConstraintViolation<UserAddDTO>> result = validator.validate(addDTO);
+    // 打印校验结果 // <4>
+    for (ConstraintViolation<UserAddDTO> constraintViolation : result) {
+        // 属性:消息
+        System.out.println(constraintViolation.getPropertyPath() + ":" + constraintViolation.getMessage());
+    }
+}
+<1.1> 处，注入 Validator Bean 对象。
+
+<1.2> 处，打印 validator 的类型。输出如下：
+
+org.springframework.validation.beanvalidation.LocalValidatorFactoryBean@48c3205a
+validator 的类型为 LocalValidatorFactoryBean 。LocalValidatorFactoryBean 提供 JSR-303、JSR-349 的支持，同时兼容 Hibernate Validator 。
+在 Spring Boot 体系中，使用 ValidationAutoConfiguration 自动化配置类，默认创建 LocalValidatorFactoryBean 作为 Validator Bean 。
+<2> 处，创建 UserAddDTO 对象，即 「3.3 UserAddDTO」 ，已经添加相应的约束注解。
+
+<3> 处，调用 Validator#validate(T object, Class<?>... groups) 方法，进行参数校验。
+
+<4> 处，打印校验结果。输出如下：
+
+username:登录账号不能为空
+password:密码不能为空
+如果校验通过，则返回的 Set<ConstraintViolation<?>> 集合为空。
+8. 国际化 i18n
+示例代码对应仓库：lab-22-validation-01 。
+
+在一些项目中，我们会有国际化的需求，特别是我们在做 TOB 的 SASS 化服务的时候。那么，显然我们在使用 Bean Validator 做参数校验的时候，也需要提供国际化的错误提示。
+
+给力的是，Hibernate Validator 已经内置了国际化的支持，所以我们只需要简单的配置，就可以实现国际化的错误提示。
+
+8.1 应用配置文件
+在 resources 目录下，创建 application.yaml 配置文件。配置如下：
+
+spring:
+  # i18 message 配置，对应 MessageSourceProperties 配置类
+  messages:
+    basename: i18n/messages # 文件路径基础名
+    encoding: UTF-8 # 使用 UTF-8 编码
+然后，我们在 resources/i18 目录下，创建不同语言的 messages 文件。如下：
+
+messages.properties ：默认的 i18 配置文件。
+
+UserUpdateDTO.id.NotNull=用户编号不能为空
+messages_en.properties ：英文的 i18 配置文件。
+
+UserUpdateDTO.id.NotNull=userId cannot be empty
+messages_ja.properties ：日文的 i18 配置文件。
+
+UserUpdateDTO.id.NotNull=ユーザー番号は空にできません
+8.2 ValidationConfiguration
+在 cn.iocoder.springboot.lab22.validation.config 包路径下，创建 ValidationConfiguration 配置类，用于创建一个支持 i18 国际化的 Validator Bean 对象。代码如下：
+
+// ValidationConfiguration.java
+
+@Configuration
+public class ValidationConfiguration {
+
+    /**
+     * 参考 {@link ValidationAutoConfiguration#defaultValidator()} 方法，构建 Validator Bean
+     *
+     * @return Validator 对象
+     */
+    @Bean
+    public Validator validator(MessageSource messageSource)  {
+        // 创建 LocalValidatorFactoryBean 对象
+        LocalValidatorFactoryBean validator = ValidationAutoConfiguration.defaultValidator();
+        // 设置 messageSource 属性，实现 i18 国际化
+        validator.setValidationMessageSource(messageSource);
+        // 返回
+        return validator;
+    }
+
+}
+8.3 UserUpdateDTO
+在 cn.iocoder.springboot.lab22.validation.dto 包路径下，创建 UserUpdateDTO 类，为用户更新 DTO 。代码如下：
+
+// UserUpdateDTO.java
+
+public class UserUpdateDTO {
+
+    /**
+     * 用户编号
+     */
+    @NotNull(message = "{UserUpdateDTO.id.NotNull}")
+    private Integer id;
+
+    // ... 省略 get/set 方法
+    
+}
+不同于我们上面看到的约束注解的 message 属性的设置，这里我们使用了 {} 占位符。
+8.4 UserController
+修改 UserController 类，增加用户更新的 API 接口。代码如下：
+
+// UserController.java
+
+@PostMapping("/update")
+public void update(@Valid UserUpdateDTO updateDTO) {
+    logger.info("[update][updateDTO: {}]", updateDTO);
+}
+下面，我们来进行下 API 接口测试。有一点要注意，SpringMVC 通过 Accept-Language 请求头，实现 i18n 国际化。
+
+Accept-Language = zh 的情况，响应结果如下：
+Accept-Language = en 的情况，响应结果如下：
+Accept-Language = ja 的情况，响应结果如下：
+至此，我们的 Validator 的 i18n 国际化已经完成了。

@@ -877,8 +877,8 @@ public Object clone() {
 }
 注意，elementData 是重新拷贝出来的新的数组，避免和原数组共享。
 # 创建子数组
-#subList(int fromIndex, int toIndex) 方法，创建 ArrayList 的子数组。代码如下：
-
+`subList(int fromIndex, int toIndex)`方法，创建`ArrayList`的子数组。
+```java
 // ArrayList.java
 
 public List<E> subList(int fromIndex, int toIndex) {
@@ -907,8 +907,8 @@ private static class SubList<E> extends AbstractList<E> implements RandomAccess 
 
     // ... 省略代码
 }
-实际使用时，一定要注意，SubList 不是一个只读数组，而是和根数组 root 共享相同的 elementData 数组，只是说限制了 [fromIndex, toIndex) 的范围。
-这块的源码，并不复杂，所以这里也就不展开了。一般情况下，我们也不需要了解它的源码，嘿嘿。
+```
+实际使用时，一定要注意，`SubList`不是一个只读数组，而是和根数组`root`共享相同的`elementData`数组，只是说限制了`[fromIndex, toIndex)`的范围。
 # 创建 Iterator 迭代器
 #iterator() 方法，创建迭代器。一般情况下，我们使用迭代器遍历 ArrayList、LinkedList 等等 List 的实现类。代码如下：
 

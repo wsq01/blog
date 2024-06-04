@@ -3,7 +3,7 @@
 
 缓存可以将数据保存在内存中，因此具备快速读取和使用的特点。
 
-和大多数持久化框架一样，MyBatis 提供了一级缓存和二级缓存的支持。默认情况下，MyBatis 只开启一级缓存。
+MyBatis 提供了一级缓存和二级缓存的支持。默认情况下，MyBatis 只开启一级缓存。
 # 一级缓存
 一级缓存是基于`PerpetualCache`（MyBatis自带）的`HashMap`本地缓存，作用范围为`session`域内。当`session flush`（刷新）或者`close`（关闭）之后，该`session`中所有的`cache`（缓存）就会被清空。
 
@@ -23,16 +23,7 @@ public Website selectWebsiteById(int id);
 ```
 测试代码如下。
 ```java
-package net.biancheng.test;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.log4j.Logger;
-import net.biancheng.po.Website;
+
 public class Test {
   public static Logger logger = Logger.getLogger(Test.class);
   public static void main(String[] args) throws IOException {

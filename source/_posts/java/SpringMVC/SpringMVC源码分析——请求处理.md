@@ -3,7 +3,7 @@
 
 我们来一览一个用户的请求，是如何被`DispatcherServlet`处理的。
 
-{% asser_img 1.jpg %}
+{% asset_img 1.jpg %}
 
 # FrameworkServlet
 虽然在整体流程图中，我们看到请求首先是被`DispatcherServlet`所处理，但是实际上，`FrameworkServlet`才是真正的入门。`FrameworkServlet`会实现

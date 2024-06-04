@@ -1,4 +1,9 @@
-
+---
+title: OSPF实战
+date: 2023-03-23 20:36:11
+tags: 计算机网络
+categories: 计算机网络
+---
 
 
 # OSPF 基础命令

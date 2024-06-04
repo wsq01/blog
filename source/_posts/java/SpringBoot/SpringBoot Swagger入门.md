@@ -3,7 +3,7 @@
 # 快速入门 Swagger
 ## 引入依赖
 在 pom.xml 文件中，引入相关依赖。
-
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -42,6 +42,7 @@
     </dependencies>
 
 </project>
+```
 ## SwaggerConfiguration
 因为 Spring Boot 暂未提供 Swagger 内置的支持，所以我们需要自己定义配置类。
 

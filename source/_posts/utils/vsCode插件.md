@@ -89,3 +89,17 @@ Tabnine 具有类似于 IntelliSense 的 AI 辅助代码完成功能。此扩展
 
 ### TypeScript Error Translator
 TypeScript的错误有时可能会令人困惑和沮丧，但是这个扩展将错误转化为可直接从IDE阅读的人类可读形式。
+
+### Power Mode
+打字特效。
+
+安装后我们按下键盘组合键 Ctrl + Shift + P，然后输入 setting，打开 JSON 配置文件（如下图）
+
+在最后添加下面三行配置：
+
+"powermode.enabled": true, // 开启 Power Mode
+"powermode.shakeIntensity": 0, // 关闭抖动（喜欢的也可以选择不关闭）
+"powermode.presets": "particles", // 特效预设，还有 "fireworks", "flames", "magic", "clippy", "simple-rift", "ex
+
+### 在 vscode 里画流程图 - draw.io
+安装 draw.io 后，新建一个 helloworld.drawio，就可以在 vscode 里面画流程图啦

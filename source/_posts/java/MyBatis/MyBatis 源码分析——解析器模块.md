@@ -1,4 +1,9 @@
-
+---
+title: MyBatis 源码分析——解析器模块
+date: 2024-06-03 18:31:03
+tags: [MyBatis]
+categories: MyBatis
+---
 
 
 MyBatis 的解析器模块，对应`parsing`包。
@@ -7,10 +12,10 @@ MyBatis 的解析器模块，对应`parsing`包。
 
 解析器模块，主要提供了两个功能:
 * 对`XPath`进行封装，为 MyBatis 初始化时解析`mybatis-config.xml`配置文件以及映射配置文件提供支持。
-* 另一个功能，是为处理动态 SQL 语句中的占位符提供支持。
+* 为处理动态 SQL 语句中的占位符提供支持。
 
 # XPathParser
-`org.apache.ibatis.parsing.XPathParser`，基于 Java XPath 解析器，用于解析 MyBatis `mybatis-config.xml`和`**Mapper.xml`等 XML 配置文件。属性如下：
+`org.apache.ibatis.parsing.XPathParser`，基于 Java XPath 解析器，用于解析 MyBatis`mybatis-config.xml`和`**Mapper.xml`等 XML 配置文件。属性如下：
 ```java
 // XPathParser.java
 
@@ -37,9 +42,12 @@ private XPath xpath;
 ```
 * `document`属性，XML 被解析后，生成的`org.w3c.dom.Document`对象。
 * `validation`属性，是否校验 XML。一般情况下，值为`true`。
-* `entityResolver`属性，`org.xml.sax.EntityResolver`对象，XML 实体解析器。默认情况下，对 XML 进行校验时，会基于 XML 文档开始位置指定的 DTD 文件或 XSD 文件。例如说，解析`mybatis-config.xml`配置文件时，会加载`http://mybatis.org/dtd/mybatis-3-config.dtd`这个 DTD 文件。但是，如果每个应用启动都从网络加载该 DTD 文件，势必在弱网络下体验非常下，甚至说应用部署在无网络的环境下，还会导致下载不下来，那么就会出现 XML 校验失败的情况。所以，在实际场景下，MyBatis 自定义了`EntityResolver`的实现，达到使用本地 DTD 文件，从而避免下载网络 DTD 文件的效果。另外，Spring 也自定义了`EntityResolver`的实现 。
+* `entityResolver`属性，`org.xml.sax.EntityResolver`对象，XML 实体解析器。默认情况下，对 XML 进行校验时，会基于 XML 文档开始位置指定的 DTD 文件或 XSD 文件。
+例如说，解析`mybatis-config.xml`配置文件时，会加载`http://mybatis.org/dtd/mybatis-3-config.dtd`这个 DTD 文件。但是，如果每个应用启动都从网络加载该 DTD 文件，势必在弱网络下体验非常下，甚至说应用部署在无网络的环境下，还会导致下载不下来，那么就会出现 XML 校验失败的情况。
+所以，在实际场景下，MyBatis 自定义了`EntityResolver`的实现，达到使用本地 DTD 文件，从而避免下载网络 DTD 文件的效果。
+另外，Spring 也自定义了`EntityResolver`的实现 。
 * `xpath`属性，`javax.xml.xpath.XPath`对象，用于查询 XML 中的节点和元素。
-* `variables`属性，变量`Properties`对象，用来替换需要动态配置的属性值。例如：
+* `variables`属性，变量`Properties`对象，用来替换需要动态配置的属性值。
 ```xml
 <dataSource type="POOLED">
   <property name="driver" value="${driver}"/>
@@ -48,7 +56,7 @@ private XPath xpath;
   <property name="password" value="${password}"/>
 </dataSource>
 ```
-`variables`的来源，即可以在常用的 Java `Properties`文件中配置，也可以使用 MyBatis `<property />`标签中配置。例如：
+`variables`的来源，即可以在常用的 Java `Properties`文件中配置，也可以使用 MyBatis `<property />`标签中配置。
 ```xml
 <properties resource="org/mybatis/example/config.properties">
   <property name="username" value="dev_user"/>
@@ -76,7 +84,7 @@ public XPathParser(String xml, boolean validation, Properties variables, EntityR
     this.document = createDocument(new InputSource(new StringReader(xml)));
 }
 ```
-调用`commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver)`方法，公用的构造方法逻辑。代码如下：
+调用`commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver)`方法，公用的构造方法逻辑。
 ```java
 // XPathParser.java
 
@@ -89,7 +97,7 @@ private void commonConstructor(boolean validation, Properties variables, EntityR
     this.xpath = factory.newXPath();
 }
 ```
-调用`createDocument(InputSource inputSource)`方法，将 XML 文件解析成`Document`对象。代码如下：
+调用`createDocument(InputSource inputSource)`方法，将 XML 文件解析成`Document`对象。
 ```java
 // XPathParser.java
 
@@ -167,17 +175,18 @@ private Object evaluate(String expression, Object root, QName returnType) {
 // XPathParser.java
 
 public String evalString(Object root, String expression) {
-    // <1> 获得值
+    // 1 获得值
     String result = (String) evaluate(expression, root, XPathConstants.STRING);
-    // <2> 基于 variables 替换动态值，如果 result 为动态值
+    // 2 基于 variables 替换动态值，如果 result 为动态值
     result = PropertyParser.parse(result, variables);
     return result;
 }
 ```
-<1> 处，调用`evaluate(String expression, Object root, QName returnType)`方法，获得值。其中，`returnType`方法传入的是`XPathConstants.STRING`，表示返回的值是`String`类型。
-<2> 处，调用`PropertyParser#parse(String string, Properties variables)`方法，基于`variables`替换动态值，如果`result`为动态值。这就是 MyBatis 如何替换掉 XML 中的动态值实现的方式。
+1 处，调用`evaluate(String expression, Object root, QName returnType)`方法，获得值。其中，`returnType`方法传入的是`XPathConstants.STRING`，表示返回的值是`String`类型。
+
+2 处，调用`PropertyParser#parse(String string, Properties variables)`方法，基于`variables`替换动态值，如果`result`为动态值。这就是 MyBatis 如何替换掉 XML 中的动态值实现的方式。
 ### eval 节点
-`eval`元素的方法，用于获得`Node`类型的节点的值。代码如下：
+`eval`元素的方法，用于获得`Node`类型的节点的值。
 ```java
 // XPathParser.java
 
@@ -201,17 +210,18 @@ public XNode evalNode(String expression) { // Node 对象
 }
 
 public XNode evalNode(Object root, String expression) { // Node 对象
-    // <1> 获得 Node 对象
+    // 1 获得 Node 对象
     Node node = (Node) evaluate(expression, root, XPathConstants.NODE);
     if (node == null) {
         return null;
     }
-    // <2> 封装成 XNode 对象
+    // 2 封装成 XNode 对象
     return new XNode(this, node, variables);
 }
 ```
-<1> 处，返回结果有`Node`对象和数组两种情况，根据方法参数`expression`需要获取的节点不同。
-<2> 处， 最终结果会将 Node 封装成`org.apache.ibatis.parsing.XNode`对象，主要为了动态值的替换。例如：
+1 处，返回结果有`Node`对象和数组两种情况，根据方法参数`expression`需要获取的节点不同。
+
+2 处， 最终结果会将`Node`封装成`org.apache.ibatis.parsing.XNode`对象，主要为了动态值的替换。例如：
 ```java
 // XNode.java
 
@@ -284,7 +294,6 @@ public class XMLMapperEntityResolver implements EntityResolver {
         }
         return source;
     }
-
 }
 ```
 # GenericTokenParser
@@ -394,11 +403,11 @@ public class GenericTokenParser {
 
 }
 ```
-就一个`parse(String text)`方法，循环( 因为可能不只一个 )，解析以`openToken`开始，以`closeToken`结束的`Token`，并提交给`handler`进行处理，即`<x>`处。
+就一个`parse(String text)`方法，循环(因为可能不只一个)，解析以`openToken`开始，以`closeToken`结束的`Token`，并提交给`handler`进行处理，即`<x>`处。
 
 这也是为什么`GenericTokenParser`叫做通用的原因，而`TokenHandler`处理特定的逻辑。
 # PropertyParser
-`org.apache.ibatis.parsing.PropertyParser`，动态属性解析器。代码如下：
+`org.apache.ibatis.parsing.PropertyParser`，动态属性解析器。
 ```java
 // PropertyParser.java
 
@@ -406,28 +415,27 @@ public class PropertyParser {
 
     // ... 省略部分无关的
 
-    private PropertyParser() { // <1>
+    private PropertyParser() { // 1
         // Prevent Instantiation
     }
 
-    public static String parse(String string, Properties variables) { // <2>
-        // <2.1> 创建 VariableTokenHandler 对象
+    public static String parse(String string, Properties variables) { // 2
+        // 2.1 创建 VariableTokenHandler 对象
         VariableTokenHandler handler = new VariableTokenHandler(variables);
-        // <2.2> 创建 GenericTokenParser 对象
+        // 2.2 创建 GenericTokenParser 对象
         GenericTokenParser parser = new GenericTokenParser("${", "}", handler);
-        // <2.3> 执行解析
+        // 2.3 执行解析
         return parser.parse(string);
     }
-    
 }
 ```
-* <1>，构造方法，修饰符为`private`，禁止构造`PropertyParser`对象，因为它是一个静态方法的工具类。
-* <2>，基于 variables 变量，替换`string`字符串中的动态属性，并返回结果。
-* <2.1>，创建`VariableTokenHandler`对象。
-* <2.2>，创建`GenericTokenParser`对象。
+* 1，构造方法，修饰符为`private`，禁止构造`PropertyParser`对象，因为它是一个静态方法的工具类。
+* 2，基于`variables`变量，替换`string`字符串中的动态属性，并返回结果。
+* 2.1，创建`VariableTokenHandler`对象。
+* 2.2，创建`GenericTokenParser`对象。
 我们可以看到，`openToken = { ，closeToken = }`，这不就是上面看到的`${username}`和`{password}`的么。
 同时，我们也可以看到，`handler`类型为`VariableTokenHandler`，也就是说，通过它实现自定义的处理逻辑。
-* <2.3> ，调用`GenericTokenParser#parse(String text)`方法，执行解析。
+* 2.3，调用`GenericTokenParser#parse(String text)`方法，执行解析。
 
 # TokenHandler
 `org.apache.ibatis.parsing.TokenHandler`，`Token`处理器接口。代码如下：
@@ -443,7 +451,6 @@ public interface TokenHandler {
      * @return 处理后的结果
      */
     String handleToken(String content);
-
 }
 ```
 `handleToken(String content)`方法，处理`Token`，在`GenericTokenParser`中，我们已经看到它的调用了。
@@ -452,7 +459,7 @@ public interface TokenHandler {
 
 {% asset_img 2.png %}
 
-本文暂时只解析`VariableTokenHandler`类，因为只有它在`parsing`包中，和解析器模块相关。
+暂时只解析`VariableTokenHandler`类，因为只有它在`parsing`包中，和解析器模块相关。
 ## VariableTokenHandler
 `VariableTokenHandler`，是`PropertyParser`的内部静态类，变量`Token`处理器。
 ### 构造方法
